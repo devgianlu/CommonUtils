@@ -339,8 +339,12 @@ public class CommonUtils {
     }
 
     public static class ToastMessage {
-        private String message;
-        private boolean isError;
+        public static final ToastMessage COPIED_TO_CLIPBOARD = new ToastMessage("Copied to clipboard!", false);
+        public static final ToastMessage LOGS_DELETED = new ToastMessage("Deleted all logs.", false);
+        public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry....", true);
+
+        private final String message;
+        private final boolean isError;
 
         public ToastMessage(String message, boolean isError) {
             this.message = message;
