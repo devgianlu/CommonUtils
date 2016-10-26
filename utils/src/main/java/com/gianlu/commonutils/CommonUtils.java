@@ -7,6 +7,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +30,46 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class CommonUtils {
+    public static void animateCollapsingArrowList(ImageButton view, boolean expanded) {
+        if (expanded)
+            view.animate()
+                    .rotation(0)
+                    .setDuration(200)
+                    .start();
+        else
+            view.animate()
+                    .rotation(90)
+                    .setDuration(200)
+                    .start();
+    }
+
+    public static void animateCollapsingArrowBellows(ImageButton view, boolean expanded) {
+        if (expanded)
+            view.animate()
+                    .rotation(0)
+                    .setDuration(200)
+                    .start();
+        else
+            view.animate()
+                    .rotation(180)
+                    .setDuration(200)
+                    .start();
+    }
+
+    public static View fastHorizontalLinearLayoutWeightDummy(Context context, int weight) {
+        View view = new View(context);
+        view.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, weight));
+
+        return view;
+    }
+
     /**
      * Show a dialog
      * @param activity the Activity
      * @param dialog the Dialog
      */
     public static void showDialog(Activity activity, final Dialog dialog) {
-        if (activity == null || activity.isFinishing()) return;
+        if (activity == null || activity.isFinishing() || dialog == null) return;
 
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -47,7 +85,7 @@ public class CommonUtils {
      * @param builder the DialogBuilder
      */
     public static void showDialog(Activity activity, final AlertDialog.Builder builder) {
-        if (activity == null || activity.isFinishing()) return;
+        if (activity == null || activity.isFinishing() || builder == null) return;
 
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -63,11 +101,16 @@ public class CommonUtils {
      * @param text the text you like :)
      * @return the TextView
      */
-    public static TextView fastTextView(Context context, String text) {
+    public static TextView fastTextView(Context context, String text, int textAlignment) {
         TextView textView = new TextView(context);
         textView.setText(text);
+        textView.setTextAlignment(textAlignment);
 
         return textView;
+    }
+
+    public static TextView fastTextView(Context context, String text) {
+        return fastTextView(context, text, TextView.TEXT_ALIGNMENT_VIEW_START);
     }
 
     /**
@@ -81,6 +124,15 @@ public class CommonUtils {
         textView.setText(text);
 
         return textView;
+    }
+
+    public static LinearLayout fastLinearLayout(Context context, int orientation, int padding) {
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(orientation);
+        int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, padding, context.getResources().getDisplayMetrics());
+        layout.setPadding(pad, pad, pad, pad);
+
+        return layout;
     }
 
     /**
