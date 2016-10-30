@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class CommonUtils {
+    public static boolean DEBUG = BuildConfig.DEBUG;
+
     public static void animateCollapsingArrowList(ImageButton view, boolean expanded) {
         if (expanded)
             view.animate()
@@ -258,7 +260,7 @@ public class CommonUtils {
      * @param exx exception to log
      */
     public static void secretLog(Context context, Throwable exx) {
-        if (BuildConfig.DEBUG)
+        if (DEBUG)
             exx.printStackTrace();
 
         try {
@@ -277,7 +279,7 @@ public class CommonUtils {
      * @param ex exception to log
      */
     public static void logMe(Context context, Throwable ex) {
-        if (BuildConfig.DEBUG)
+        if (DEBUG)
             ex.printStackTrace();
         logMe(context, ex.getMessage(), true);
     }
