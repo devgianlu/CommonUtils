@@ -7,11 +7,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,69 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class CommonUtils {
     public static boolean DEBUG = BuildConfig.DEBUG;
+
+    public static boolean isExpanded(View v) {
+        return v.getVisibility() == View.VISIBLE;
+    }
+
+    public static void expand(final View v) {
+        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? RelativeLayout.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static void expandTitle(TextView v) {
+        v.setSingleLine(false);
+        v.setEllipsize(null);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static void collapseTitle(TextView v) {
+        v.setSingleLine(true);
+        v.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+    }
 
     public static void animateCollapsingArrowList(ImageButton view, boolean expanded) {
         if (expanded)
@@ -65,11 +132,6 @@ public class CommonUtils {
         return view;
     }
 
-    /**
-     * Show a dialog
-     * @param activity the Activity
-     * @param dialog the Dialog
-     */
     public static void showDialog(Activity activity, final Dialog dialog) {
         if (activity == null || activity.isFinishing() || dialog == null) return;
 
@@ -81,11 +143,6 @@ public class CommonUtils {
         });
     }
 
-    /**
-     * Show a dialog
-     * @param activity the Activity
-     * @param builder the DialogBuilder
-     */
     public static void showDialog(Activity activity, final AlertDialog.Builder builder) {
         if (activity == null || activity.isFinishing() || builder == null) return;
 
@@ -97,12 +154,6 @@ public class CommonUtils {
         });
     }
 
-    /**
-     * Creates a TextView
-     * @param context Context
-     * @param text the text you like :)
-     * @return the TextView
-     */
     public static TextView fastTextView(Context context, String text, int textAlignment) {
         TextView textView = new TextView(context);
         textView.setText(text);
@@ -115,12 +166,6 @@ public class CommonUtils {
         return fastTextView(context, text, TextView.TEXT_ALIGNMENT_VIEW_START);
     }
 
-    /**
-     * Creates a TextView
-     * @param context Context
-     * @param text the text you like :)
-     * @return the TextView
-     */
     public static TextView fastTextView(Context context, Spanned text) {
         TextView textView = new TextView(context);
         textView.setText(text);
@@ -137,12 +182,6 @@ public class CommonUtils {
         return layout;
     }
 
-    /**
-     * Creates an indeterminate ProgressDialog
-     * @param context Context
-     * @param message the message to display
-     * @return the ProgressDialog
-     */
     private static ProgressDialog fastIndeterminateProgressDialog(Context context, String message) {
         ProgressDialog pd = new ProgressDialog(context);
         pd.setMessage(message);
@@ -151,51 +190,34 @@ public class CommonUtils {
         return pd;
     }
 
-    /**
-     * Creates an indeterminate ProgressDialog
-     * @param context Context
-     * @param message the message resource to display
-     * @return the ProgressDialog
-     */
     public static ProgressDialog fastIndeterminateProgressDialog(Context context, int message) {
         return fastIndeterminateProgressDialog(context, context.getString(message));
     }
 
-    /**
-     * Format values to a human readable text
-     * @param v bytes
-     * @return formatted value
-     */
     public static String dimensionFormatter(float v) {
         if (v <= 0) {
             return "0 B";
         } else {
             final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
             int digitGroups = (int) (Math.log10(v) / Math.log10(1000));
+            if (digitGroups > 4)
+                return "∞ B";
             return new DecimalFormat("#,##0.#").format(v / Math.pow(1000, digitGroups)) + " " + units[digitGroups];
         }
     }
 
-    /**
-     * Format values to a human readable text
-     * @param v bytes/second
-     * @return formatted value
-     */
     public static String speedFormatter(float v) {
         if (v <= 0) {
             return "0 B/s";
         } else {
             final String[] units = new String[]{"B/s", "KB/s", "MB/s", "GB/s", "TB/s"};
             int digitGroups = (int) (Math.log10(v) / Math.log10(1000));
+            if (digitGroups > 4)
+                return "∞ B/s";
             return new DecimalFormat("#,##0.#").format(v / Math.pow(1000, digitGroups)) + " " + units[digitGroups];
         }
     }
 
-    /**
-     * Format values to a human readable text
-     * @param sec seconds
-     * @return formatted value
-     */
     public static String timeFormatter(Long sec) {
         if (sec == null) return "∞";
 
@@ -230,10 +252,6 @@ public class CommonUtils {
         }
     }
 
-    /**
-     * Delete logs older than a week
-     * @param context Context
-     */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("SimpleDateFormat")
     public static void logCleaner(Context context) {
@@ -254,11 +272,6 @@ public class CommonUtils {
         }
     }
 
-    /**
-     * Secretly logs exceptions' stacktrace
-     * @param context Context
-     * @param exx exception to log
-     */
     public static void secretLog(Context context, Throwable exx) {
         if (DEBUG)
             exx.printStackTrace();
@@ -273,23 +286,12 @@ public class CommonUtils {
         } catch (IOException ignored) {}
     }
 
-    /**
-     * Logs exceptions
-     * @param context Context
-     * @param ex exception to log
-     */
     public static void logMe(Context context, Throwable ex) {
         if (DEBUG)
             ex.printStackTrace();
         logMe(context, ex.getMessage(), true);
     }
 
-    /**
-     * Logs exceptions
-     * @param context Context
-     * @param message message to log
-     * @param isError is that message an error?
-     */
     public static void logMe(Context context, String message, boolean isError) {
         try {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".log", Context.MODE_APPEND);
