@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.annotation.Keep;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
+@Keep
 public class CommonUtils {
     public static boolean DEBUG = BuildConfig.DEBUG;
 
@@ -394,10 +396,11 @@ public class CommonUtils {
         CommonUtils.logMe(context, message.toString(), message.isError());
     }
 
+    @Keep
     public static class ToastMessage {
         public static final ToastMessage COPIED_TO_CLIPBOARD = new ToastMessage("Copied to clipboard!", false);
         public static final ToastMessage LOGS_DELETED = new ToastMessage("Deleted all logs.", false);
-        public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry....", true);
+        public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry...", true);
 
         private final String message;
         private final boolean isError;
