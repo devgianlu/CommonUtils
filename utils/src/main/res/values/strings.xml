@@ -5,4 +5,6 @@
     <string name="warningTag">WARNING:</string>
     <string name="errorTag">ERROR:</string>
     <string name="infoTag">INFO:</string>
+    <string name="unknown">Unknown</string>
+    <string name="email">altomanigianluca@gmail.com</string>
 </resources>

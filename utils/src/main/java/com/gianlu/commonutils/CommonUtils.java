@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.Keep;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
@@ -220,6 +222,30 @@ public class CommonUtils {
         }
     }
 
+    public static void sendEmail(Activity activity, String appName) {
+        String version;
+        try {
+            version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException ex) {
+            version = activity.getString(R.string.unknown);
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SEND)
+                .setType("message/rfc822")
+                .putExtra(Intent.EXTRA_EMAIL, new String[]{activity.getString(R.string.email)})
+                .putExtra(Intent.EXTRA_SUBJECT, appName)
+                .putExtra(Intent.EXTRA_TEXT, "OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
+                        "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
+                        "\nDevice: " + android.os.Build.DEVICE +
+                        "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
+                        "\nApplication version: " + version);
+        try {
+            activity.startActivity(Intent.createChooser(intent, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            CommonUtils.UIToast(activity, ToastMessage.NO_EMAIL_CLIENT);
+        }
+    }
+
     public static String timeFormatter(Long sec) {
         if (sec == null) return "∞";
 
@@ -295,6 +321,9 @@ public class CommonUtils {
     }
 
     public static void logMe(Context context, String message, boolean isError) {
+        if (message == null)
+            message = "No message given";
+
         try {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".log", Context.MODE_APPEND);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
@@ -398,6 +427,7 @@ public class CommonUtils {
 
     @Keep
     public static class ToastMessage {
+        public static final ToastMessage NO_EMAIL_CLIENT = new CommonUtils.ToastMessage("There are no email clients installed.", true);
         public static final ToastMessage COPIED_TO_CLIPBOARD = new ToastMessage("Copied to clipboard!", false);
         public static final ToastMessage LOGS_DELETED = new ToastMessage("Deleted all logs.", false);
         public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry...", true);
