@@ -317,6 +317,8 @@ public class CommonUtils {
     public static void logMe(Context context, Throwable ex) {
         if (DEBUG)
             ex.printStackTrace();
+        if (ex == null)
+            return;
         logMe(context, ex.getMessage(), true);
     }
 
@@ -386,6 +388,9 @@ public class CommonUtils {
             }
         });
 
+        if (exception == null)
+            return;
+
         CommonUtils.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
         CommonUtils.secretLog(context, exception);
     }
@@ -409,6 +414,9 @@ public class CommonUtils {
             }
         });
         context.runOnUiThread(extra);
+
+        if (exception == null)
+            return;
 
         CommonUtils.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
         CommonUtils.secretLog(context, exception);

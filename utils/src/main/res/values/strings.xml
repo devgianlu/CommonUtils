@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="log_activity_title">Logs</string>
+    <string name="log_activity_title" translatable="false">Logs</string>
     <string name="deleteAllLogs">Delete all logs</string>
-    <string name="warningTag">WARNING:</string>
-    <string name="errorTag">ERROR:</string>
-    <string name="infoTag">INFO:</string>
+    <string name="warningTag" translatable="false">WARNING:</string>
+    <string name="errorTag" translatable="false">ERROR:</string>
+    <string name="infoTag" translatable="false">INFO:</string>
     <string name="unknown">Unknown</string>
-    <string name="email">altomanigianluca@gmail.com</string>
+    <string name="email" translatable="false">altomanigianluca@gmail.com</string>
 </resources>
