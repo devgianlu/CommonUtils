@@ -136,6 +136,13 @@ public class CommonUtils {
         return view;
     }
 
+    public static View fastVerticalLinearLayoutWeightDummy(Context context, int weight) {
+        View view = new View(context);
+        view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, weight));
+
+        return view;
+    }
+
     public static void showDialog(Activity activity, final Dialog dialog) {
         if (activity == null || activity.isFinishing() || dialog == null) return;
 
