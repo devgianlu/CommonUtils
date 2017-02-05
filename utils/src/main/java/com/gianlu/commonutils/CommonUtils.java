@@ -348,6 +348,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final String text, final int duration) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -357,6 +359,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final String text, final int duration, Runnable extra) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -367,6 +371,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -377,6 +383,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final String message_extras) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -388,6 +396,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -403,6 +413,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final String message_extras, Runnable extra) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -414,6 +426,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception, Runnable extra) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -430,6 +444,8 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, Runnable extra) {
+        if (context == null)
+            return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
