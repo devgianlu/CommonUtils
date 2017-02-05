@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,6 +41,20 @@ import java.util.concurrent.TimeUnit;
 @Keep
 public class CommonUtils {
     public static boolean DEBUG = BuildConfig.DEBUG;
+
+    public static boolean hasInternetAccess() {
+        try {
+            HttpURLConnection url = (HttpURLConnection) new URL("http://clients3.google.com/generate_204").openConnection();
+            //noinspection SpellCheckingInspection
+            url.setRequestProperty("User-Agent", "Connectivity test");
+            url.setRequestProperty("Connection", "close");
+            url.setConnectTimeout(1000);
+            url.connect();
+            return url.getResponseCode() == 204 && url.getContentLength() == 0;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
 
     public static boolean isExpanded(View v) {
         return v.getVisibility() == View.VISIBLE;
