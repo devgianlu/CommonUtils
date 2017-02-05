@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("Unused,WeakerAccess")
 @Keep
 public class CommonUtils {
     public static boolean DEBUG = BuildConfig.DEBUG;
