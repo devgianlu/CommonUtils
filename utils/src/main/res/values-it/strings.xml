@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="deleteAllLogs">Cancella tutti i log</string>
+    <string name="unknown">Sconosciuto</string>
+    <string name="emptyLogs">Non ci sono log.</string>
+</resources>

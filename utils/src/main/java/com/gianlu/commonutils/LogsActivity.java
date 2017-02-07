@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,25 +35,14 @@ public class LogsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_logs);
         setTitle(R.string.log_activity_title);
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        int dpPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        layout.setPadding(dpPadding, dpPadding, dpPadding, dpPadding);
+        final Spinner spinner = (Spinner) findViewById(R.id.logs_spinner);
+        TextView empty = (TextView) findViewById(R.id.logs_empty);
+        final ListView list = (ListView) findViewById(R.id.logs_list);
 
-        Spinner logs = new Spinner(this);
-        logs.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        layout.addView(logs);
-        final ListView log = new ListView(this);
-        LinearLayout.LayoutParams logParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);
-        logParams.setMargins(0, 16, 0, 0);
-        log.setLayoutParams(logParams);
-        layout.addView(log);
-
-        setContentView(layout);
-
-        log.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -72,13 +60,17 @@ public class LogsActivity extends AppCompatActivity {
             }
         });
 
-        List<String> spinnerList = new ArrayList<>();
-        for (File logFile : files) {
-            spinnerList.add(logFile.getName());
+        if (files.length == 0) {
+            empty.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.GONE);
         }
 
-        logs.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList));
-        logs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        List<String> spinnerList = new ArrayList<>();
+        for (File logFile : files)
+            spinnerList.add(logFile.getName());
+
+        spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerList));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 List<LoglineItem> logLines = new ArrayList<>();
@@ -97,17 +89,17 @@ public class LogsActivity extends AppCompatActivity {
                     onBackPressed();
                 }
 
-                log.setAdapter(new LoglineAdapter(logLines));
-                log.setSelection(log.getCount() - 1);
+                list.setAdapter(new LoglineAdapter(logLines));
+                list.setSelection(list.getCount() - 1);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                finishActivity(0);
+                onBackPressed();
             }
         });
 
-        logs.setSelection(logs.getCount() - 1);
+        spinner.setSelection(spinner.getCount() - 1);
     }
 
     @Override
@@ -128,12 +120,11 @@ public class LogsActivity extends AppCompatActivity {
                     }
                 });
 
-                for (File logFile : files) {
+                for (File logFile : files)
                     logFile.delete();
-                }
 
                 CommonUtils.UIToast(this, CommonUtils.ToastMessage.LOGS_DELETED);
-                recreate();
+                onBackPressed();
                 break;
         }
 
@@ -159,7 +150,7 @@ public class LogsActivity extends AppCompatActivity {
             return type;
         }
 
-        public String getMessage() {
+        String getMessage() {
             return message;
         }
     }

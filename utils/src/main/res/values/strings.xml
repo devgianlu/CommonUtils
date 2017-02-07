@@ -7,4 +7,5 @@
     <string name="infoTag" translatable="false">INFO:</string>
     <string name="unknown">Unknown</string>
     <string name="email" translatable="false">altomanigianluca@gmail.com</string>
+    <string name="emptyLogs">There is no log.</string>
 </resources>
