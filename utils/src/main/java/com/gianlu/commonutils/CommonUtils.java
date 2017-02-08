@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused,WeakerAccess")
 @Keep
 public class CommonUtils {
+    @SuppressWarnings("CanBeFinal")
     public static boolean DEBUG = BuildConfig.DEBUG;
 
     public static boolean hasInternetAccess() {

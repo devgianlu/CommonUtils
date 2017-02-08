@@ -3,4 +3,7 @@
     <string name="deleteAllLogs">Cancella tutti i log</string>
     <string name="unknown">Sconosciuto</string>
     <string name="emptyLogs">Non ci sono log.</string>
+    <string name="send_email">Invia email</string>
+    <string name="emailMe">Se vuoi aggiungere un parere su quello che è successo mandami una mail a altomanigianluca@gmail.com cliccando il pulsante qui sotto.</string>
+    <string name="somethingWentWrong">Qualcosa è andato storto! Un report dell\'accaduto è già stato inviato allo sviluppatore.</string>
 </resources>
