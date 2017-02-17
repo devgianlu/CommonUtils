@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Keep;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -52,6 +53,33 @@ public class CommonUtils {
             url.setConnectTimeout(1000);
             url.connect();
             return url.getResponseCode() == 204 && url.getContentLength() == 0;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+
+    @Nullable
+    public static File getSecondaryStorage() {
+        final String value = System.getenv("SECONDARY_STORAGE");
+        if (!value.isEmpty()) {
+            final String[] paths = value.split(":");
+            for (String path : paths) {
+                File file = new File(path);
+                if (file.isDirectory())
+                    return file;
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean isOnSecondaryStorage(File file) {
+        File secondaryStorage = getSecondaryStorage();
+        if (secondaryStorage == null)
+            return false;
+
+        try {
+            return file.getCanonicalPath().startsWith(secondaryStorage.getAbsolutePath());
         } catch (IOException ex) {
             return false;
         }
@@ -479,6 +507,11 @@ public class CommonUtils {
         public static final ToastMessage COPIED_TO_CLIPBOARD = new ToastMessage("Copied to clipboard!", false);
         public static final ToastMessage LOGS_DELETED = new ToastMessage("Deleted all logs.", false);
         public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry...", true);
+        public static final ToastMessage PURCHASING_CANCELED = new ToastMessage("The purchase has been canceled.", false);
+        public static final ToastMessage BILLING_USER_CANCELLED = new ToastMessage("You cancelled the operation.", false);
+        public static final ToastMessage THANK_YOU = new ToastMessage("Thank you!", false);
+        public static final ToastMessage FAILED_BUYING_ITEM = new ToastMessage("Failed to buy this item! Please contact me.", true);
+        public static final ToastMessage FAILED_CONNECTION_BILLING_SERVICE = new ToastMessage("Failed to connect to the billing service!", true);
 
         private final String message;
         private final boolean isError;

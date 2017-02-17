@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gianlu.commonutils">
 
+    <!-- Google In-app Billing -->
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application>
         <activity android:name=".LogsActivity" />
         <activity
