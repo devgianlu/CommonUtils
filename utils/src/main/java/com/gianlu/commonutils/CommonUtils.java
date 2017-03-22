@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -246,7 +247,7 @@ public class CommonUtils {
         return pd;
     }
 
-    public static ProgressDialog fastIndeterminateProgressDialog(Context context, int message) {
+    public static ProgressDialog fastIndeterminateProgressDialog(Context context, @StringRes int message) {
         return fastIndeterminateProgressDialog(context, context.getString(message));
     }
 
