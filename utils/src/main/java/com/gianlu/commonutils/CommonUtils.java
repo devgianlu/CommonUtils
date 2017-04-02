@@ -45,9 +45,16 @@ public class CommonUtils {
     @SuppressWarnings("CanBeFinal")
     public static boolean DEBUG = BuildConfig.DEBUG;
 
-    public static boolean hasInternetAccess() {
+    private static String pickCountryURL(boolean global) {
+        String country = Locale.getDefault().getCountry();
+        if (country.isEmpty() || country.length() >= 3 || global)
+            return "http://www.google.com/generate_204";
+        else return "http://www.google." + country.toLowerCase() + "/generate_204";
+    }
+
+    public static boolean hasInternetAccess(boolean global) {
         try {
-            HttpURLConnection url = (HttpURLConnection) new URL("http://clients3.google.com/generate_204").openConnection();
+            HttpURLConnection url = (HttpURLConnection) new URL(pickCountryURL(global)).openConnection();
             //noinspection SpellCheckingInspection
             url.setRequestProperty("User-Agent", "Connectivity test");
             url.setRequestProperty("Connection", "close");
@@ -55,7 +62,7 @@ public class CommonUtils {
             url.connect();
             return url.getResponseCode() == 204 && url.getContentLength() == 0;
         } catch (IOException ex) {
-            return false;
+            return !global && hasInternetAccess(true);
         }
     }
 
@@ -349,7 +356,8 @@ public class CommonUtils {
                 if (new SimpleDateFormat("d-LL-yyyy").parse(file.getName().replace(".log", "").replace(".secret", "")).before(cal.getTime())) {
                     file.delete();
                 }
-            } catch (ParseException ignored) {}
+            } catch (ParseException ignored) {
+            }
         }
     }
 
@@ -364,7 +372,8 @@ public class CommonUtils {
             osw.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + exx.toString() + "\n" + Arrays.toString(exx.getStackTrace()) + "\n\n");
             osw.flush();
             osw.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     public static void logMe(Context context, Throwable ex) {
@@ -379,6 +388,10 @@ public class CommonUtils {
         if (message == null)
             message = "No message given";
 
+        if (DEBUG)
+            if (isError) System.err.println(message);
+            else System.out.println(message);
+
         try {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".log", Context.MODE_APPEND);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
@@ -386,7 +399,8 @@ public class CommonUtils {
             osw.write((isError ? "--ERROR--" : "--INFO--") + new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + message.replace("\n", " ") + "\n");
             osw.flush();
             osw.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     public static void UIToast(final Activity context, final String text) {
