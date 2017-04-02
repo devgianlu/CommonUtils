@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused,WeakerAccess")
@@ -514,6 +515,12 @@ public class CommonUtils {
         });
         context.runOnUiThread(extra);
         CommonUtils.logMe(context, message.toString(), message.isError());
+    }
+
+    public static SimpleDateFormat getVerbalDateFormatter() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf;
     }
 
     @Keep
