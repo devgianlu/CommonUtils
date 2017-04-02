@@ -519,6 +519,7 @@ public class CommonUtils {
     @Keep
     public static class ToastMessage {
         public static final ToastMessage NO_EMAIL_CLIENT = new CommonUtils.ToastMessage("There are no email clients installed.", true);
+        public static final ToastMessage OFFLINE = new ToastMessage("You're offline!", false);
         public static final ToastMessage COPIED_TO_CLIPBOARD = new ToastMessage("Copied to clipboard!", false);
         public static final ToastMessage LOGS_DELETED = new ToastMessage("Deleted all logs.", false);
         public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry...", true);

@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused,WeakerAccess")
 @Keep
 public class LogsActivity extends AppCompatActivity {
     private static final int DELETE_LOGS_ID = 1;
