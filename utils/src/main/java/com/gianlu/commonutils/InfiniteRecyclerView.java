@@ -67,6 +67,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         int page = 1;
         long currDay = -1;
         private IFailedLoadingContent listener;
+        private boolean loading = false;
 
         public InfiniteAdapter(Context context, List<E> items, int maxPages, @ColorInt int primary_shadow) {
             this.inflater = LayoutInflater.from(context);
@@ -81,7 +82,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         private void populate(List<E> elements) {
             for (E element : elements) {
                 Date date = getDateFromItem(element);
-                if (currDay != date.getTime() / 86400000) {
+                if (date != null && currDay != date.getTime() / 86400000 && primary_shadow != -1) {
                     items.add(new ItemEnclosure<E>(null, date));
                     currDay = date.getTime() / 86400000;
                 }
@@ -90,6 +91,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             }
         }
 
+        @Nullable
         protected abstract Date getDateFromItem(E item);
 
         private void attachListener(IFailedLoadingContent listener) {
@@ -132,8 +134,10 @@ public class InfiniteRecyclerView extends RecyclerView {
         protected abstract ViewHolder createViewHolder(ViewGroup parent);
 
         private void loadMoreContent() {
-            if (page > maxPages)
+            if ((maxPages != -1 && page > maxPages) || loading)
                 return;
+
+            loading = true;
 
             if (items.get(items.size() - 1) != null) {
                 items.add(null);
@@ -155,13 +159,15 @@ public class InfiniteRecyclerView extends RecyclerView {
                             int start = items.size();
                             populate(content);
                             notifyItemRangeInserted(start, content.size());
+                            loading = false;
                         }
                     });
                 }
 
                 @Override
                 public void onFailed(Exception ex) {
-                    if (listener != null)
+                    loading = false;
+                    if (listener != null && maxPages != -1)
                         listener.onFailedLoadingContent(ex);
                 }
             });
@@ -210,11 +216,12 @@ public class InfiniteRecyclerView extends RecyclerView {
 
     private class CustomScrollListener extends RecyclerView.OnScrollListener {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(RecyclerView recyclerView, int dx, final int dy) {
             recyclerView.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (!canScrollVertically(1)) ((InfiniteAdapter) getAdapter()).loadMoreContent();
+                    if (!canScrollVertically(1) && dy > 0)
+                        ((InfiniteAdapter) getAdapter()).loadMoreContent();
                 }
             });
         }

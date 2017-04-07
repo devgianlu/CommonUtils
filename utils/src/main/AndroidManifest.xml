@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gianlu.commonutils">
 
-    <!-- Google In-app Billing -->
+    <!-- Google In-apk Billing -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application>

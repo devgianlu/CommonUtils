@@ -19,16 +19,16 @@ package com.android.vending.billing;
 import android.os.Bundle;
 
 /**
- * InAppBillingService is the service that provides in-app billing version 3 and beyond.
+ * InAppBillingService is the service that provides in-apk billing version 3 and beyond.
  * This service provides the following features:
- * 1. Provides a new API to get details of in-app items published for the app including
+ * 1. Provides a new API to get details of in-apk items published for the apk including
  *    price, type, title and description.
  * 2. The purchase flow is synchronous and purchase information is available immediately
  *    after it completes.
- * 3. Purchase information of in-app purchases is maintained within the Google Play system
+ * 3. Purchase information of in-apk purchases is maintained within the Google Play system
  *    till the purchase is consumed.
  * 4. An API to consume a purchase of an inapp item. All purchases of one-time
- *    in-app items are consumable and thereafter can be purchased again.
+ *    in-apk items are consumable and thereafter can be purchased again.
  * 5. An API to get current purchases of the user immediately. This will not contain any
  *    consumed purchases.
  *
@@ -44,11 +44,11 @@ import android.os.Bundle;
  */
 interface IInAppBillingService {
     /**
-     * Checks support for the requested billing API version, package and in-app type.
+     * Checks support for the requested billing API version, package and in-apk type.
      * Minimum API version supported by this interface is 3.
-     * @param apiVersion the billing version which the app is using
-     * @param packageName the package name of the calling app
-     * @param type type of the in-app item being purchased "inapp" for one-time purchases
+     * @param apiVersion the billing version which the apk is using
+     * @param packageName the package name of the calling apk
+     * @param type type of the in-apk item being purchased "inapp" for one-time purchases
      *        and "subs" for subscription.
      * @return RESULT_OK(0) on success, corresponding result code on failures
      */
@@ -60,7 +60,7 @@ interface IInAppBillingService {
      * with a list JSON strings containing the productId, price, title and description.
      * This API can be called with a maximum of 20 SKUs.
      * @param apiVersion billing API version that the Third-party is using
-     * @param packageName the package name of the calling app
+     * @param packageName the package name of the calling apk
      * @param skusBundle bundle containing a StringArrayList of SKUs with key "ITEM_ID_LIST"
      * @return Bundle containing the following key-value pairs
      *         "RESPONSE_CODE" with int value, RESULT_OK(0) if success, other response codes on
@@ -73,12 +73,12 @@ interface IInAppBillingService {
     Bundle getSkuDetails(int apiVersion, String packageName, String type, in Bundle skusBundle);
 
     /**
-     * Returns a pending intent to launch the purchase flow for an in-app item by providing a SKU,
+     * Returns a pending intent to launch the purchase flow for an in-apk item by providing a SKU,
      * the type, a unique purchase token and an optional developer payload.
-     * @param apiVersion billing API version that the app is using
-     * @param packageName package name of the calling app
-     * @param sku the SKU of the in-app item as published in the developer console
-     * @param type the type of the in-app item ("inapp" for one-time purchases
+     * @param apiVersion billing API version that the apk is using
+     * @param packageName package name of the calling apk
+     * @param sku the SKU of the in-apk item as published in the developer console
+     * @param type the type of the in-apk item ("inapp" for one-time purchases
      *        and "subs" for subscription).
      * @param developerPayload optional argument to be sent back with the purchase information
      * @return Bundle containing the following key-value pairs
@@ -93,14 +93,14 @@ interface IInAppBillingService {
      *              failure as listed above.
      *         "INAPP_PURCHASE_DATA" - String in JSON format similar to
      *              '{"orderId":"12999763169054705758.1371079406387615",
-     *                "packageName":"com.example.app",
+     *                "packageName":"com.example.apk",
      *                "productId":"exampleSku",
      *                "purchaseTime":1345678900000,
      *                "purchaseToken" : "122333444455555",
      *                "developerPayload":"example developer payload" }'
      *         "INAPP_DATA_SIGNATURE" - String containing the signature of the purchase data that
      *                                  was signed with the private key of the developer
-     *                                  (change this to app-specific keys).
+     *                                  (change this to apk-specific keys).
      */
     Bundle getBuyIntent(int apiVersion, String packageName, String sku, String type,
         String developerPayload);
@@ -110,9 +110,9 @@ interface IInAppBillingService {
      * purchase information and a signature of the data to be validated.
      * This will return all SKUs that have been purchased in V3 and managed items purchased using
      * V1 and V2 that have not been consumed.
-     * @param apiVersion billing API version that the app is using
-     * @param packageName package name of the calling app
-     * @param type the type of the in-app items being requested
+     * @param apiVersion billing API version that the apk is using
+     * @param packageName package name of the calling apk
+     * @param type the type of the in-apk items being requested
      *        ("inapp" for one-time purchases and "subs" for subscription).
      * @param continuationToken to be set as null for the first call, if the number of owned
      *        skus are too many, a continuationToken is returned in the response bundle.
@@ -126,7 +126,7 @@ interface IInAppBillingService {
      *         "INAPP_DATA_SIGNATURE_LIST"- StringArrayList containing the signatures
      *                                      of the purchase information
      *         "INAPP_CONTINUATION_TOKEN" - String containing a continuation token for the
-     *                                      next set of in-app purchases. Only set if the
+     *                                      next set of in-apk purchases. Only set if the
      *                                      user has more owned skus than the current list.
      */
     Bundle getPurchases(int apiVersion, String packageName, String type, String continuationToken);
@@ -134,8 +134,8 @@ interface IInAppBillingService {
     /**
      * Consume the last purchase of the given SKU. This will result in this item being removed
      * from all subsequent responses to getPurchases() and allow re-purchase of this item.
-     * @param apiVersion billing API version that the app is using
-     * @param packageName package name of the calling app
+     * @param apiVersion billing API version that the apk is using
+     * @param packageName package name of the calling apk
      * @param purchaseToken token in the purchase information JSON that identifies the purchase
      *        to be consumed
      * @return 0 if consumption succeeded. Appropriate error values for failures.
