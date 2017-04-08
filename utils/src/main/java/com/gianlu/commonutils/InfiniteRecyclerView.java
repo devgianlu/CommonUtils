@@ -62,7 +62,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         protected final LayoutInflater inflater;
         protected final Context context;
         protected final List<ItemEnclosure<E>> items;
-        final int maxPages;
+        protected int maxPages;
         private final int primary_shadow;
         int page = 1;
         long currDay = -1;
