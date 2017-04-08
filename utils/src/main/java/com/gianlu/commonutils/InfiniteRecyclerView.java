@@ -134,6 +134,8 @@ public class InfiniteRecyclerView extends RecyclerView {
         protected abstract ViewHolder createViewHolder(ViewGroup parent);
 
         private void loadMoreContent() {
+            if (maxPages == -2)
+                return;
             if ((maxPages != -1 && page > maxPages) || loading)
                 return;
 
@@ -165,10 +167,31 @@ public class InfiniteRecyclerView extends RecyclerView {
                 }
 
                 @Override
+                public void onReloadAllContent(final List<E> content) {
+                    new Handler(context.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (items.get(items.size() - 1) == null) {
+                                items.remove(null);
+                                notifyItemRemoved(items.size() - 1);
+                            }
+
+                            items.clear();
+                            populate(content);
+                            notifyDataSetChanged();
+                            loading = false;
+                        }
+                    });
+                }
+
+                @Override
                 public void onFailed(Exception ex) {
                     loading = false;
                     if (listener != null && maxPages != -1)
                         listener.onFailedLoadingContent(ex);
+
+                    if (CommonUtils.DEBUG)
+                        ex.printStackTrace();
                 }
             });
         }
@@ -177,6 +200,8 @@ public class InfiniteRecyclerView extends RecyclerView {
 
         protected interface IContentProvider<E> {
             void onMoreContent(List<E> content);
+
+            void onReloadAllContent(List<E> content);
 
             void onFailed(Exception ex);
         }
