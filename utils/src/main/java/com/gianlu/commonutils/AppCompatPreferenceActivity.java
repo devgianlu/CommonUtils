@@ -1,5 +1,6 @@
 package com.gianlu.commonutils;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -21,6 +22,11 @@ import android.view.ViewGroup;
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
+
+    public static boolean isXLargeTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

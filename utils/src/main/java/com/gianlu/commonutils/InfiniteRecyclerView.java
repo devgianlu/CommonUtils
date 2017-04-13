@@ -62,8 +62,8 @@ public class InfiniteRecyclerView extends RecyclerView {
         protected final LayoutInflater inflater;
         protected final Context context;
         protected final List<ItemEnclosure<E>> items;
-        protected int maxPages;
         private final int primary_shadow;
+        protected int maxPages;
         int page = 1;
         long currDay = -1;
         private IFailedLoadingContent listener;
@@ -246,7 +246,8 @@ public class InfiniteRecyclerView extends RecyclerView {
                 @Override
                 public void run() {
                     if (!canScrollVertically(1) && dy > 0)
-                        ((InfiniteAdapter) getAdapter()).loadMoreContent();
+                        if (getAdapter() instanceof InfiniteAdapter)
+                            ((InfiniteAdapter) getAdapter()).loadMoreContent();
                 }
             });
         }
