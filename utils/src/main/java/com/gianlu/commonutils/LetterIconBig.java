@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+@Keep
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LetterIconBig extends View {
     private final Rect lettersBounds = new Rect();
     private final Rect textBounds = new Rect();
@@ -23,7 +25,6 @@ public class LetterIconBig extends View {
     private String addr;
     private String port;
 
-    @Keep
     public LetterIconBig(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

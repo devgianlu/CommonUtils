@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+@Keep
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LetterIconSmall extends View {
     private final Rect lettersBounds = new Rect();
     private Paint shapePaint;
@@ -19,7 +21,6 @@ public class LetterIconSmall extends View {
     private String letters;
     private String profileFileName;
 
-    @Keep
     public LetterIconSmall(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
