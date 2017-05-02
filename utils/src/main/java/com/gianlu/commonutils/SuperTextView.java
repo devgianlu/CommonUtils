@@ -41,11 +41,16 @@ public class SuperTextView extends AppCompatTextView {
     }
 
     public SuperTextView(Context context, String str) {
-        super(context);
-        setHtml(str);
+        this(context, str, -1);
     }
 
-    private static String makeBold(String str) {
+    public SuperTextView(Context context, String str, @ColorInt int textColor) {
+        super(context);
+        setHtml(str);
+        if (textColor != -1) setTextColor(textColor);
+    }
+
+    public static String makeBold(String str) {
         return "<b>" + str + "</b>";
     }
 

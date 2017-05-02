@@ -6,4 +6,8 @@
     <string name="send_email">Invia email</string>
     <string name="emailMe">Se vuoi aggiungere un parere su quello che è successo mandami una mail a altomanigianluca@gmail.com cliccando il pulsante qui sotto.</string>
     <string name="somethingWentWrong">Qualcosa è andato storto! Un report dell\'accaduto è già stato inviato allo sviluppatore.</string>
+    <string name="addProfile">Aggiungi profilo</string>
+    <string name="editProfile">Modifica profilo</string>
+    <string name="closeDrawer">Chiudi drawer</string>
+    <string name="openDrawer">Apri drawer</string>
 </resources>

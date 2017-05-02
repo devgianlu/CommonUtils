@@ -56,9 +56,8 @@ public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapt
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BaseDrawerProfile profile = getItem(position);
 
-        holder.globalName.setText(profile.getGlobalName());
-        holder.name.setText(profile.getName());
-        holder.address.setText(profile.getAddress());
+        holder.name.setText(profile.getProfileName());
+        holder.secondary.setText(profile.getSecondaryText());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +90,7 @@ public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapt
         public final TextView ping;
         public final TextView globalName;
         public final TextView name;
-        public final TextView address;
+        public final TextView secondary;
 
         public ViewHolder(ViewGroup parent) {
             super(inflater.inflate(R.layout.drawer_profile_item, parent, false));
@@ -102,7 +101,7 @@ public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapt
             ping = (TextView) itemView.findViewById(R.id.drawerProfileItem_ping);
             globalName = (TextView) itemView.findViewById(R.id.drawerProfileItem_globalName);
             name = (TextView) itemView.findViewById(R.id.drawerProfileItem_name);
-            address = (TextView) itemView.findViewById(R.id.drawerProfileItem_address);
+            secondary = (TextView) itemView.findViewById(R.id.drawerProfileItem_secondary);
         }
     }
 }

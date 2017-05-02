@@ -5,13 +5,11 @@ import android.support.annotation.Keep;
 @Keep
 @SuppressWarnings({"unused", "WeakerAccess"})
 public interface BaseDrawerProfile {
-    String getGlobalName();
+    String getProfileName();
 
-    String getName();
-
-    String getAddress();
-
-    int getPort();
+    String getSecondaryText();
 
     String toString();
+
+    String getInitials();
 }

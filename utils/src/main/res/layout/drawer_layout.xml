@@ -34,7 +34,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/drawerHeader_currentAccount"
-            android:layout_toStartOf="@+id/drawerHeader_dropdown"
+            android:layout_toStartOf="@+id/drawerHeader_action"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingBottom="8dp"
@@ -52,7 +52,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/drawerHeader_profileAddr"
+                android:id="@+id/drawerHeader_profileSecondaryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -63,14 +63,13 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/drawerHeader_dropdown"
+            android:id="@+id/drawerHeader_action"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="20dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_arrow_drop_down_white_48dp" />
+            android:layout_marginEnd="16dp" />
     </RelativeLayout>
 
     <LinearLayout
