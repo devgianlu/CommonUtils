@@ -11,7 +11,6 @@ import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -84,8 +83,7 @@ public class CommonUtils {
 
     public static boolean isOnSecondaryStorage(File file) {
         File secondaryStorage = getSecondaryStorage();
-        if (secondaryStorage == null)
-            return false;
+        if (secondaryStorage == null) return false;
 
         try {
             return file.getCanonicalPath().startsWith(secondaryStorage.getAbsolutePath());
@@ -158,48 +156,29 @@ public class CommonUtils {
     }
 
     public static void animateCollapsingArrowList(ImageButton view, boolean expanded) {
-        if (expanded)
-            view.animate()
-                    .rotation(0)
-                    .setDuration(200)
-                    .start();
-        else
-            view.animate()
-                    .rotation(90)
-                    .setDuration(200)
-                    .start();
+        if (expanded) view.animate().rotation(0).setDuration(200).start();
+        else view.animate().rotation(90).setDuration(200).start();
     }
 
     public static void animateCollapsingArrowBellows(ImageButton view, boolean expanded) {
-        if (expanded)
-            view.animate()
-                    .rotation(0)
-                    .setDuration(200)
-                    .start();
-        else
-            view.animate()
-                    .rotation(180)
-                    .setDuration(200)
-                    .start();
+        if (expanded) view.animate().rotation(0).setDuration(200).start();
+        else view.animate().rotation(180).setDuration(200).start();
     }
 
     public static View fastHorizontalLinearLayoutWeightDummy(Context context, int weight) {
         View view = new View(context);
         view.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, weight));
-
         return view;
     }
 
     public static View fastVerticalLinearLayoutWeightDummy(Context context, int weight) {
         View view = new View(context);
         view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, weight));
-
         return view;
     }
 
     public static void showDialog(Activity activity, final Dialog dialog) {
         if (activity == null || activity.isFinishing() || dialog == null) return;
-
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -210,7 +189,6 @@ public class CommonUtils {
 
     public static void showDialog(Activity activity, final AlertDialog.Builder builder) {
         if (activity == null || activity.isFinishing() || builder == null) return;
-
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -219,31 +197,11 @@ public class CommonUtils {
         });
     }
 
-    public static TextView fastTextView(Context context, String text, int textAlignment) {
-        TextView textView = new TextView(context);
-        textView.setText(text);
-        textView.setTextAlignment(textAlignment);
-
-        return textView;
-    }
-
-    public static TextView fastTextView(Context context, String text) {
-        return fastTextView(context, text, TextView.TEXT_ALIGNMENT_VIEW_START);
-    }
-
-    public static TextView fastTextView(Context context, Spanned text) {
-        TextView textView = new TextView(context);
-        textView.setText(text);
-
-        return textView;
-    }
-
     public static LinearLayout fastLinearLayout(Context context, int orientation, int padding) {
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(orientation);
         int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, padding, context.getResources().getDisplayMetrics());
         layout.setPadding(pad, pad, pad, pad);
-
         return layout;
     }
 
@@ -300,6 +258,7 @@ public class CommonUtils {
                         "\nDevice: " + android.os.Build.DEVICE +
                         "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
                         "\nApplication version: " + version);
+
         try {
             activity.startActivity(Intent.createChooser(intent, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -311,12 +270,9 @@ public class CommonUtils {
         if (sec == null) return "∞";
 
         int day = (int) TimeUnit.SECONDS.toDays(sec);
-        long hours = TimeUnit.SECONDS.toHours(sec) -
-                TimeUnit.DAYS.toHours(day);
-        long minute = TimeUnit.SECONDS.toMinutes(sec) -
-                TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(sec));
-        long second = TimeUnit.SECONDS.toSeconds(sec) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(sec));
+        long hours = TimeUnit.SECONDS.toHours(sec) - TimeUnit.DAYS.toHours(day);
+        long minute = TimeUnit.SECONDS.toMinutes(sec) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(sec));
+        long second = TimeUnit.SECONDS.toSeconds(sec) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(sec));
 
         if (day > 0) {
             if (day > 1000) {
@@ -363,8 +319,7 @@ public class CommonUtils {
     }
 
     public static void secretLog(Context context, Throwable exx) {
-        if (DEBUG)
-            exx.printStackTrace();
+        if (DEBUG) exx.printStackTrace();
 
         try {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND);
@@ -378,16 +333,13 @@ public class CommonUtils {
     }
 
     public static void logMe(Context context, Throwable ex) {
-        if (DEBUG)
-            ex.printStackTrace();
-        if (ex == null)
-            return;
+        if (DEBUG) ex.printStackTrace();
+        if (ex == null) return;
         logMe(context, ex.getMessage(), true);
     }
 
     public static void logMe(Context context, String message, boolean isError) {
-        if (message == null)
-            message = "No message given";
+        if (message == null) message = "No message given";
 
         if (DEBUG)
             if (isError) System.err.println(message);
@@ -409,8 +361,7 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final String text, final int duration) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -420,8 +371,7 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final String text, final int duration, Runnable extra) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -432,8 +382,7 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -444,8 +393,7 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final String message_extras) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -457,8 +405,7 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -466,16 +413,14 @@ public class CommonUtils {
             }
         });
 
-        if (exception == null)
-            return;
+        if (exception == null) return;
 
         CommonUtils.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
         CommonUtils.secretLog(context, exception);
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final String message_extras, Runnable extra) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -487,8 +432,7 @@ public class CommonUtils {
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception, Runnable extra) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -497,16 +441,14 @@ public class CommonUtils {
         });
         context.runOnUiThread(extra);
 
-        if (exception == null)
-            return;
+        if (exception == null) return;
 
         CommonUtils.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
         CommonUtils.secretLog(context, exception);
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, Runnable extra) {
-        if (context == null)
-            return;
+        if (context == null) return;
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {

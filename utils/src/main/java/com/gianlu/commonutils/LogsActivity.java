@@ -203,8 +203,7 @@ public class LogsActivity extends AppCompatActivity {
                     break;
             }
             linearLayout.addView(type);
-            linearLayout.addView(CommonUtils.fastTextView(LogsActivity.this, item.getMessage()));
-
+            linearLayout.addView(new SuperTextView(LogsActivity.this, item.getMessage()));
 
             return linearLayout;
         }
