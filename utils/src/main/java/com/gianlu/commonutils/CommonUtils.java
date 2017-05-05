@@ -1,12 +1,12 @@
 package com.gianlu.commonutils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -24,17 +24,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -42,8 +41,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused,WeakerAccess")
 @Keep
 public class CommonUtils {
-    @SuppressWarnings("CanBeFinal")
-    public static boolean DEBUG = BuildConfig.DEBUG;
+    private static boolean DEBUG = BuildConfig.DEBUG;
 
     private static String pickCountryURL(boolean global) {
         String country = Locale.getDefault().getCountry();
@@ -259,11 +257,31 @@ public class CommonUtils {
                         "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
                         "\nApplication version: " + version);
 
+        Logging.LogFile log = Logging.getLatestLogFile(activity);
+        if (log != null) {
+            try {
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(activity, log)));
+            } catch (ParseException | IOException ex) {
+                CommonUtils.UIToast(activity, ToastMessage.FATAL_EXCEPTION, ex);
+            }
+        }
+
         try {
             activity.startActivity(Intent.createChooser(intent, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
             CommonUtils.UIToast(activity, ToastMessage.NO_EMAIL_CLIENT);
         }
+    }
+
+    public static void copyFile(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+        in.close();
+        out.close();
     }
 
     public static String timeFormatter(Long sec) {
@@ -294,65 +312,6 @@ public class CommonUtils {
                     }
                 }
             }
-        }
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @SuppressLint("SimpleDateFormat")
-    public static void logCleaner(Context context) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -7);
-
-        for (File file : context.getFilesDir().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                return s.toLowerCase().endsWith(".log") || s.toLowerCase().endsWith(".secret");
-            }
-        })) {
-            try {
-                if (new SimpleDateFormat("d-LL-yyyy").parse(file.getName().replace(".log", "").replace(".secret", "")).before(cal.getTime())) {
-                    file.delete();
-                }
-            } catch (ParseException ignored) {
-            }
-        }
-    }
-
-    public static void secretLog(Context context, Throwable exx) {
-        if (DEBUG) exx.printStackTrace();
-
-        try {
-            FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
-            osw.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + exx.toString() + "\n" + Arrays.toString(exx.getStackTrace()) + "\n\n");
-            osw.flush();
-            osw.close();
-        } catch (IOException ignored) {
-        }
-    }
-
-    public static void logMe(Context context, Throwable ex) {
-        if (DEBUG) ex.printStackTrace();
-        if (ex == null) return;
-        logMe(context, ex.getMessage(), true);
-    }
-
-    public static void logMe(Context context, String message, boolean isError) {
-        if (message == null) message = "No message given";
-
-        if (DEBUG)
-            if (isError) System.err.println(message);
-            else System.out.println(message);
-
-        try {
-            FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".log", Context.MODE_APPEND);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
-            osw.write((isError ? "--ERROR--" : "--INFO--") + new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + message.replace("\n", " ") + "\n");
-            osw.flush();
-            osw.close();
-        } catch (IOException ignored) {
         }
     }
 
@@ -389,7 +348,7 @@ public class CommonUtils {
                 Toast.makeText(context, message.toString() + (message.isError() ? " See logs for more..." : ""), Toast.LENGTH_SHORT).show();
             }
         });
-        CommonUtils.logMe(context, message.toString(), message.isError());
+        Logging.logMe(context, message.toString(), message.isError());
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final String message_extras) {
@@ -401,7 +360,7 @@ public class CommonUtils {
             }
         });
 
-        CommonUtils.logMe(context, message + " Details: " + message_extras, message.isError());
+        Logging.logMe(context, message + " Details: " + message_extras, message.isError());
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception) {
@@ -415,8 +374,8 @@ public class CommonUtils {
 
         if (exception == null) return;
 
-        CommonUtils.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
-        CommonUtils.secretLog(context, exception);
+        Logging.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
+        Logging.secretLog(context, exception);
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final String message_extras, Runnable extra) {
@@ -428,7 +387,7 @@ public class CommonUtils {
             }
         });
         context.runOnUiThread(extra);
-        CommonUtils.logMe(context, message + " Details: " + message_extras, message.isError());
+        Logging.logMe(context, message + " Details: " + message_extras, message.isError());
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception, Runnable extra) {
@@ -443,8 +402,8 @@ public class CommonUtils {
 
         if (exception == null) return;
 
-        CommonUtils.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
-        CommonUtils.secretLog(context, exception);
+        Logging.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
+        Logging.secretLog(context, exception);
     }
 
     public static void UIToast(final Activity context, final ToastMessage message, Runnable extra) {
@@ -456,13 +415,22 @@ public class CommonUtils {
             }
         });
         context.runOnUiThread(extra);
-        CommonUtils.logMe(context, message.toString(), message.isError());
+        Logging.logMe(context, message.toString(), message.isError());
     }
 
     public static SimpleDateFormat getVerbalDateFormatter() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf;
+    }
+
+    public static boolean isDebug() {
+        return DEBUG;
+    }
+
+    public static void setDebug(boolean debug) {
+        CommonUtils.DEBUG = debug;
+        Logging.DEBUG = debug;
     }
 
     @Keep

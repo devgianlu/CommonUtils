@@ -190,7 +190,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                     if (listener != null && maxPages != -1)
                         listener.onFailedLoadingContent(ex);
 
-                    if (CommonUtils.DEBUG) ex.printStackTrace();
+                    if (CommonUtils.isDebug()) ex.printStackTrace();
                 }
             });
         }
