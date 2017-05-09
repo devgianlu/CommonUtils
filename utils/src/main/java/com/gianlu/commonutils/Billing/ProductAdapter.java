@@ -1,7 +1,6 @@
 package com.gianlu.commonutils.Billing;
 
 import android.content.Context;
-import android.support.annotation.Keep;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import com.gianlu.commonutils.R;
 import java.util.List;
 
 @SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private final List<Product> products;
     private final IAdapter handler;

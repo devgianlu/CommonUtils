@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/errorLayout_container"
+    android:id="@+id/messageLayout_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -8,14 +8,14 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/messageLayout_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
-        android:alpha="0.54"
-        android:src="@drawable/ic_error_outline_black_48dp" />
+        android:alpha="0.54" />
 
     <TextView
-        android:id="@+id/errorLayout_message"
+        android:id="@+id/messageLayout_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"

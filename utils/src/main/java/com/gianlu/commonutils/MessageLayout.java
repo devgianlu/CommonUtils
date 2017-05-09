@@ -2,24 +2,24 @@ package com.gianlu.commonutils;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Keep;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-@Keep
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class ErrorLayout {
-    public static void show(final ViewGroup parent, final String errorMessage) {
+public class MessageLayout {
+    public static void show(final ViewGroup parent, final String message, @DrawableRes final int icon) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            _show(parent, errorMessage);
+            _show(parent, message, icon);
         } else {
             new Handler(parent.getContext().getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    _show(parent, errorMessage);
+                    _show(parent, message, icon);
                 }
             });
         }
@@ -38,19 +38,21 @@ public class ErrorLayout {
         }
     }
 
-    private static void _show(ViewGroup parent, String errorMessage) {
-        LinearLayout container = (LinearLayout) parent.findViewById(R.id.errorLayout_container);
-        TextView message = (TextView) container.findViewById(R.id.errorLayout_message);
+    private static void _show(ViewGroup parent, String errorMessage, @DrawableRes int iconRes) {
+        LinearLayout container = (LinearLayout) parent.findViewById(R.id.messageLayout_container);
+        TextView message = (TextView) container.findViewById(R.id.messageLayout_message);
         message.setText(errorMessage);
+        ImageView icon = (ImageView) container.findViewById(R.id.messageLayout_icon);
+        icon.setImageResource(iconRes);
         container.setVisibility(View.VISIBLE);
     }
 
     public static void _hide(ViewGroup parent) {
-        LinearLayout container = (LinearLayout) parent.findViewById(R.id.errorLayout_container);
+        LinearLayout container = (LinearLayout) parent.findViewById(R.id.messageLayout_container);
         container.setVisibility(View.VISIBLE);
     }
 
-    public static void show(ViewGroup parent, @StringRes int errorMessage) {
-        show(parent, parent.getContext().getString(errorMessage));
+    public static void show(ViewGroup parent, @StringRes int message, @DrawableRes int icon) {
+        show(parent, parent.getContext().getString(message), icon);
     }
 }

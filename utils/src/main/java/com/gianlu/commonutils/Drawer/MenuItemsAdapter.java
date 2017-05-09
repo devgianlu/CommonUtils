@@ -3,7 +3,6 @@ package com.gianlu.commonutils.Drawer;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Keep;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@Keep
 @SuppressWarnings({"unused", "WeakerAccess"})
 class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int ITEM_NORMAL = 0;

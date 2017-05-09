@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-@Keep
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Logging {
     public static boolean DEBUG = BuildConfig.DEBUG;

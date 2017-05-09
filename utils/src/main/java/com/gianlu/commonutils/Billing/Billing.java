@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class Billing {
     public static final int RESULT_BILLING_UNAVAILABLE = 3;
     private static final ArrayList<String> donationProducts = new ArrayList<>(Arrays.asList(

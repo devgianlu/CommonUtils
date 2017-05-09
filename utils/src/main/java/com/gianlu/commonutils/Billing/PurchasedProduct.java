@@ -1,12 +1,9 @@
 package com.gianlu.commonutils.Billing;
 
-import android.support.annotation.Keep;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class PurchasedProduct {
     public static final int PURCHASED = 0;
     public static final int CANCELED = 1;

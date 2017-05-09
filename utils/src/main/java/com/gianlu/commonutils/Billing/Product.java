@@ -1,13 +1,11 @@
 package com.gianlu.commonutils.Billing;
 
-import android.support.annotation.Keep;
 import android.text.Html;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class Product {
     public String productId;
     public String price;

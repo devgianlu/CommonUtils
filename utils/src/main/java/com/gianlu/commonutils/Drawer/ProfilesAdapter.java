@@ -1,9 +1,11 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +18,25 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@Keep
 @SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> {
+public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> {
     protected final Context context;
-    protected final List<BaseDrawerProfile> profiles;
+    protected final List<P> profiles;
     private final LayoutInflater inflater;
     private final int ripple_dark;
-    protected IAdapter listener;
+    private final int colorAccent;
+    protected IAdapter<P> listener;
 
-    public ProfilesAdapter(Context context, List<BaseDrawerProfile> profiles, @DrawableRes int ripple_dark, IAdapter listener) {
+    public ProfilesAdapter(Context context, List<P> profiles, @DrawableRes int ripple_dark, @ColorRes int colorAccent, IAdapter<P> listener) {
         this.context = context;
         this.profiles = profiles;
         this.inflater = LayoutInflater.from(context);
         this.ripple_dark = ripple_dark;
+        this.colorAccent = colorAccent;
         this.listener = listener;
     }
 
-    public List<BaseDrawerProfile> getItems() {
+    public List<P> getItems() {
         return profiles;
     }
 
@@ -48,13 +51,12 @@ public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapt
             else runTest(i, null);
     }
 
-    protected abstract BaseDrawerProfile getItem(int pos);
+    protected abstract P getItem(int pos);
 
     protected abstract void runTest(int pos, IFinished tester);
 
-    @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final BaseDrawerProfile profile = getItem(position);
+        final P profile = getItem(position);
 
         holder.name.setText(profile.getProfileName());
         holder.secondary.setText(profile.getSecondaryText());
@@ -72,12 +74,12 @@ public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapt
         return profiles.size();
     }
 
-    public void setDrawerListener(IAdapter listener) {
+    public void setDrawerListener(IAdapter<P> listener) {
         this.listener = listener;
     }
 
-    public interface IAdapter {
-        void onProfileSelected(BaseDrawerProfile profile);
+    public interface IAdapter<P extends BaseDrawerProfile> {
+        void onProfileSelected(P profile);
     }
 
     public interface IFinished {
@@ -97,6 +99,7 @@ public abstract class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapt
             itemView.setBackgroundResource(ripple_dark);
 
             loading = (ProgressBar) itemView.findViewById(R.id.drawerProfileItem_loading);
+            loading.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(context, colorAccent)));
             status = (ImageView) itemView.findViewById(R.id.drawerProfileItem_status);
             ping = (TextView) itemView.findViewById(R.id.drawerProfileItem_ping);
             globalName = (TextView) itemView.findViewById(R.id.drawerProfileItem_globalName);

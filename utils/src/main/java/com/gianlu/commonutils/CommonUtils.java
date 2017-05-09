@@ -34,12 +34,12 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class CommonUtils {
     private static boolean DEBUG = BuildConfig.DEBUG;
 
@@ -431,6 +431,17 @@ public class CommonUtils {
     public static void setDebug(boolean debug) {
         CommonUtils.DEBUG = debug;
         Logging.DEBUG = debug;
+    }
+
+    public static String join(List<?> objs, String separator) {
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < objs.size(); i++) {
+            builder.append(objs.get(i).toString());
+            if (i < objs.size() - 1) builder.append(", ");
+        }
+
+        return builder.toString();
     }
 
     @Keep
