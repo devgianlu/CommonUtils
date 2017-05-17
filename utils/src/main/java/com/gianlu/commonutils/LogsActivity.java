@@ -34,7 +34,7 @@ public class LogsActivity extends AppCompatActivity {
         final Spinner spinner = (Spinner) findViewById(R.id.logs_spinner);
         TextView empty = (TextView) findViewById(R.id.logs_empty);
         final ListView list = (ListView) findViewById(R.id.logs_list);
-        final List<Logging.LogFile> logFiles = Logging.listLogFiles(this);
+        final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, false);
 
         if (logFiles.isEmpty()) {
             empty.setVisibility(View.VISIBLE);

@@ -54,8 +54,8 @@ public class Logging {
     }
 
     @Nullable
-    public static LogFile getLatestLogFile(Context context) {
-        List<LogFile> logs = listLogFiles(context);
+    public static LogFile getLatestLogFile(Context context, boolean secret) {
+        List<LogFile> logs = listLogFiles(context, secret);
         return logs.isEmpty() ? null : logs.get(0);
     }
 
@@ -65,11 +65,11 @@ public class Logging {
         return dest;
     }
 
-    public static List<LogFile> listLogFiles(Context context) {
+    public static List<LogFile> listLogFiles(Context context, final boolean secret) {
         final File files[] = context.getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file, String s) {
-                return s.toLowerCase().endsWith(".log");
+                return s.toLowerCase().endsWith(secret ? ".secret" : ".log");
             }
         });
 

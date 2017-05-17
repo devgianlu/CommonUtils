@@ -129,6 +129,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         profiles.addAll(newProfiles);
 
         setupProfiles();
+        profilesAdapter.startProfilesTest(null);
         return this;
     }
 
@@ -359,6 +360,10 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         secondaryText.setText(profile.getSecondaryText());
         currAccount.setInitials(profile.getInitials());
         return this;
+    }
+
+    public boolean isOpen() {
+        return drawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
     public interface IDrawerListener<P extends BaseDrawerProfile> {

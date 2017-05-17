@@ -2,6 +2,7 @@ package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -22,17 +23,19 @@ import java.util.List;
 public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> {
     protected final Context context;
     protected final List<P> profiles;
+    protected final boolean black;
     private final LayoutInflater inflater;
     private final int ripple_dark;
     private final int colorAccent;
     protected IAdapter<P> listener;
 
-    public ProfilesAdapter(Context context, List<P> profiles, @DrawableRes int ripple_dark, @ColorRes int colorAccent, IAdapter<P> listener) {
+    public ProfilesAdapter(Context context, List<P> profiles, @DrawableRes int ripple_dark, @ColorRes int colorAccent, boolean black, IAdapter<P> listener) {
         this.context = context;
         this.profiles = profiles;
         this.inflater = LayoutInflater.from(context);
         this.ripple_dark = ripple_dark;
         this.colorAccent = colorAccent;
+        this.black = black;
         this.listener = listener;
     }
 
@@ -105,6 +108,15 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
             globalName = (TextView) itemView.findViewById(R.id.drawerProfileItem_globalName);
             name = (TextView) itemView.findViewById(R.id.drawerProfileItem_name);
             secondary = (TextView) itemView.findViewById(R.id.drawerProfileItem_secondary);
+
+            if (!black) {
+                ping.setTextColor(Color.WHITE);
+                ping.setAlpha(.7f);
+                globalName.setTextColor(Color.WHITE);
+                name.setTextColor(Color.WHITE);
+                secondary.setTextColor(Color.WHITE);
+                secondary.setAlpha(.7f);
+            }
         }
     }
 }

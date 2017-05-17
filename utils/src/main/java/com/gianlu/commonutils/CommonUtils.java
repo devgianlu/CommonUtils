@@ -215,27 +215,25 @@ public class CommonUtils {
         return fastIndeterminateProgressDialog(context, context.getString(message));
     }
 
-    public static String dimensionFormatter(float v) {
+    public static String dimensionFormatter(float v, boolean si) {
         if (v <= 0) {
             return "0 B";
         } else {
             final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
-            int digitGroups = (int) (Math.log10(v) / Math.log10(1000));
-            if (digitGroups > 4)
-                return "∞ B";
-            return new DecimalFormat("#,##0.#").format(v / Math.pow(1000, digitGroups)) + " " + units[digitGroups];
+            int digitGroups = (int) (Math.log10(v) / Math.log10(si ? 1000 : 1024));
+            if (digitGroups > 4) return "∞ B";
+            return new DecimalFormat("#,##0.#").format(v / Math.pow(si ? 1000 : 1024, digitGroups)) + " " + units[digitGroups];
         }
     }
 
-    public static String speedFormatter(float v) {
+    public static String speedFormatter(float v, boolean si) {
         if (v <= 0) {
             return "0 B/s";
         } else {
             final String[] units = new String[]{"B/s", "KB/s", "MB/s", "GB/s", "TB/s"};
-            int digitGroups = (int) (Math.log10(v) / Math.log10(1000));
-            if (digitGroups > 4)
-                return "∞ B/s";
-            return new DecimalFormat("#,##0.#").format(v / Math.pow(1000, digitGroups)) + " " + units[digitGroups];
+            int digitGroups = (int) (Math.log10(v) / Math.log10(si ? 1000 : 1024));
+            if (digitGroups > 4) return "∞ B/s";
+            return new DecimalFormat("#,##0.#").format(v / Math.pow(si ? 1000 : 1024, digitGroups)) + " " + units[digitGroups];
         }
     }
 
@@ -257,7 +255,7 @@ public class CommonUtils {
                         "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
                         "\nApplication version: " + version);
 
-        Logging.LogFile log = Logging.getLatestLogFile(activity);
+        Logging.LogFile log = Logging.getLatestLogFile(activity, true);
         if (log != null) {
             try {
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(activity, log)));
@@ -284,9 +282,7 @@ public class CommonUtils {
         out.close();
     }
 
-    public static String timeFormatter(Long sec) {
-        if (sec == null) return "∞";
-
+    public static String timeFormatter(long sec) {
         int day = (int) TimeUnit.SECONDS.toDays(sec);
         long hours = TimeUnit.SECONDS.toHours(sec) - TimeUnit.DAYS.toHours(day);
         long minute = TimeUnit.SECONDS.toMinutes(sec) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(sec));
@@ -420,6 +416,12 @@ public class CommonUtils {
 
     public static SimpleDateFormat getVerbalDateFormatter() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf;
+    }
+
+    public static SimpleDateFormat getFullDateFormatter() {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss dd/MM/yyyy", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf;
     }
