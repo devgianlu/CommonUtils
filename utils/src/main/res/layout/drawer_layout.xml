@@ -7,9 +7,9 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="156dp">
+        android:layout_height="180dp">
 
         <ImageView
             android:id="@+id/drawerHeader_background"
@@ -17,61 +17,66 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
 
-        <com.gianlu.commonutils.LetterIconBig
-            android:id="@+id/drawerHeader_currentAccount"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:elevation="2dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/drawerHeader_currentAccount"
-            android:layout_toStartOf="@+id/drawerHeader_action"
-            android:gravity="center_vertical"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingEnd="56dp">
+            android:paddingTop="24dp">
 
-            <TextView
-                android:id="@+id/drawerHeader_profileName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <com.gianlu.commonutils.LetterIconBig
+                android:id="@+id/drawerHeader_currentAccount"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="start|bottom"
+                android:layout_marginBottom="4dp"
                 android:layout_marginStart="16dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:elevation="2dp" />
 
-            <TextView
-                android:id="@+id/drawerHeader_profileSecondaryText"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingEnd="56dp">
+
+                    <TextView
+                        android:id="@+id/drawerHeader_profileName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/drawerHeader_profileSecondaryText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:ellipsize="none"
+                        android:lines="1"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/drawerHeader_action"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp" />
+            </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/drawerHeader_action"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="16dp" />
-    </RelativeLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,7 +87,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/drawer_shadow_bottom" />
+            android:background="@drawable/shadow_bottom" />
 
         <FrameLayout
             android:layout_width="match_parent"

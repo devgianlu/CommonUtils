@@ -34,6 +34,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -433,6 +434,10 @@ public class CommonUtils {
     public static void setDebug(boolean debug) {
         CommonUtils.DEBUG = debug;
         Logging.DEBUG = debug;
+    }
+
+    public static String join(Object[] objs, String separator) {
+        return join(Arrays.asList(objs), separator);
     }
 
     public static String join(List<?> objs, String separator) {

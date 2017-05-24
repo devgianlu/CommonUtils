@@ -13,6 +13,7 @@ import android.widget.TextView;
 public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheetCallback {
     protected final TextView title;
     protected final FrameLayout content;
+    private final View mask;
     private final BottomSheetBehavior behavior;
     protected E current;
 
@@ -24,6 +25,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         behavior.setHideable(true);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+        mask = parent.findViewById(R.id.bottomSheet_mask);
         title = (TextView) sheet.findViewById(R.id.bottomSheet_title);
         content = (FrameLayout) sheet.findViewById(R.id.bottomSheet_content);
         LayoutInflater.from(sheet.getContext()).inflate(layoutRes, content, true);
@@ -36,13 +38,25 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
                 behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
+
+        mask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapse();
+            }
+        });
     }
 
     protected abstract int getRippleDark();
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {
-        if (newState == BottomSheetBehavior.STATE_COLLAPSED) behavior.setPeekHeight(0);
+        if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+            behavior.setPeekHeight(0);
+            mask.setVisibility(View.GONE);
+        } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+            mask.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -76,6 +90,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     }
 
     public void update(E item) {
+        if (item == null) return;
         updateView(item);
     }
 
