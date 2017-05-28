@@ -1,5 +1,7 @@
 package com.gianlu.commonutils;
 
+import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheetCallback {
     protected final TextView title;
+    protected final Context context;
+    protected final Handler mainHandler;
     protected final FrameLayout content;
     private final View mask;
     private final BottomSheetBehavior behavior;
@@ -19,6 +23,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
 
     protected BaseBottomSheet(View parent, @LayoutRes int layoutRes) {
         View sheet = parent.findViewById(R.id.bottomSheet_container);
+        context = sheet.getContext();
         behavior = BottomSheetBehavior.from(sheet);
         behavior.setBottomSheetCallback(this);
         behavior.setPeekHeight(0);
@@ -28,7 +33,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         mask = parent.findViewById(R.id.bottomSheet_mask);
         title = (TextView) sheet.findViewById(R.id.bottomSheet_title);
         content = (FrameLayout) sheet.findViewById(R.id.bottomSheet_content);
-        LayoutInflater.from(sheet.getContext()).inflate(layoutRes, content, true);
+        LayoutInflater.from(context).inflate(layoutRes, content, true);
 
         ImageButton close = (ImageButton) sheet.findViewById(R.id.bottomSheet_close);
         close.setBackgroundResource(getRippleDark());
@@ -45,6 +50,8 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
                 collapse();
             }
         });
+
+        mainHandler = new Handler(context.getMainLooper());
     }
 
     protected abstract int getRippleDark();
