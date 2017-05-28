@@ -10,7 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-// TODO: Handle item removing
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, E extends Filterable<F>, S, F> extends RecyclerView.Adapter<VH> {
     protected final SortingArrayList objs;
@@ -59,6 +58,26 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
                 super.notifyItemChanged(res.first, payload);
             else super.notifyItemMoved(res.first, res.second);
         }
+    }
+
+    private void notifyItemRemoved(E item) {
+        originalObjs.remove(item);
+
+        int pos = objs.indexOf(item);
+        if (pos != -1) {
+            objs.remove(pos);
+            super.notifyItemRemoved(pos);
+        }
+    }
+
+    public final void notifyItemsChanged(List<E> items) {
+        for (E obj : new ArrayList<>(objs))
+            if (!items.contains(obj))
+                notifyItemRemoved(obj);
+
+        for (E item : items) notifyItemChanged(item);
+
+        shouldUpdateItemCount(objs.size());
     }
 
     public final void setFilters(List<F> newFilters) {
