@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:clickable="true"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <FrameLayout
@@ -63,7 +62,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:ellipsize="none"
+                        android:ellipsize="end"
                         android:lines="1"
                         android:textColor="@color/white"
                         android:textSize="14sp" />

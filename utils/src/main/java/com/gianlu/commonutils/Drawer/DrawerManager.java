@@ -3,7 +3,6 @@ package com.gianlu.commonutils.Drawer;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -52,10 +51,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
         ImageView headerBackground = (ImageView) realLayout.findViewById(R.id.drawerHeader_background);
         headerBackground.setImageResource(setup.getHeaderBackground());
-
-        initializer.activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
-        initializer.activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        // FIXME: initializer.activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         setupMenuItems();
         if (initializer.singleProfile != null && initializer.logoutHandler != null) {
