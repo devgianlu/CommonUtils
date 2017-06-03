@@ -1,6 +1,7 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 
@@ -25,7 +26,7 @@ public class Initializer<P extends BaseDrawerProfile> {
         this.setup = setup;
     }
 
-    public Initializer<P> hasSingleProfile(P profile, DrawerManager.ILogout handler) {
+    public Initializer<P> hasSingleProfile(P profile, @Nullable DrawerManager.ILogout handler) {
         this.singleProfile = profile;
         this.logoutHandler = handler;
         return this;

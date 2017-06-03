@@ -2,6 +2,7 @@ package com.gianlu.commonutils.Sorting;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
@@ -27,6 +28,9 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         shouldUpdateItemCount(objs.size());
     }
 
+    @Nullable
+    protected abstract RecyclerView getRecyclerView();
+
     private void processFilters() {
         objs.clear();
 
@@ -35,7 +39,13 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
                 objs.add(obj);
 
         shouldUpdateItemCount(objs.size());
-        notifyDataSetChanged();
+        super.notifyDataSetChanged();
+        scrollToTop();
+    }
+
+    private void scrollToTop() {
+        RecyclerView recyclerView = getRecyclerView();
+        if (recyclerView != null) recyclerView.scrollToPosition(0);
     }
 
     private boolean notifyItemChangedOriginal(E payload) {
@@ -99,6 +109,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     public final void sort(S sorting) {
         objs.sort(sorting);
         super.notifyDataSetChanged();
+        scrollToTop();
     }
 
     public final class SortingArrayList extends BaseSortingArrayList<E, S> {

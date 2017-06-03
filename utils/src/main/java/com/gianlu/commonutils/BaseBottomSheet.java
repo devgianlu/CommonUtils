@@ -1,6 +1,7 @@
 package com.gianlu.commonutils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -31,6 +32,9 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         mask = parent.findViewById(R.id.bottomSheet_mask);
+        mask.setBackgroundColor(Color.BLACK);
+        mask.setAlpha(.2f);
+
         title = (TextView) sheet.findViewById(R.id.bottomSheet_title);
         content = (FrameLayout) sheet.findViewById(R.id.bottomSheet_content);
         LayoutInflater.from(context).inflate(layoutRes, content, true);
@@ -38,13 +42,6 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         ImageButton close = (ImageButton) sheet.findViewById(R.id.bottomSheet_close);
         close.setBackgroundResource(getRippleDark());
         close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
-
-        mask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 collapse();
@@ -62,7 +59,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
             behavior.setPeekHeight(0);
             mask.setVisibility(View.GONE);
         } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-            mask.setVisibility(View.VISIBLE);
+            mask.setAlpha(.2f);
         }
     }
 
@@ -79,6 +76,16 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         setupViewInternal(item);
         updateViewInternal(item);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        mask.setAlpha(0);
+        mask.setVisibility(View.VISIBLE);
+        mask.animate().alpha(.2f).setDuration(500).start();
+        mask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapse();
+            }
+        });
     }
 
     private void setupViewInternal(E item) {
@@ -104,5 +111,8 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     public void collapse() {
         current = null;
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        mask.animate().alpha(0).setDuration(500).start();
+        mask.setClickable(false);
     }
 }

@@ -53,7 +53,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         headerBackground.setImageResource(setup.getHeaderBackground());
 
         setupMenuItems();
-        if (initializer.singleProfile != null && initializer.logoutHandler != null) {
+        if (initializer.singleProfile != null) {
             setupSingleProfile(initializer.logoutHandler);
             setCurrentProfile(initializer.singleProfile);
         } else {
@@ -84,7 +84,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logoutHandler.logout();
+                if (logoutHandler != null) logoutHandler.logout();
             }
         });
     }
@@ -161,7 +161,8 @@ public class DrawerManager<P extends BaseDrawerProfile> {
                                 @Override
                                 public void onAnimationEnd(Animator animator) {
                                     profileContainer.setAlpha(1);
-                                    profilesAdapter.startProfilesTest();
+                                    if (profilesAdapter != null)
+                                        profilesAdapter.startProfilesTest();
                                 }
 
                                 @Override
