@@ -17,6 +17,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     private final S defaultSorting;
     private final List<E> originalObjs;
     private final List<F> filters;
+    private String query;
 
     public OrderedRecyclerViewAdapter(List<E> objs, S defaultSorting) {
         this.originalObjs = objs;
@@ -43,6 +44,24 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         scrollToTop();
     }
 
+    private void processQuery() {
+        objs.clear();
+
+        if (query == null) {
+            objs.addAll(originalObjs);
+        } else {
+            for (E obj : originalObjs)
+                if (matchQuery(obj, query))
+                    objs.add(obj);
+        }
+
+        shouldUpdateItemCount(objs.size());
+        super.notifyDataSetChanged();
+        scrollToTop();
+    }
+
+    protected abstract boolean matchQuery(E item, @Nullable String query);
+
     private void scrollToTop() {
         RecyclerView recyclerView = getRecyclerView();
         if (recyclerView != null) recyclerView.scrollToPosition(0);
@@ -61,7 +80,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     }
 
     public final void notifyItemChanged(E payload) {
-        if (!notifyItemChangedOriginal(payload) && !filters.contains(payload.getFilterable())) {
+        if (!notifyItemChangedOriginal(payload) && !filters.contains(payload.getFilterable()) && matchQuery(payload, query)) {
             Pair<Integer, Integer> res = objs.addAndSort(payload);
             if (res.first == -1) super.notifyItemInserted(res.second);
             else if (Objects.equals(res.first, res.second))
@@ -94,6 +113,11 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         filters.clear();
         filters.addAll(newFilters);
         processFilters();
+    }
+
+    public final void filterWithQuery(String query) {
+        this.query = query;
+        processQuery();
     }
 
     @Override
