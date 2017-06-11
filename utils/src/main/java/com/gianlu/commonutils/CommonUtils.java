@@ -12,13 +12,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -154,26 +151,9 @@ public class CommonUtils {
         v.setEllipsize(TextUtils.TruncateAt.MARQUEE);
     }
 
-    public static void animateCollapsingArrowList(ImageButton view, boolean expanded) {
-        if (expanded) view.animate().rotation(0).setDuration(200).start();
-        else view.animate().rotation(90).setDuration(200).start();
-    }
-
     public static void animateCollapsingArrowBellows(ImageButton view, boolean expanded) {
         if (expanded) view.animate().rotation(0).setDuration(200).start();
         else view.animate().rotation(180).setDuration(200).start();
-    }
-
-    public static View fastHorizontalLinearLayoutWeightDummy(Context context, int weight) {
-        View view = new View(context);
-        view.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, weight));
-        return view;
-    }
-
-    public static View fastVerticalLinearLayoutWeightDummy(Context context, int weight) {
-        View view = new View(context);
-        view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, weight));
-        return view;
     }
 
     public static void showDialog(Activity activity, final Dialog dialog) {
@@ -194,14 +174,6 @@ public class CommonUtils {
                 builder.create().show();
             }
         });
-    }
-
-    public static LinearLayout fastLinearLayout(Context context, int orientation, int padding) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(orientation);
-        int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, padding, context.getResources().getDisplayMetrics());
-        layout.setPadding(pad, pad, pad, pad);
-        return layout;
     }
 
     private static ProgressDialog fastIndeterminateProgressDialog(Context context, String message) {
@@ -441,11 +413,12 @@ public class CommonUtils {
     }
 
     public static String join(List<?> objs, String separator) {
+        if (objs == null) return "";
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < objs.size(); i++) {
             builder.append(objs.get(i).toString());
-            if (i < objs.size() - 1) builder.append(", ");
+            if (i < objs.size() - 1) builder.append(separator);
         }
 
         return builder.toString();

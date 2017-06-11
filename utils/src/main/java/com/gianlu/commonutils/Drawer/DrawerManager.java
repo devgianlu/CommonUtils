@@ -353,9 +353,9 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         TextView profileName = (TextView) drawerLayout.findViewById(R.id.drawerHeader_profileName);
         TextView secondaryText = (TextView) drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
 
-        profileName.setText(profile.getProfileName());
-        secondaryText.setText(profile.getSecondaryText());
-        currAccount.setInitials(profile.getInitials());
+        profileName.setText(profile.getProfileName(context));
+        secondaryText.setText(profile.getSecondaryText(context));
+        currAccount.setInitials(profile.getInitials(context));
         return this;
     }
 

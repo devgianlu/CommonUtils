@@ -60,8 +60,8 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
     public void onBindViewHolder(ViewHolder holder, int position) {
         final P profile = getItem(position);
 
-        holder.name.setText(profile.getProfileName());
-        holder.secondary.setText(profile.getSecondaryText());
+        holder.name.setText(profile.getProfileName(context));
+        holder.secondary.setText(profile.getSecondaryText(context));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

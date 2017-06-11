@@ -20,9 +20,13 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     protected final FrameLayout content;
     private final View mask;
     private final BottomSheetBehavior behavior;
+    private final int layoutRes;
+    private final boolean forceLayoutInflating;
     protected E current;
 
-    protected BaseBottomSheet(View parent, @LayoutRes int layoutRes) {
+    protected BaseBottomSheet(View parent, @LayoutRes int layoutRes, boolean forceLayoutInflating) {
+        this.layoutRes = layoutRes;
+        this.forceLayoutInflating = forceLayoutInflating;
         View sheet = parent.findViewById(R.id.bottomSheet_container);
         context = sheet.getContext();
         behavior = BottomSheetBehavior.from(sheet);
@@ -49,6 +53,8 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         });
 
         mainHandler = new Handler(context.getMainLooper());
+
+        bindViews();
     }
 
     protected abstract int getRippleDark();
@@ -71,7 +77,15 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         return behavior.getState() == BottomSheetBehavior.STATE_EXPANDED;
     }
 
+    public abstract void bindViews();
+
     public void expand(E item) {
+        if (forceLayoutInflating) {
+            content.removeAllViews();
+            LayoutInflater.from(context).inflate(layoutRes, content, true);
+            bindViews();
+        }
+
         current = item;
         setupViewInternal(item);
         updateViewInternal(item);
@@ -105,7 +119,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
 
     public void update(E item) {
         if (item == null) return;
-        updateView(item);
+        updateViewInternal(item);
     }
 
     public void collapse() {

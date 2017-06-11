@@ -117,8 +117,8 @@ public class Logging {
     }
 
     public static void logMe(Context context, Throwable ex) {
-        if (DEBUG) ex.printStackTrace();
         if (ex == null) return;
+        if (DEBUG) ex.printStackTrace();
         logMe(context, ex.getMessage(), true);
     }
 
