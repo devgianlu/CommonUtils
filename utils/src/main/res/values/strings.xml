@@ -13,7 +13,19 @@
     <string name="emailMe">If you want to add your opinion on what happen please email me at altomanigianluca@gmail.com by clicking the button below.</string>
     <string name="send_email">Send email</string>
     <string name="openDrawer">Open drawer</string>
+    <string name="donate">Donate</string>
     <string name="closeDrawer">Close drawer</string>
     <string name="addProfile">Add profile</string>
     <string name="editProfile">Edit profile</string>
+    <string name="donateGoogle">Donate vie Google Play</string>
+    <string name="donateGoogleSummary">Part of the money will be subtracted by Google</string>
+    <string name="donatePaypal">Donate via PayPal</string>
+    <string name="donatePaypalSummary">I will receive all the money</string>
+    <string name="about_app">About this application</string>
+    <string name="connectingBillingService">Connecting to the billing service. Please wait…</string>
+    <string name="tracking">Disable anonymous statistics</string>
+    <string name="trackingOn">No statistics will be sent to the developer.</string>
+    <string name="trackingOff">Statistics about the application behavior will be sent to the developer. (No personal data will be sent)</string>
+    <string name="app_version">Application version</string>
+    <string name="developer">Developer: Gianlu (Report bugs or any suggestion)</string>
 </resources>

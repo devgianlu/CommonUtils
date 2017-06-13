@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="trackingDisable"
+        android:summaryOff="@string/trackingOff"
+        android:summaryOn="@string/trackingOn"
+        android:title="@string/tracking" />
+
+    <Preference
+        android:key="donateGoogle"
+        android:summary="@string/donateGoogleSummary"
+        android:title="@string/donateGoogle" />
+
+    <Preference
+        android:key="donatePaypal"
+        android:summary="@string/donatePaypalSummary"
+        android:title="@string/donatePaypal" />
+
+    <Preference
+        android:key="app_version"
+        android:title="@string/app_version" />
+
+    <Preference
+        android:key="email"
+        android:summary="@string/email"
+        android:title="@string/developer" />
+</PreferenceScreen>
