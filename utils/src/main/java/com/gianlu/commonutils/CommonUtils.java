@@ -226,7 +226,8 @@ public class CommonUtils {
                         "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
                         "\nDevice: " + android.os.Build.DEVICE +
                         "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
-                        "\nApplication version: " + version);
+                        "\nApplication version: " + version +
+                        "\n\nProvide bug/feature details");
 
         Logging.LogFile log = Logging.getLatestLogFile(activity, true);
         if (log != null) {
@@ -244,15 +245,16 @@ public class CommonUtils {
         }
     }
 
-    public static void copyFile(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        OutputStream out = new FileOutputStream(dst);
-
+    public static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
         in.close();
         out.close();
+    }
+
+    public static void copyFile(File src, File dst) throws IOException {
+        copy(new FileInputStream(src), new FileOutputStream(dst));
     }
 
     public static String timeFormatter(long sec) {

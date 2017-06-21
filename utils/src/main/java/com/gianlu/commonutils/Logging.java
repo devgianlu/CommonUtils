@@ -18,10 +18,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -109,17 +110,24 @@ public class Logging {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
 
-            osw.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + exx.toString() + "\n" + Arrays.toString(exx.getStackTrace()) + "\n\n");
+            osw.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + getStackTrace(exx) + "\n\n");
             osw.flush();
             osw.close();
         } catch (IOException ignored) {
         }
     }
 
+    public static String getStackTrace(Throwable ex) {
+        StringWriter sw = new StringWriter();
+        PrintWriter writer = new PrintWriter(sw);
+        ex.printStackTrace(writer);
+        return sw.toString();
+    }
+
     public static void logMe(Context context, Throwable ex) {
         if (ex == null) return;
-        if (DEBUG) ex.printStackTrace();
         logMe(context, ex.getMessage(), true);
+        secretLog(context, ex);
     }
 
     public static void logMe(Context context, String message, boolean isError) {

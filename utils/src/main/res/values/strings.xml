@@ -17,7 +17,7 @@
     <string name="closeDrawer">Close drawer</string>
     <string name="addProfile">Add profile</string>
     <string name="editProfile">Edit profile</string>
-    <string name="donateGoogle">Donate vie Google Play</string>
+    <string name="donateGoogle">Donate via Google Play</string>
     <string name="donateGoogleSummary">Part of the money will be subtracted by Google</string>
     <string name="donatePaypal">Donate via PayPal</string>
     <string name="donatePaypalSummary">I will receive all the money</string>

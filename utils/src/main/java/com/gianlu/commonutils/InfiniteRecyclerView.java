@@ -63,20 +63,27 @@ public class InfiniteRecyclerView extends RecyclerView {
         protected final Context context;
         protected final List<ItemEnclosure<E>> items;
         private final int primary_shadow;
+        private final boolean countForSeparator;
         protected int maxPages;
         int page = 1;
         long currDay = -1;
         private IFailedLoadingContent listener;
         private boolean loading = false;
 
-        public InfiniteAdapter(Context context, List<E> items, int maxPages, @ColorInt int primary_shadow) {
+        public InfiniteAdapter(Context context, List<E> items, int maxPages, @ColorInt int primary_shadow, boolean countForSeparator) {
             this.inflater = LayoutInflater.from(context);
             this.context = context;
             this.primary_shadow = primary_shadow;
+            this.countForSeparator = countForSeparator;
             this.items = new ArrayList<>();
             this.maxPages = maxPages;
 
             populate(items);
+        }
+
+        @Override
+        public final int getItemCount() {
+            return items.size();
         }
 
         private void populate(List<E> elements) {
@@ -99,14 +106,14 @@ public class InfiniteRecyclerView extends RecyclerView {
         }
 
         @Override
-        public int getItemViewType(int position) {
+        public final int getItemViewType(int position) {
             if (items.get(position) == null) return ITEM_LOADING;
             else if (items.get(position).item == null) return ITEM_SEPARATOR;
             else return ITEM_NORMAL;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public final ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == ITEM_LOADING)
                 return new LoadingViewHolder(inflater.inflate(R.layout.loading_item, parent, false));
             else if (viewType == ITEM_SEPARATOR)
@@ -115,14 +122,41 @@ public class InfiniteRecyclerView extends RecyclerView {
                 return createViewHolder(parent);
         }
 
+        private int indexOfSeparator(Date date) {
+            for (int i = 0; i < items.size(); i++) {
+                ItemEnclosure item = items.get(i);
+                if (item.date == date && item.item == null) return i;
+            }
+
+            return -1;
+        }
+
+        private int countFor(Date date) {
+            int pos = indexOfSeparator(date);
+            if (pos == -1) return 0;
+
+            int count = 0;
+            for (int i = pos + 1; i < items.size(); i++) {
+                if (items.get(i).item == null) break;
+                else count++;
+            }
+
+            return count;
+        }
+
         @Override
         @SuppressWarnings("unchecked")
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            if (items.get(position) != null) {
-                if (items.get(position).item == null) {
+        public final void onBindViewHolder(ViewHolder holder, int position) {
+            ItemEnclosure<E> item = items.get(position);
+            if (item != null) {
+                if (item.item == null) {
                     SeparatorViewHolder separator = (SeparatorViewHolder) holder;
                     separator.line.setBackgroundColor(primary_shadow);
-                    separator.date.setText(CommonUtils.getVerbalDateFormatter().format(items.get(position).date));
+                    if (countForSeparator) {
+                        separator.date.setText(CommonUtils.getVerbalDateFormatter().format(item.date) + " (" + countFor(item.date) + ")");
+                    } else {
+                        separator.date.setText(CommonUtils.getVerbalDateFormatter().format(item.date));
+                    }
                 } else {
                     userBindViewHolder((T) holder, position);
                 }
@@ -133,11 +167,18 @@ public class InfiniteRecyclerView extends RecyclerView {
 
         protected abstract ViewHolder createViewHolder(ViewGroup parent);
 
+        private int findLastSeparator() {
+            for (int i = items.size() - 1; i >= 0; i--) {
+                ItemEnclosure item = items.get(i);
+                if (item != null && item.item == null) return i;
+            }
+
+            return -1;
+        }
+
         private void loadMoreContent() {
-            if (maxPages == -2)
-                return;
-            if ((maxPages != -1 && page > maxPages) || loading)
-                return;
+            if (maxPages == -2) return;
+            if ((maxPages != -1 && page > maxPages) || loading) return;
 
             loading = true;
 
@@ -159,7 +200,9 @@ public class InfiniteRecyclerView extends RecyclerView {
                             }
 
                             int start = items.size();
+                            int lastSeparator = findLastSeparator();
                             populate(content);
+                            if (countForSeparator && lastSeparator != -1) notifyItemChanged(lastSeparator);
                             notifyItemRangeInserted(start, content.size());
                             loading = false;
                         }
@@ -187,9 +230,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                 @Override
                 public void onFailed(Exception ex) {
                     loading = false;
-                    if (listener != null && maxPages != -1)
-                        listener.onFailedLoadingContent(ex);
-
+                    if (listener != null && maxPages != -1) listener.onFailedLoadingContent(ex);
                     if (CommonUtils.isDebug()) ex.printStackTrace();
                 }
             });

@@ -10,4 +10,16 @@
     <string name="editProfile">Modifica profilo</string>
     <string name="closeDrawer">Chiudi drawer</string>
     <string name="openDrawer">Apri drawer</string>
+    <string name="about_app">Su questa applicazione</string>
+    <string name="tracking">Disabilita le statistiche anonime</string>
+    <string name="developer">Sviluppatore: Gianlu</string>
+    <string name="app_version">Versione applicazione</string>
+    <string name="donate">Dona</string>
+    <string name="donateGoogle">Dona con Google Play</string>
+    <string name="donatePaypal">Dona con Paypal</string>
+    <string name="trackingOn">Nessuna statistica sarà inviata allo sviluppatore</string>
+    <string name="trackingOff">Statistiche del comportamento dell\'applicazione saranno inviate allo sviluppatore. (Nessun dato personale verrà inviato)</string>
+    <string name="donatePaypalSummary">Riceverò tutto il denaro</string>
+    <string name="donateGoogleSummary">Una parte del denaro sarà sottratta da Google</string>
+    <string name="connectingBillingService">Connessione al servizio di acquisto…</string>
 </resources>
