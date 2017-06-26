@@ -210,7 +210,7 @@ public class CommonUtils {
         }
     }
 
-    public static void sendEmail(Activity activity, String appName) {
+    public static void sendEmail(Activity activity, String appName, @Nullable Throwable sendEx) {
         String version;
         try {
             version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
@@ -221,13 +221,21 @@ public class CommonUtils {
         Intent intent = new Intent(Intent.ACTION_SEND)
                 .setType("message/rfc822")
                 .putExtra(Intent.EXTRA_EMAIL, new String[]{activity.getString(R.string.email)})
-                .putExtra(Intent.EXTRA_SUBJECT, appName)
-                .putExtra(Intent.EXTRA_TEXT, "OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
+                .putExtra(Intent.EXTRA_SUBJECT, appName);
+
+        String emailBody = "OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
                         "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
                         "\nDevice: " + android.os.Build.DEVICE +
                         "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
                         "\nApplication version: " + version +
-                        "\n\nProvide bug/feature details");
+                "\n\nProvide bug/feature details";
+
+        if (sendEx != null) {
+            emailBody += "\n\n\n";
+            emailBody += Logging.getStackTrace(sendEx);
+        }
+
+        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
         Logging.LogFile log = Logging.getLatestLogFile(activity, true);
         if (log != null) {

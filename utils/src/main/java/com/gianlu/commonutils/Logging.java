@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,7 +118,7 @@ public class Logging {
         }
     }
 
-    public static String getStackTrace(Throwable ex) {
+    public static String getStackTrace(@NonNull Throwable ex) {
         StringWriter sw = new StringWriter();
         PrintWriter writer = new PrintWriter(sw);
         ex.printStackTrace(writer);

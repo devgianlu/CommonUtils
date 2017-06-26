@@ -10,9 +10,11 @@ import android.widget.Button;
 
 @SuppressWarnings("unused,WeakerAccess")
 public class UncaughtExceptionActivity extends AppCompatActivity {
-    public static void startActivity(Context context, String appName) {
+    public static void startActivity(Context context, String appName, Throwable ex) {
         if (context != null)
-            context.startActivity(new Intent(context, UncaughtExceptionActivity.class).putExtra("appName", appName));
+            context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
+                    .putExtra("appName", appName)
+                    .putExtra("exception", ex));
     }
 
     @Override
@@ -35,7 +37,7 @@ public class UncaughtExceptionActivity extends AppCompatActivity {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.sendEmail(UncaughtExceptionActivity.this, getIntent().getStringExtra("appName"));
+                CommonUtils.sendEmail(UncaughtExceptionActivity.this, getIntent().getStringExtra("appName"), (Throwable) getIntent().getSerializableExtra("exception"));
             }
         });
     }
