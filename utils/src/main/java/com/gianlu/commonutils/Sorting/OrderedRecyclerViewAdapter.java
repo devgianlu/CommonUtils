@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-// TODO: Should reset sorting after queryFilter (??)
 public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, E extends Filterable<F>, S, F> extends RecyclerView.Adapter<VH> {
     protected final SortingArrayList objs;
     protected final List<F> filters;
