@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
+// TODO: Should reset sorting after queryFilter (??)
 public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, E extends Filterable<F>, S, F> extends RecyclerView.Adapter<VH> {
     protected final SortingArrayList objs;
+    protected final List<F> filters;
     private final S defaultSorting;
     private final List<E> originalObjs;
-    private final List<F> filters;
     private String query;
 
     public OrderedRecyclerViewAdapter(List<E> objs, S defaultSorting) {
@@ -39,6 +40,8 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
             if (!filters.contains(obj.getFilterable()))
                 objs.add(obj);
 
+        objs.resort();
+
         shouldUpdateItemCount(objs.size());
         super.notifyDataSetChanged();
         scrollToTop();
@@ -54,6 +57,8 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
                 if (matchQuery(obj, query))
                     objs.add(obj);
         }
+
+        objs.resort();
 
         shouldUpdateItemCount(objs.size());
         super.notifyDataSetChanged();

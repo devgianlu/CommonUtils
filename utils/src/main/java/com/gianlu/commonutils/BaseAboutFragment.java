@@ -116,7 +116,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         findPreference("email").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                CommonUtils.sendEmail(getActivity(), getString(getAppNameRes()));
+                CommonUtils.sendEmail(getActivity(), getString(getAppNameRes()), null);
                 return true;
             }
         });

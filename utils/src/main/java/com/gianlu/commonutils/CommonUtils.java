@@ -241,16 +241,23 @@ public class CommonUtils {
         if (log != null) {
             try {
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(activity, log)));
-            } catch (ParseException | IOException ex) {
-                CommonUtils.UIToast(activity, ToastMessage.FATAL_EXCEPTION, ex);
+            } catch (ParseException | IOException ignored) {
             }
         }
 
         try {
             activity.startActivity(Intent.createChooser(intent, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            CommonUtils.UIToast(activity, ToastMessage.NO_EMAIL_CLIENT);
+            CommonUtils.UIToast(activity, ToastMessage.NO_EMAIL_CLIENT, ex);
         }
+    }
+
+    public static <T> int indexOf(T[] items, T item) {
+        for (int i = 0; i < items.length; i++)
+            if (items[i] == item)
+                return i;
+
+        return -1;
     }
 
     public static void copy(InputStream in, OutputStream out) throws IOException {

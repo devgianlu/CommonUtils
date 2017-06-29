@@ -16,6 +16,10 @@ public abstract class BaseSortingArrayList<E, S> extends ArrayList<E> {
         this.currentSort = defaultSorting;
     }
 
+    public void resort() {
+        Collections.sort(this, getComparator(currentSort));
+    }
+
     @NonNull
     public abstract Comparator<E> getComparator(S sorting);
 
