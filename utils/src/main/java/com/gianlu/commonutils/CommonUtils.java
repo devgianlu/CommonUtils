@@ -1,13 +1,12 @@
 package com.gianlu.commonutils;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.Uri;
-import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
@@ -18,7 +17,9 @@ import android.view.animation.Transformation;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,14 +27,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +65,80 @@ public class CommonUtils {
         } catch (IOException ex) {
             return !global && hasInternetAccess(true);
         }
+    }
+
+    public static int getMaskedValue(int maskedValue, int mask) {
+        int definitiveMaskedValue = 0;
+        int count = 0;
+
+        maskedValue = mask & maskedValue;
+
+        while (mask != 0) {
+            while ((mask & 1) == 0) {
+                mask = mask >>> 1;
+                maskedValue = maskedValue >>> 1;
+            }
+            while ((mask & 1) == 1) {
+                definitiveMaskedValue = definitiveMaskedValue + ((maskedValue & 1) << count);
+                count++;
+
+                mask = mask >>> 1;
+                maskedValue = maskedValue >>> 1;
+            }
+        }
+
+        return definitiveMaskedValue;
+    }
+
+    public static int setMaskedValue(int maskedValue, int mask, int valueToAdd) {
+        int nbZero = 0;
+        int nbLeastSignificantBit = 0;
+        int tmpMask = mask;
+        maskedValue = maskedValue & ~mask;
+
+        while (tmpMask != 0) {
+            while ((tmpMask & 1) == 0) {
+                tmpMask = tmpMask >>> 1;
+                nbLeastSignificantBit++;
+                nbZero++;
+            }
+
+            while ((tmpMask & 1) == 1) {
+                tmpMask = tmpMask >>> 1;
+
+                BigInteger bigValueToAdd = BigInteger.valueOf(valueToAdd).shiftLeft(nbZero);
+                int tmpValueToAdd = bigValueToAdd.intValue();
+                BigInteger bigMaskOneBit = BigInteger.valueOf(1).shiftLeft(nbLeastSignificantBit);
+                int maskOneBit = bigMaskOneBit.intValue();
+
+                int bitValueToSet = getMaskedValue(tmpValueToAdd, maskOneBit);
+                maskedValue = maskedValue | bitValueToSet << nbLeastSignificantBit;
+                nbLeastSignificantBit++;
+            }
+        }
+        return maskedValue;
+    }
+
+    public static HashMap<String, Object> toMap(JSONObject obj) throws JSONException {
+        HashMap<String, Object> map = new HashMap<>();
+
+        Iterator<String> iterator = obj.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            map.put(key, obj.get(key));
+        }
+
+        return map;
+    }
+
+    public static JSONObject toJSONObject(HashMap<String, Object> map) throws JSONException {
+        JSONObject obj = new JSONObject();
+        if (map == null) return obj;
+
+        for (Map.Entry<String, Object> entry : map.entrySet())
+            obj.put(entry.getKey(), entry.getValue());
+
+        return obj;
     }
 
     @Nullable
@@ -156,9 +235,9 @@ public class CommonUtils {
         else view.animate().rotation(180).setDuration(200).start();
     }
 
-    public static void showDialog(Activity activity, final Dialog dialog) {
-        if (activity == null || activity.isFinishing() || dialog == null) return;
-        activity.runOnUiThread(new Runnable() {
+    public static void showDialog(Context context, final Dialog dialog) {
+        Toaster.initHandler(context);
+        Toaster.handler.post(new Runnable() {
             @Override
             public void run() {
                 dialog.show();
@@ -166,9 +245,9 @@ public class CommonUtils {
         });
     }
 
-    public static void showDialog(Activity activity, final AlertDialog.Builder builder) {
-        if (activity == null || activity.isFinishing() || builder == null) return;
-        activity.runOnUiThread(new Runnable() {
+    public static void showDialog(Context context, final AlertDialog.Builder builder) {
+        Toaster.initHandler(context);
+        Toaster.handler.post(new Runnable() {
             @Override
             public void run() {
                 builder.create().show();
@@ -210,17 +289,17 @@ public class CommonUtils {
         }
     }
 
-    public static void sendEmail(Activity activity, String appName, @Nullable Throwable sendEx) {
+    public static void sendEmail(Context context, String appName, @Nullable Throwable sendEx) {
         String version;
         try {
-            version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
+            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException ex) {
-            version = activity.getString(R.string.unknown);
+            version = context.getString(R.string.unknown);
         }
 
         Intent intent = new Intent(Intent.ACTION_SEND)
                 .setType("message/rfc822")
-                .putExtra(Intent.EXTRA_EMAIL, new String[]{activity.getString(R.string.email)})
+                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.email)})
                 .putExtra(Intent.EXTRA_SUBJECT, appName);
 
         String emailBody = "OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
@@ -237,24 +316,32 @@ public class CommonUtils {
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
-        Logging.LogFile log = Logging.getLatestLogFile(activity, true);
+        Logging.LogFile log = Logging.getLatestLogFile(context, true);
         if (log != null) {
             try {
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(activity, log)));
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(context, log)));
             } catch (ParseException | IOException ignored) {
             }
         }
 
         try {
-            activity.startActivity(Intent.createChooser(intent, "Send mail..."));
+            context.startActivity(Intent.createChooser(intent, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            CommonUtils.UIToast(activity, ToastMessage.NO_EMAIL_CLIENT, ex);
+            Toaster.show(context, Toaster.Message.NO_EMAIL_CLIENT, ex);
         }
     }
 
     public static <T> int indexOf(T[] items, T item) {
         for (int i = 0; i < items.length; i++)
             if (items[i] == item)
+                return i;
+
+        return -1;
+    }
+
+    public static <T> int indexOf(List<T> items, T item) {
+        for (int i = 0; i < items.size(); i++)
+            if (items.get(i) == item)
                 return i;
 
         return -1;
@@ -301,109 +388,6 @@ public class CommonUtils {
         }
     }
 
-    public static void UIToast(final Activity context, final String text) {
-        UIToast(context, text, Toast.LENGTH_SHORT);
-    }
-
-    public static void UIToast(final Activity context, final String text, final int duration) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, text, duration).show();
-            }
-        });
-    }
-
-    public static void UIToast(final Activity context, final String text, final int duration, Runnable extra) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, text, duration).show();
-            }
-        });
-        context.runOnUiThread(extra);
-    }
-
-    public static void UIToast(final Activity context, final ToastMessage message) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message.toString() + (message.isError() ? " See logs for more..." : ""), Toast.LENGTH_SHORT).show();
-            }
-        });
-        Logging.logMe(context, message.toString(), message.isError());
-    }
-
-    public static void UIToast(final Activity context, final ToastMessage message, final String message_extras) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Logging.logMe(context, message + " Details: " + message_extras, message.isError());
-    }
-
-    public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        if (exception == null) return;
-
-        Logging.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
-        Logging.secretLog(context, exception);
-    }
-
-    public static void UIToast(final Activity context, final ToastMessage message, final String message_extras, Runnable extra) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        context.runOnUiThread(extra);
-        Logging.logMe(context, message + " Details: " + message_extras, message.isError());
-    }
-
-    public static void UIToast(final Activity context, final ToastMessage message, final Throwable exception, Runnable extra) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        context.runOnUiThread(extra);
-
-        if (exception == null) return;
-
-        Logging.logMe(context, message + " Details: " + exception.getMessage(), message.isError());
-        Logging.secretLog(context, exception);
-    }
-
-    public static void UIToast(final Activity context, final ToastMessage message, Runnable extra) {
-        if (context == null) return;
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        context.runOnUiThread(extra);
-        Logging.logMe(context, message.toString(), message.isError());
-    }
-
     public static SimpleDateFormat getVerbalDateFormatter() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
@@ -441,42 +425,14 @@ public class CommonUtils {
         return builder.toString();
     }
 
-    @Keep
-    public static class ToastMessage {
-        public static final ToastMessage NO_EMAIL_CLIENT = new CommonUtils.ToastMessage("There are no email clients installed.", true);
-        public static final ToastMessage OFFLINE = new ToastMessage("You're offline!", false);
-        public static final ToastMessage COPIED_TO_CLIPBOARD = new ToastMessage("Copied to clipboard!", false);
-        public static final ToastMessage LOGS_DELETED = new ToastMessage("Deleted all logs.", false);
-        public static final ToastMessage FATAL_EXCEPTION = new ToastMessage("Fatal exception! Don't worry...", true);
-        public static final ToastMessage PURCHASING_CANCELED = new ToastMessage("The purchase has been canceled.", false);
-        public static final ToastMessage BILLING_USER_CANCELLED = new ToastMessage("You cancelled the operation.", false);
-        public static final ToastMessage THANK_YOU = new ToastMessage("Thank you!", false);
-        public static final ToastMessage FAILED_BUYING_ITEM = new ToastMessage("Failed to buy this item! Please contact me.", true);
-        public static final ToastMessage FAILED_CONNECTION_BILLING_SERVICE = new ToastMessage("Failed to connect to the billing service!", true);
+    public static <T> boolean contains(T[] elements, T element) {
+        for (T element1 : elements)
+            if (element1 == element) return true;
 
-        private final String message;
-        private final boolean isError;
+        return false;
+    }
 
-        public ToastMessage(String message, boolean isError) {
-            this.message = message;
-            this.isError = isError;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public boolean isError() {
-            return isError;
-        }
-
-        public String toString(String extra) {
-            return message + " " + extra;
-        }
-
-        @Override
-        public String toString() {
-            return message;
-        }
+    public static String breakText(String str, Paint paint, float maxWidth) {
+        return str.substring(0, paint.breakText(str, 0, str.length(), true, maxWidth, null));
     }
 }

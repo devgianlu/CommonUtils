@@ -4,24 +4,21 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
-@SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class LogsActivity extends AppCompatActivity {
     private static final int DELETE_LOGS_ID = 1;
 
@@ -31,14 +28,15 @@ public class LogsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_logs);
         setTitle(R.string.log_activity_title);
 
+        final FrameLayout container = (FrameLayout) findViewById(R.id.logs_container);
         final Spinner spinner = (Spinner) findViewById(R.id.logs_spinner);
-        TextView empty = (TextView) findViewById(R.id.logs_empty);
         final ListView list = (ListView) findViewById(R.id.logs_list);
         final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, false);
 
         if (logFiles.isEmpty()) {
-            empty.setVisibility(View.VISIBLE);
+            MessageLayout.show(container, R.string.noLogs, R.drawable.ic_info_outline_black_48dp);
             spinner.setVisibility(View.GONE);
+            list.setVisibility(View.GONE);
             return;
         }
 
@@ -56,12 +54,12 @@ public class LogsActivity extends AppCompatActivity {
                             ClipData clip = ClipData.newPlainText("stack trace", logLines.get(position).message);
                             clipboard.setPrimaryClip(clip);
 
-                            CommonUtils.UIToast(LogsActivity.this, CommonUtils.ToastMessage.COPIED_TO_CLIPBOARD);
+                            Toaster.show(LogsActivity.this, Toaster.Message.COPIED_TO_CLIPBOARD);
                         }
                     });
                     list.setSelection(list.getCount() - 1);
                 } catch (IOException ex) {
-                    CommonUtils.UIToast(LogsActivity.this, CommonUtils.ToastMessage.FATAL_EXCEPTION, ex);
+                    Logging.logMe(LogsActivity.this, ex);
                     onBackPressed();
                 }
             }
@@ -96,9 +94,9 @@ public class LogsActivity extends AppCompatActivity {
                 for (File logFile : files)
                     logFile.delete();
 
-                CommonUtils.UIToast(this, CommonUtils.ToastMessage.LOGS_DELETED);
+                Toaster.show(this, Toaster.Message.LOGS_DELETED);
                 onBackPressed();
-                break;
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

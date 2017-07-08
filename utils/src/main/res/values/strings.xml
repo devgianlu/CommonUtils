@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="log_activity_title" translatable="false">Logs</string>
+    <string name="log_activity_title">Logs</string>
     <string name="deleteAllLogs">Delete all logs</string>
     <string name="warningTag" translatable="false">WARNING:</string>
     <string name="errorTag" translatable="false">ERROR:</string>
@@ -28,4 +28,14 @@
     <string name="trackingOff">Statistics about the application behavior will be sent to the developer. (No personal data will be sent)</string>
     <string name="app_version">Application version</string>
     <string name="developer">Developer: Gianlu (Report bugs or any suggestion)</string>
+    <string name="noMailClients">There are no email clients installed!</string>
+    <string name="offline">You\'re offline!</string>
+    <string name="copiedToClipboard">Copied to clipboard!</string>
+    <string name="logDeleted">All logs have been deleted.</string>
+    <string name="purchaseCanceled">The purchase has been canceled.</string>
+    <string name="userCancelled">You cancelled the operation.</string>
+    <string name="thankYou">Thank you!</string>
+    <string name="failedBuying">Failed to buy this item! Please contact me.</string>
+    <string name="failedBillingConnection">Failed to connect to the billing service!</string>
+    <string name="noLogs">There are no logs.</string>
 </resources>

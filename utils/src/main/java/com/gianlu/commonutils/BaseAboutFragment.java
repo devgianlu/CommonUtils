@@ -70,18 +70,18 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                     PurchasedProduct purchasedProduct = new PurchasedProduct(data.getStringExtra("INAPP_PURCHASE_DATA"));
                     if (Objects.equals(purchasedProduct.developerPayload, devString)) {
                         if (purchasedProduct.purchaseState == PurchasedProduct.PURCHASED) {
-                            CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.THANK_YOU, "Purchased " + purchasedProduct.productId + " with order ID " + purchasedProduct.orderId);
+                            Toaster.show(getActivity(), Toaster.Message.THANK_YOU, "Purchased " + purchasedProduct.productId + " with order ID " + purchasedProduct.orderId);
                         } else if (purchasedProduct.purchaseState == PurchasedProduct.CANCELED) {
-                            CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.PURCHASING_CANCELED);
+                            Toaster.show(getActivity(), Toaster.Message.PURCHASING_CANCELED);
                         }
                     } else {
-                        CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_BUYING_ITEM, new Exception("Payloads mismatch!"));
+                        Toaster.show(getActivity(), Toaster.Message.FAILED_BUYING_ITEM, new Exception("Payloads mismatch!"));
                     }
                 } catch (JSONException ex) {
-                    CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_BUYING_ITEM, ex);
+                    Toaster.show(getActivity(), Toaster.Message.FAILED_BUYING_ITEM, ex);
                 }
             } else {
-                CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.PURCHASING_CANCELED);
+                Toaster.show(getActivity(), Toaster.Message.PURCHASING_CANCELED);
             }
         }
     }
@@ -147,7 +147,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                         try {
                             getActivity().startIntentSenderForResult(intent.getIntentSender(), requestCode, new Intent(), 0, 0, 0);
                         } catch (IntentSender.SendIntentException ex) {
-                            CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_CONNECTION_BILLING_SERVICE, ex);
+                            Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
                         }
                     }
 
@@ -163,7 +163,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
 
                     @Override
                     public void onFailed(Exception ex) {
-                        CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_CONNECTION_BILLING_SERVICE, ex);
+                        Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
                     }
                 };
                 pd.dismiss();
@@ -188,19 +188,19 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
             @Override
             public void onAPIException(int code) {
                 if (code == Billing.RESULT_BILLING_UNAVAILABLE)
-                    CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_CONNECTION_BILLING_SERVICE, "Code: " + code);
+                    Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, "Code: " + code);
                 else
-                    CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_BUYING_ITEM, "Code: " + code);
+                    Toaster.show(getActivity(), Toaster.Message.FAILED_BUYING_ITEM, "Code: " + code);
             }
 
             @Override
             public void onUserCancelled() {
-                CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.BILLING_USER_CANCELLED);
+                Toaster.show(getActivity(), Toaster.Message.BILLING_USER_CANCELLED);
             }
 
             @Override
             public void onFailed(Exception ex) {
-                CommonUtils.UIToast(getActivity(), CommonUtils.ToastMessage.FAILED_CONNECTION_BILLING_SERVICE, ex);
+                Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
             }
         });
     }
