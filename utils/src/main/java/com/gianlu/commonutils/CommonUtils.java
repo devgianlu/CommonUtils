@@ -1,16 +1,22 @@
 package com.gianlu.commonutils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.AttrRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -196,10 +202,6 @@ public class CommonUtils {
         v.startAnimation(a);
     }
 
-    public static void expandTitle(TextView v) {
-        v.setSingleLine(false);
-        v.setEllipsize(null);
-    }
 
     public static void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();
@@ -230,26 +232,40 @@ public class CommonUtils {
         v.setEllipsize(TextUtils.TruncateAt.MARQUEE);
     }
 
+    public static void expandTitle(TextView v) {
+        v.setSingleLine(false);
+        v.setEllipsize(null);
+    }
+
+    public static Drawable resolveAttrAsDrawable(Context context, @AttrRes int id) {
+        TypedArray ta = context.obtainStyledAttributes(new int[]{id});
+        Drawable drawableFromTheme = ta.getDrawable(0);
+        ta.recycle();
+        return drawableFromTheme;
+    }
+
     public static void animateCollapsingArrowBellows(ImageButton view, boolean expanded) {
         if (expanded) view.animate().rotation(0).setDuration(200).start();
         else view.animate().rotation(180).setDuration(200).start();
     }
 
-    public static void showDialog(Context context, final Dialog dialog) {
+    public static void showDialog(final Context context, final Dialog dialog) {
         Toaster.initHandler(context);
         Toaster.handler.post(new Runnable() {
             @Override
             public void run() {
+                if (context instanceof Activity && ((Activity) context).isFinishing()) return;
                 dialog.show();
             }
         });
     }
 
-    public static void showDialog(Context context, final AlertDialog.Builder builder) {
+    public static void showDialog(final Context context, final AlertDialog.Builder builder) {
         Toaster.initHandler(context);
         Toaster.handler.post(new Runnable() {
             @Override
             public void run() {
+                if (context instanceof Activity && ((Activity) context).isFinishing()) return;
                 builder.create().show();
             }
         });
@@ -303,10 +319,10 @@ public class CommonUtils {
                 .putExtra(Intent.EXTRA_SUBJECT, appName);
 
         String emailBody = "OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
-                        "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
-                        "\nDevice: " + android.os.Build.DEVICE +
-                        "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
-                        "\nApplication version: " + version +
+                "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
+                "\nDevice: " + android.os.Build.DEVICE +
+                "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
+                "\nApplication version: " + version +
                 "\n\nProvide bug/feature details";
 
         if (sendEx != null) {
@@ -423,6 +439,11 @@ public class CommonUtils {
         }
 
         return builder.toString();
+    }
+
+    public static void setCardTopMargin(Context context, RecyclerView.ViewHolder holder) {
+        if (holder.itemView.getLayoutParams() == null) return;
+        ((RecyclerView.LayoutParams) holder.itemView.getLayoutParams()).topMargin = holder.getLayoutPosition() == 0 ? (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics()) : 0;
     }
 
     public static <T> boolean contains(T[] elements, T element) {

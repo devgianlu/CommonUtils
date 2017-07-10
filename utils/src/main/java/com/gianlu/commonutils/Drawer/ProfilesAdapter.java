@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
@@ -24,15 +24,13 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
     protected final List<P> profiles;
     protected final boolean black;
     private final LayoutInflater inflater;
-    private final int ripple_dark;
     private final int colorAccent;
     protected IAdapter<P> listener;
 
-    public ProfilesAdapter(Context context, List<P> profiles, @DrawableRes int ripple_dark, @ColorRes int colorAccent, boolean black, IAdapter<P> listener) {
+    public ProfilesAdapter(Context context, List<P> profiles, @ColorRes int colorAccent, boolean black, IAdapter<P> listener) {
         this.context = context;
         this.profiles = profiles;
         this.inflater = LayoutInflater.from(context);
-        this.ripple_dark = ripple_dark;
         this.colorAccent = colorAccent;
         this.black = black;
         this.listener = listener;
@@ -98,7 +96,7 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
 
         public ViewHolder(ViewGroup parent) {
             super(inflater.inflate(R.layout.drawer_profile_item, parent, false));
-            itemView.setBackgroundResource(ripple_dark);
+            itemView.setBackground(CommonUtils.resolveAttrAsDrawable(context, R.attr.selectableItemBackground));
 
             loading = (ProgressBar) itemView.findViewById(R.id.drawerProfileItem_loading);
             loading.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(context, colorAccent)));

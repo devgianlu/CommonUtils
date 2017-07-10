@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
@@ -22,17 +23,15 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int ITEM_SEPARATOR = 1;
     private final LayoutInflater inflater;
     private final List<BaseDrawerItem> menuItems;
-    private final int ripple_dark;
     private final int badge;
     private final int separator;
     private final Context context;
     private IAdapter listener;
 
-    MenuItemsAdapter(Context context, List<BaseDrawerItem> menuItems, @DrawableRes int ripple_dark, @DrawableRes int badge, @ColorRes int separator, IAdapter listener) {
+    MenuItemsAdapter(Context context, List<BaseDrawerItem> menuItems, @DrawableRes int badge, @ColorRes int separator, IAdapter listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.menuItems = menuItems;
-        this.ripple_dark = ripple_dark;
         this.badge = badge;
         this.separator = separator;
         this.listener = listener;
@@ -41,7 +40,7 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM_SEPARATOR) return new SeparatorViewHolder(context, separator);
-        else return new ViewHolder(inflater, parent, ripple_dark);
+        else return new ViewHolder(inflater, parent);
     }
 
     @Override
@@ -126,9 +125,9 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final LinearLayout badgeContainer;
         final TextView badge;
 
-        public ViewHolder(LayoutInflater inflater, ViewGroup parent, @DrawableRes int ripple_dark) {
+        public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.drawer_item_primary, parent, false));
-            itemView.setBackgroundResource(ripple_dark);
+            itemView.setBackground(CommonUtils.resolveAttrAsDrawable(parent.getContext(), R.attr.selectableItemBackground));
 
             icon = (ImageView) itemView.findViewById(R.id.drawerItem_icon);
             name = (TextView) itemView.findViewById(R.id.drawerItem_name);

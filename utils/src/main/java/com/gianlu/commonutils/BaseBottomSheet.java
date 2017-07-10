@@ -44,7 +44,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         LayoutInflater.from(context).inflate(layoutRes, content, true);
 
         ImageButton close = (ImageButton) sheet.findViewById(R.id.bottomSheet_close);
-        close.setBackgroundResource(getRippleDark());
+        close.setBackground(CommonUtils.resolveAttrAsDrawable(context, R.attr.selectableItemBackgroundBorderless));
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,8 +56,6 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
 
         bindViews();
     }
-
-    protected abstract int getRippleDark();
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {

@@ -64,6 +64,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         protected final List<ItemEnclosure<E>> items;
         private final int primary_shadow;
         private final boolean countForSeparator;
+        private final Handler handler;
         protected int maxPages;
         int page = 1;
         long currDay = -1;
@@ -77,6 +78,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             this.countForSeparator = countForSeparator;
             this.items = new ArrayList<>();
             this.maxPages = maxPages;
+            this.handler = new Handler(context.getMainLooper());
 
             populate(items);
         }
@@ -191,7 +193,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             moreContent(page, new IContentProvider<E>() {
                 @Override
                 public void onMoreContent(final List<E> content) {
-                    new Handler(context.getMainLooper()).post(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if (items.get(items.size() - 1) == null) {
@@ -202,7 +204,8 @@ public class InfiniteRecyclerView extends RecyclerView {
                             int start = items.size();
                             int lastSeparator = findLastSeparator();
                             populate(content);
-                            if (countForSeparator && lastSeparator != -1) notifyItemChanged(lastSeparator);
+                            if (countForSeparator && lastSeparator != -1)
+                                notifyItemChanged(lastSeparator);
                             notifyItemRangeInserted(start, content.size());
                             loading = false;
                         }
@@ -211,7 +214,7 @@ public class InfiniteRecyclerView extends RecyclerView {
 
                 @Override
                 public void onReloadAllContent(final List<E> content) {
-                    new Handler(context.getMainLooper()).post(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if (items.get(items.size() - 1) == null) {
@@ -229,9 +232,20 @@ public class InfiniteRecyclerView extends RecyclerView {
 
                 @Override
                 public void onFailed(Exception ex) {
-                    loading = false;
                     if (listener != null && maxPages != -1) listener.onFailedLoadingContent(ex);
                     if (CommonUtils.isDebug()) ex.printStackTrace();
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (items.get(items.size() - 1) == null) {
+                                items.remove(null);
+                                notifyItemRemoved(items.size() - 1);
+                            }
+
+                            loading = false;
+                        }
+                    });
                 }
             });
         }

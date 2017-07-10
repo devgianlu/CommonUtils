@@ -95,7 +95,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
         profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, setup.getColorPrimaryShadow()));
 
-        MenuItemsAdapter.ViewHolder addProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter, setup.getRippleDark());
+        MenuItemsAdapter.ViewHolder addProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter);
         addProfile.name.setText(context.getString(R.string.addProfile));
         addProfile.icon.setImageResource(R.drawable.ic_add_black_48dp);
         addProfile.badgeContainer.setVisibility(View.GONE);
@@ -107,7 +107,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         });
         profilesFooter.addView(addProfile.itemView);
 
-        MenuItemsAdapter.ViewHolder editProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter, setup.getRippleDark());
+        MenuItemsAdapter.ViewHolder editProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter);
         editProfile.name.setText(context.getString(R.string.editProfile));
         editProfile.icon.setImageResource(R.drawable.ic_mode_edit_black_48dp);
         editProfile.badgeContainer.setVisibility(View.GONE);
@@ -270,7 +270,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private void setupMenuItems() {
         RecyclerView menuList = (RecyclerView) drawerLayout.findViewById(R.id.drawer_menuList);
         menuList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        menuItemsAdapter = new MenuItemsAdapter(context, menuItems, setup.getRippleDark(), setup.getDrawerBadge(), setup.getColorPrimaryShadow(), new MenuItemsAdapter.IAdapter() {
+        menuItemsAdapter = new MenuItemsAdapter(context, menuItems, setup.getDrawerBadge(), setup.getColorPrimaryShadow(), new MenuItemsAdapter.IAdapter() {
             @Override
             public void onMenuItemSelected(BaseDrawerItem which) {
                 if (listener != null) setDrawerState(false, listener.onMenuItemSelected(which));
@@ -385,9 +385,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
         @StringRes
         int getCloseDrawerDesc();
-
-        @DrawableRes
-        int getRippleDark();
 
         @DrawableRes
         int getDrawerBadge();
