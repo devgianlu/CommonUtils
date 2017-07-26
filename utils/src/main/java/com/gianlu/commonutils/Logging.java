@@ -106,6 +106,7 @@ public class Logging {
 
     public static void secretLog(Context context, Throwable exx) {
         if (DEBUG) exx.printStackTrace();
+        if (context == null) return;
 
         try {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND);
@@ -137,6 +138,8 @@ public class Logging {
         if (DEBUG)
             if (isError) System.err.println(message);
             else System.out.println(message);
+
+        if (context == null) return;
 
         try {
             FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".log", Context.MODE_APPEND);

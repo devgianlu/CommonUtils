@@ -318,17 +318,19 @@ public class CommonUtils {
                 .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.email)})
                 .putExtra(Intent.EXTRA_SUBJECT, appName);
 
-        String emailBody = "OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
+        String emailBody = "-------- DO NOT EDIT --------" +
+                "\nOS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
                 "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
                 "\nDevice: " + android.os.Build.DEVICE +
                 "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
-                "\nApplication version: " + version +
-                "\n\nProvide bug/feature details";
+                "\nApplication version: " + version;
 
         if (sendEx != null) {
-            emailBody += "\n\n\n";
+            emailBody += "\n\n";
             emailBody += Logging.getStackTrace(sendEx);
         }
+
+        emailBody += "\n-----------------------------" + "\n\n\nProvide bug details\n";
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 

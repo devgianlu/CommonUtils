@@ -10,8 +10,12 @@ public class Toaster {
     public static Handler handler;
 
     public static void initHandler(Context context) {
-        if (context == null) throw new NullPointerException("context is null!!");
-        if (handler == null || handler.getLooper() != context.getMainLooper())
+        if (context == null) {
+            handler = new FakeHandler();
+            return;
+        }
+
+        if (handler == null || handler instanceof FakeHandler || handler.getLooper() != context.getMainLooper())
             handler = new Handler(context.getMainLooper());
     }
 
@@ -58,6 +62,18 @@ public class Toaster {
         show(context, message, null, null, extra);
     }
 
+    private static class FakeHandler extends Handler {
+
+        @Override
+        public boolean sendMessageAtTime(android.os.Message msg, long uptimeMillis) {
+            return false;
+        }
+
+        @Override
+        public void dispatchMessage(android.os.Message msg) {
+        }
+    }
+
     @SuppressWarnings("unused")
     public static class Message {
         public static final Message NO_EMAIL_CLIENT = new Message(R.string.noMailClients, true);
@@ -79,6 +95,10 @@ public class Toaster {
         }
 
         public String getMessage(Context context) {
+            if (context == null) {
+                return "Unknown message!";
+            }
+
             return context.getString(messageRes);
         }
     }

@@ -19,12 +19,12 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     protected final Handler mainHandler;
     protected final FrameLayout content;
     private final View mask;
-    private final BottomSheetBehavior behavior;
     private final int layoutRes;
+    private final BottomSheetBehavior behavior;
     private final boolean forceLayoutInflating;
     protected E current;
 
-    protected BaseBottomSheet(View parent, @LayoutRes int layoutRes, boolean forceLayoutInflating) {
+    public BaseBottomSheet(View parent, @LayoutRes int layoutRes, boolean forceLayoutInflating) {
         this.layoutRes = layoutRes;
         this.forceLayoutInflating = forceLayoutInflating;
         View sheet = parent.findViewById(R.id.bottomSheet_container);
@@ -64,6 +64,8 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
             mask.setVisibility(View.GONE);
         } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
             mask.setAlpha(.2f);
+        } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // FIXME: Should allow dragging when it's not maximized
         }
     }
 
