@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,7 +41,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         this.drawerLayout = initializer.drawerLayout;
         this.menuItems = initializer.menuItems;
         this.profiles = initializer.profiles;
-        drawerToggle = new ActionBarDrawerToggle(initializer.activity, drawerLayout, initializer.toolbar, setup.getOpenDrawerDesc(), setup.getCloseDrawerDesc());
+        drawerToggle = new ActionBarDrawerToggle(initializer.activity, drawerLayout, initializer.toolbar, R.string.openDrawer, R.string.closeDrawer);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
@@ -379,12 +378,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
         @DrawableRes
         int getHeaderBackground();
-
-        @StringRes
-        int getOpenDrawerDesc();
-
-        @StringRes
-        int getCloseDrawerDesc();
 
         @DrawableRes
         int getDrawerBadge();
