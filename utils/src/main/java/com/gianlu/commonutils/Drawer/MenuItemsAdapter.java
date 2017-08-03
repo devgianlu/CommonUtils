@@ -129,10 +129,10 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(inflater.inflate(R.layout.drawer_item_primary, parent, false));
             itemView.setBackground(CommonUtils.resolveAttrAsDrawable(parent.getContext(), R.attr.selectableItemBackground));
 
-            icon = (ImageView) itemView.findViewById(R.id.drawerItem_icon);
-            name = (TextView) itemView.findViewById(R.id.drawerItem_name);
-            badgeContainer = (LinearLayout) itemView.findViewById(R.id.drawerItem_badgeContainer);
-            badge = (TextView) itemView.findViewById(R.id.drawerItem_badge);
+            icon = itemView.findViewById(R.id.drawerItem_icon);
+            name = itemView.findViewById(R.id.drawerItem_name);
+            badgeContainer = itemView.findViewById(R.id.drawerItem_badgeContainer);
+            badge = itemView.findViewById(R.id.drawerItem_badge);
         }
     }
 }

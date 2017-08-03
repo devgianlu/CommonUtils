@@ -28,9 +28,9 @@ public class LogsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_logs);
         setTitle(R.string.log_activity_title);
 
-        final FrameLayout container = (FrameLayout) findViewById(R.id.logs_container);
-        final Spinner spinner = (Spinner) findViewById(R.id.logs_spinner);
-        final ListView list = (ListView) findViewById(R.id.logs_list);
+        final FrameLayout container = findViewById(R.id.logs_container);
+        final Spinner spinner = findViewById(R.id.logs_spinner);
+        final ListView list = findViewById(R.id.logs_list);
         final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, false);
 
         if (logFiles.isEmpty()) {

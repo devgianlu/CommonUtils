@@ -288,7 +288,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                 super(itemView);
 
                 line = itemView.findViewById(R.id.separatorItem_line);
-                date = (TextView) itemView.findViewById(R.id.separatorItem_date);
+                date = itemView.findViewById(R.id.separatorItem_date);
             }
         }
     }

@@ -98,13 +98,13 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
             super(inflater.inflate(R.layout.drawer_profile_item, parent, false));
             itemView.setBackground(CommonUtils.resolveAttrAsDrawable(context, R.attr.selectableItemBackground));
 
-            loading = (ProgressBar) itemView.findViewById(R.id.drawerProfileItem_loading);
+            loading = itemView.findViewById(R.id.drawerProfileItem_loading);
             loading.setIndeterminateTintList(ColorStateList.valueOf(ContextCompat.getColor(context, colorAccent)));
-            status = (ImageView) itemView.findViewById(R.id.drawerProfileItem_status);
-            ping = (TextView) itemView.findViewById(R.id.drawerProfileItem_ping);
-            globalName = (TextView) itemView.findViewById(R.id.drawerProfileItem_globalName);
-            name = (TextView) itemView.findViewById(R.id.drawerProfileItem_name);
-            secondary = (TextView) itemView.findViewById(R.id.drawerProfileItem_secondary);
+            status = itemView.findViewById(R.id.drawerProfileItem_status);
+            ping = itemView.findViewById(R.id.drawerProfileItem_ping);
+            globalName = itemView.findViewById(R.id.drawerProfileItem_globalName);
+            name = itemView.findViewById(R.id.drawerProfileItem_name);
+            secondary = itemView.findViewById(R.id.drawerProfileItem_secondary);
 
             if (!black) {
                 ping.setTextColor(Color.WHITE);

@@ -33,7 +33,7 @@ public class UncaughtExceptionActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        Button email = (Button) findViewById(R.id.uncaughtException_email);
+        Button email = findViewById(R.id.uncaughtException_email);
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

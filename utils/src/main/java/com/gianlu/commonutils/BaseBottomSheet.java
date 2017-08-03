@@ -39,11 +39,11 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         mask.setBackgroundColor(Color.BLACK);
         mask.setAlpha(.2f);
 
-        title = (TextView) sheet.findViewById(R.id.bottomSheet_title);
-        content = (FrameLayout) sheet.findViewById(R.id.bottomSheet_content);
+        title = sheet.findViewById(R.id.bottomSheet_title);
+        content = sheet.findViewById(R.id.bottomSheet_content);
         LayoutInflater.from(context).inflate(layoutRes, content, true);
 
-        ImageButton close = (ImageButton) sheet.findViewById(R.id.bottomSheet_close);
+        ImageButton close = sheet.findViewById(R.id.bottomSheet_close);
         close.setBackground(CommonUtils.resolveAttrAsDrawable(context, R.attr.selectableItemBackgroundBorderless));
         close.setOnClickListener(new View.OnClickListener() {
             @Override

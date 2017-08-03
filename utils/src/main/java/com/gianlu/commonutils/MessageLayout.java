@@ -41,16 +41,16 @@ public class MessageLayout {
     }
 
     private static void _show(ViewGroup parent, String errorMessage, @DrawableRes int iconRes) {
-        LinearLayout container = (LinearLayout) parent.findViewById(R.id.messageLayout_container);
-        TextView message = (TextView) container.findViewById(R.id.messageLayout_message);
+        LinearLayout container = parent.findViewById(R.id.messageLayout_container);
+        TextView message = container.findViewById(R.id.messageLayout_message);
         message.setText(errorMessage);
-        ImageView icon = (ImageView) container.findViewById(R.id.messageLayout_icon);
+        ImageView icon = container.findViewById(R.id.messageLayout_icon);
         icon.setImageResource(iconRes);
         container.setVisibility(View.VISIBLE);
     }
 
     private static void _hide(ViewGroup parent) {
-        LinearLayout container = (LinearLayout) parent.findViewById(R.id.messageLayout_container);
+        LinearLayout container = parent.findViewById(R.id.messageLayout_container);
         container.setVisibility(View.GONE);
     }
 

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.support.annotation.AttrRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -71,6 +73,14 @@ public class CommonUtils {
         } catch (IOException ex) {
             return !global && hasInternetAccess(true);
         }
+    }
+
+    public static boolean equals(List<?> a, List<?> b) {
+        if (a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); i++)
+            if (!Objects.equals(a.get(i), b.get(i))) return false;
+
+        return true;
     }
 
     public static int getMaskedValue(int maskedValue, int mask) {
@@ -281,6 +291,15 @@ public class CommonUtils {
 
     public static ProgressDialog fastIndeterminateProgressDialog(Context context, @StringRes int message) {
         return fastIndeterminateProgressDialog(context, context.getString(message));
+    }
+
+    @Nullable
+    public static String getText(TextInputLayout field) {
+        return field.getEditText() == null ? null : field.getEditText().getText().toString();
+    }
+
+    public static void setText(TextInputLayout field, String val) {
+        if (field.getEditText() != null) field.getEditText().setText(val);
     }
 
     public static String dimensionFormatter(float v, boolean si) {

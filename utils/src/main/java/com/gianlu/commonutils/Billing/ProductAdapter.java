@@ -93,10 +93,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         ViewHolder(View itemView) {
             super(itemView);
 
-            icon = (ImageView) itemView.findViewById(R.id.productItem_icon);
-            title = (TextView) itemView.findViewById(R.id.productItem_title);
-            description = (TextView) itemView.findViewById(R.id.productItem_description);
-            buy = (Button) itemView.findViewById(R.id.productItem_buy);
+            icon = itemView.findViewById(R.id.productItem_icon);
+            title = itemView.findViewById(R.id.productItem_title);
+            description = itemView.findViewById(R.id.productItem_description);
+            buy = itemView.findViewById(R.id.productItem_buy);
             buy.setFocusable(false);
         }
     }

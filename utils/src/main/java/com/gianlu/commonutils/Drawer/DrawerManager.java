@@ -48,7 +48,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         LinearLayout realLayout = (LinearLayout) drawerLayout.getChildAt(1);
         realLayout.setBackgroundResource(setup.getColorAccent());
 
-        ImageView headerBackground = (ImageView) realLayout.findViewById(R.id.drawerHeader_background);
+        ImageView headerBackground = realLayout.findViewById(R.id.drawerHeader_background);
         headerBackground.setImageResource(setup.getHeaderBackground());
 
         setupMenuItems();
@@ -77,7 +77,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     public void setupSingleProfile(final ILogout logoutHandler) {
-        final ImageView logout = (ImageView) drawerLayout.findViewById(R.id.drawerHeader_action);
+        final ImageView logout = drawerLayout.findViewById(R.id.drawerHeader_action);
         logout.setImageResource(R.drawable.ic_exit_to_app_white_48dp);
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +89,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     private void setupProfilesFooter() {
-        LinearLayout profilesFooter = (LinearLayout) drawerLayout.findViewById(R.id.drawer_profilesFooter);
+        LinearLayout profilesFooter = drawerLayout.findViewById(R.id.drawer_profilesFooter);
         LayoutInflater inflater = LayoutInflater.from(context);
 
         profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, setup.getColorPrimaryShadow()));
@@ -129,12 +129,12 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     private void setupProfiles() {
-        RecyclerView profilesList = (RecyclerView) drawerLayout.findViewById(R.id.drawer_profilesList);
+        RecyclerView profilesList = drawerLayout.findViewById(R.id.drawer_profilesList);
         profilesList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         profilesAdapter = setup.getProfilesAdapter(context, profiles, listener);
         profilesList.setAdapter(profilesAdapter);
 
-        final ImageView dropdownToggle = (ImageView) drawerLayout.findViewById(R.id.drawerHeader_action);
+        final ImageView dropdownToggle = drawerLayout.findViewById(R.id.drawerHeader_action);
         dropdownToggle.setImageResource(R.drawable.ic_arrow_drop_down_white_48dp);
         dropdownToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,7 +267,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     private void setupMenuItems() {
-        RecyclerView menuList = (RecyclerView) drawerLayout.findViewById(R.id.drawer_menuList);
+        RecyclerView menuList = drawerLayout.findViewById(R.id.drawer_menuList);
         menuList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         menuItemsAdapter = new MenuItemsAdapter(context, menuItems, setup.getDrawerBadge(), setup.getColorPrimaryShadow(), new MenuItemsAdapter.IAdapter() {
             @Override
@@ -346,11 +346,11 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     public DrawerManager<P> setCurrentProfile(P profile) {
-        LetterIconBig currAccount = (LetterIconBig) drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
+        LetterIconBig currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
         currAccount.setColorScheme(setup.getColorAccent(), setup.getColorPrimaryShadow());
 
-        TextView profileName = (TextView) drawerLayout.findViewById(R.id.drawerHeader_profileName);
-        TextView secondaryText = (TextView) drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
+        TextView profileName = drawerLayout.findViewById(R.id.drawerHeader_profileName);
+        TextView secondaryText = drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
 
         profileName.setText(profile.getProfileName(context));
         secondaryText.setText(profile.getSecondaryText(context));

@@ -108,14 +108,11 @@ public class Logging {
         if (DEBUG) exx.printStackTrace();
         if (context == null) return;
 
-        try {
-            FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
-            osw.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + getStackTrace(exx) + "\n\n");
-            osw.flush();
-            osw.close();
-        } catch (IOException ignored) {
+        try (OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND))) {
+            out.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + getStackTrace(exx) + "\n\n");
+            out.flush();
+        } catch (IOException ex) {
+            if (DEBUG) ex.printStackTrace();
         }
     }
 
