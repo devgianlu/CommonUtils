@@ -2,6 +2,7 @@ package com.gianlu.commonutils;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ public class Toaster {
 
     public static void initHandler(Context context) {
         if (context == null) {
+            Looper.prepare();
             handler = new FakeHandler();
             return;
         }
