@@ -64,8 +64,6 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
             mask.setVisibility(View.GONE);
         } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
             mask.setAlpha(.2f);
-        } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-            behavior.setState(BottomSheetBehavior.STATE_EXPANDED); // FIXME: Should allow dragging when it's not maximized
         }
     }
 

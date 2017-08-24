@@ -35,8 +35,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,27 +51,6 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused,WeakerAccess")
 public class CommonUtils {
     private static boolean DEBUG = BuildConfig.DEBUG;
-
-    private static String pickCountryURL(boolean global) {
-        String country = Locale.getDefault().getCountry();
-        if (country.isEmpty() || country.length() >= 3 || global)
-            return "http://www.google.com/generate_204";
-        else return "http://www.google." + country.toLowerCase() + "/generate_204";
-    }
-
-    public static boolean hasInternetAccess(boolean global) {
-        try {
-            HttpURLConnection url = (HttpURLConnection) new URL(pickCountryURL(global)).openConnection();
-            //noinspection SpellCheckingInspection
-            url.setRequestProperty("User-Agent", "Connectivity test");
-            url.setRequestProperty("Connection", "close");
-            url.setConnectTimeout(1000);
-            url.connect();
-            return url.getResponseCode() == 204 && url.getContentLength() == 0;
-        } catch (IOException ex) {
-            return !global && hasInternetAccess(true);
-        }
-    }
 
     public static boolean equals(List<?> a, List<?> b) {
         if (a.size() != b.size()) return false;
