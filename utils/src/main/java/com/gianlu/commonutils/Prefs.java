@@ -4,12 +4,23 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Prefs {
     private static SharedPreferences prefs;
+
+    public static String getBase64String(Context context, PrefKey key, String fallback) {
+        init(context);
+        return new String(Base64.decode(prefs.getString(key.getKey(), Base64.encodeToString(fallback.getBytes(), Base64.NO_WRAP)).getBytes(), Base64.NO_WRAP));
+    }
+
+    public static void putBase64String(Context context, PrefKey key, String value) {
+        init(context);
+        prefs.edit().putString(key.getKey(), Base64.encodeToString(value.getBytes(), Base64.NO_WRAP)).apply();
+    }
 
     public static boolean getBoolean(Context context, PrefKey key, boolean fallback) {
         init(context);
@@ -72,6 +83,26 @@ public class Prefs {
     public static void remove(Context context, PrefKey key) {
         init(context);
         prefs.edit().remove(key.getKey()).apply();
+    }
+
+    public static void putBoolean(Context context, PrefKey key, boolean value) {
+        init(context);
+        prefs.edit().putBoolean(key.getKey(), value).apply();
+    }
+
+    public static void putInt(Context context, PrefKey key, int value) {
+        init(context);
+        prefs.edit().putInt(key.getKey(), value).apply();
+    }
+
+    public static long getLong(Context context, PrefKey key, int fallback) {
+        init(context);
+        return prefs.getLong(key.getKey(), fallback);
+    }
+
+    public static void putLong(Context context, PrefKey key, long value) {
+        init(context);
+        prefs.edit().putLong(key.getKey(), value).apply();
     }
 
     public enum Keys implements PrefKey {

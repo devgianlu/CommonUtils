@@ -3,13 +3,12 @@ package com.gianlu.commonutils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -20,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -149,11 +149,11 @@ public class Logging {
         }
     }
 
-    public static class LogLine {
+    public static class LogLine implements Serializable {
         public final Type type;
         public final String message;
 
-        LogLine(Type type, String message) {
+        public LogLine(Type type, String message) {
             this.type = type;
             this.message = message;
         }
@@ -192,10 +192,22 @@ public class Logging {
     public static class LogLineAdapter extends BaseAdapter {
         private final Context context;
         private final List<LogLine> objs;
+        private final LayoutInflater inflater;
 
-        LogLineAdapter(Context context, List<LogLine> objs) {
+        public LogLineAdapter(Context context, List<LogLine> objs) {
             this.context = context;
+            this.inflater = LayoutInflater.from(context);
             this.objs = objs;
+        }
+
+        public void clear() {
+            objs.clear();
+            notifyDataSetChanged();
+        }
+
+        public void add(LogLine line) {
+            objs.add(line);
+            notifyDataSetChanged();
         }
 
         @Override
@@ -214,33 +226,30 @@ public class Logging {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LinearLayout linearLayout = new LinearLayout(context);
-            linearLayout.setPadding(12, 12, 12, 12);
-            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        @SuppressLint("ViewHolder")
+        public View getView(int position, View view, ViewGroup parent) {
+            if (view == null) view = inflater.inflate(R.layout.log_line_item, parent, false);
 
             LogLine item = getItem(position);
-
-            TextView type = new TextView(context);
-            type.setTypeface(Typeface.DEFAULT_BOLD);
+            TextView msg = view.findViewById(R.id.logLine_msg);
+            msg.setText(item.message);
+            TextView level = view.findViewById(R.id.logLine_level);
             switch (item.type) {
                 case INFO:
-                    type.setText(R.string.infoTag);
-                    type.setTextColor(Color.BLACK);
+                    level.setText(R.string.infoTag);
+                    level.setTextColor(Color.BLACK);
                     break;
                 case WARNING:
-                    type.setText(R.string.warningTag);
-                    type.setTextColor(Color.YELLOW);
+                    level.setText(R.string.warningTag);
+                    level.setTextColor(Color.YELLOW);
                     break;
                 case ERROR:
-                    type.setText(R.string.errorTag);
-                    type.setTextColor(Color.RED);
+                    level.setText(R.string.errorTag);
+                    level.setTextColor(Color.RED);
                     break;
             }
-            linearLayout.addView(type);
-            linearLayout.addView(new SuperTextView(context, item.message));
 
-            return linearLayout;
+            return view;
         }
     }
 }
