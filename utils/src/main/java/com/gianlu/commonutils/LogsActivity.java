@@ -5,13 +5,15 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.io.File;
@@ -30,7 +32,9 @@ public class LogsActivity extends AppCompatActivity {
 
         final FrameLayout container = findViewById(R.id.logs_container);
         final Spinner spinner = findViewById(R.id.logs_spinner);
-        final ListView list = findViewById(R.id.logs_list);
+        final RecyclerView list = findViewById(R.id.logs_list);
+        list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, false);
 
         if (logFiles.isEmpty()) {
@@ -45,19 +49,16 @@ public class LogsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    final List<Logging.LogLine> logLines = Logging.getLogLines(LogsActivity.this, logFiles.get(i));
-                    list.setAdapter(new Logging.LogLineAdapter(LogsActivity.this, logLines));
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    list.setAdapter(new Logging.LogLineAdapter(LogsActivity.this, Logging.getLogLines(LogsActivity.this, logFiles.get(i)), new Logging.LogLineAdapter.IAdapter() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        public void onLogLineSelected(Logging.LogLine line) {
                             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("stack trace", logLines.get(position).message);
+                            ClipData clip = ClipData.newPlainText("stack trace", line.message);
                             clipboard.setPrimaryClip(clip);
 
                             Toaster.show(LogsActivity.this, Toaster.Message.COPIED_TO_CLIPBOARD);
                         }
-                    });
-                    list.setSelection(list.getCount() - 1);
+                    }));
                 } catch (IOException ex) {
                     Logging.logMe(LogsActivity.this, ex);
                     onBackPressed();

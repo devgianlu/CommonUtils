@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -357,6 +358,19 @@ public class CommonUtils {
         for (int i = 0; i < items.size(); i++)
             if (items.get(i) == item)
                 return i;
+
+        return -1;
+    }
+
+    public static <T> int indexOf(Set<T> items, T item) {
+        Iterator<T> iterator = items.iterator();
+        int pos = 0;
+        while (iterator.hasNext()) {
+            if (Objects.equals(iterator.next(), item))
+                return pos;
+
+            pos++;
+        }
 
         return -1;
     }

@@ -5,10 +5,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -189,15 +189,17 @@ public class Logging {
         }
     }
 
-    public static class LogLineAdapter extends BaseAdapter {
+    public static class LogLineAdapter extends RecyclerView.Adapter<LogLineAdapter.ViewHolder> {
         private final Context context;
         private final List<LogLine> objs;
+        private final IAdapter listener;
         private final LayoutInflater inflater;
 
-        public LogLineAdapter(Context context, List<LogLine> objs) {
+        public LogLineAdapter(Context context, List<LogLine> objs, @Nullable IAdapter listener) {
             this.context = context;
             this.inflater = LayoutInflater.from(context);
             this.objs = objs;
+            this.listener = listener;
         }
 
         public void clear() {
@@ -207,49 +209,61 @@ public class Logging {
 
         public void add(LogLine line) {
             objs.add(line);
-            notifyDataSetChanged();
+            notifyItemInserted(objs.size() - 1);
         }
 
         @Override
-        public int getCount() {
-            return objs.size();
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ViewHolder(parent);
         }
 
         @Override
-        public LogLine getItem(int i) {
-            return objs.get(i);
-        }
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            final LogLine item = objs.get(position);
 
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        @SuppressLint("ViewHolder")
-        public View getView(int position, View view, ViewGroup parent) {
-            if (view == null) view = inflater.inflate(R.layout.log_line_item, parent, false);
-
-            LogLine item = getItem(position);
-            TextView msg = view.findViewById(R.id.logLine_msg);
-            msg.setText(item.message);
-            TextView level = view.findViewById(R.id.logLine_level);
+            holder.msg.setText(item.message);
             switch (item.type) {
                 case INFO:
-                    level.setText(R.string.infoTag);
-                    level.setTextColor(Color.BLACK);
+                    holder.level.setText(R.string.infoTag);
+                    holder.level.setTextColor(Color.BLACK);
                     break;
                 case WARNING:
-                    level.setText(R.string.warningTag);
-                    level.setTextColor(Color.YELLOW);
+                    holder.level.setText(R.string.warningTag);
+                    holder.level.setTextColor(Color.YELLOW);
                     break;
                 case ERROR:
-                    level.setText(R.string.errorTag);
-                    level.setTextColor(Color.RED);
+                    holder.level.setText(R.string.errorTag);
+                    holder.level.setTextColor(Color.RED);
                     break;
             }
 
-            return view;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) listener.onLogLineSelected(item);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return objs.size();
+        }
+
+        public interface IAdapter {
+            void onLogLineSelected(LogLine line);
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView msg;
+            final TextView level;
+
+            public ViewHolder(ViewGroup parent) {
+                super(inflater.inflate(R.layout.log_line_item, parent, false));
+
+                msg = itemView.findViewById(R.id.logLine_msg);
+                level = itemView.findViewById(R.id.logLine_level);
+            }
         }
     }
 }
