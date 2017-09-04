@@ -52,14 +52,21 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     billingService = IInAppBillingService.Stub.asInterface(service);
-                    if (pd != null && pd.isShowing())
-                        donate();
+                    if (pd != null && pd.isShowing()) donate();
                 }
             };
 
             getActivity().bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND").setPackage("com.android.vending"),
                     serviceConnection, Context.BIND_AUTO_CREATE);
         }
+    }
+
+    @Override
+    public void onStop() {
+        Activity activity = getActivity();
+        if (serviceConnection != null && billingService != null && activity != null)
+            activity.unbindService(serviceConnection);
+        super.onStop();
     }
 
     @Override

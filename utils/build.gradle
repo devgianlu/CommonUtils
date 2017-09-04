@@ -20,16 +20,6 @@ android {
 }
 
 dependencies {
-    compile(name: 'appcompat-v7-26.0.1-fixed', ext: 'aar')
-    // START - DEPS OF appcompat-v7
-    compile 'com.android.support:support-annotations:26.0.1'
-    compile 'com.android.support:support-v4:26.0.1'
-    compile 'com.android.support:support-vector-drawable:26.0.1'
-    compile 'com.android.support:animated-vector-drawable:26.0.1'
-    // END - DEPS OF appcompat-v7
-
-    // compile 'com.android.support:appcompat-v7:26.0.1'
-    compile('com.android.support:design:26.0.1') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
+    compile 'com.android.support:appcompat-v7:26.0.2'
+    compile 'com.android.support:design:26.0.2'
 }

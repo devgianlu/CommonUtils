@@ -19,12 +19,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -166,8 +167,13 @@ public class CommonUtils {
     }
 
     public static void expand(final View v) {
-        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final int targetHeight = v.getMeasuredHeight();
+        final int targetHeight;
+        if (v.getMinimumHeight() != 0) {
+            targetHeight = v.getMinimumHeight();
+        } else {
+            v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            targetHeight = v.getMeasuredHeight();
+        }
 
         v.getLayoutParams().height = 0;
         v.setVisibility(View.VISIBLE);
@@ -175,7 +181,7 @@ public class CommonUtils {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
-                        ? RelativeLayout.LayoutParams.WRAP_CONTENT
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
                         : (int) (targetHeight * interpolatedTime);
                 v.requestLayout();
             }
@@ -189,7 +195,6 @@ public class CommonUtils {
         a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
-
 
     public static void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();
@@ -467,5 +472,11 @@ public class CommonUtils {
 
     public static String breakText(String str, Paint paint, float maxWidth) {
         return str.substring(0, paint.breakText(str, 0, str.length(), true, maxWidth, null));
+    }
+
+    public static JSONArray toJSONArray(String[] keys) {
+        JSONArray array = new JSONArray();
+        for (String key : keys) array.put(key);
+        return array;
     }
 }
