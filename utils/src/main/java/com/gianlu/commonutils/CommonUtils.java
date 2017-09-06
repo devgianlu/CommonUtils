@@ -35,10 +35,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,58 +63,6 @@ public class CommonUtils {
         return true;
     }
 
-    public static int getMaskedValue(int maskedValue, int mask) {
-        int definitiveMaskedValue = 0;
-        int count = 0;
-
-        maskedValue = mask & maskedValue;
-
-        while (mask != 0) {
-            while ((mask & 1) == 0) {
-                mask = mask >>> 1;
-                maskedValue = maskedValue >>> 1;
-            }
-            while ((mask & 1) == 1) {
-                definitiveMaskedValue = definitiveMaskedValue + ((maskedValue & 1) << count);
-                count++;
-
-                mask = mask >>> 1;
-                maskedValue = maskedValue >>> 1;
-            }
-        }
-
-        return definitiveMaskedValue;
-    }
-
-    public static int setMaskedValue(int maskedValue, int mask, int valueToAdd) {
-        int nbZero = 0;
-        int nbLeastSignificantBit = 0;
-        int tmpMask = mask;
-        maskedValue = maskedValue & ~mask;
-
-        while (tmpMask != 0) {
-            while ((tmpMask & 1) == 0) {
-                tmpMask = tmpMask >>> 1;
-                nbLeastSignificantBit++;
-                nbZero++;
-            }
-
-            while ((tmpMask & 1) == 1) {
-                tmpMask = tmpMask >>> 1;
-
-                BigInteger bigValueToAdd = BigInteger.valueOf(valueToAdd).shiftLeft(nbZero);
-                int tmpValueToAdd = bigValueToAdd.intValue();
-                BigInteger bigMaskOneBit = BigInteger.valueOf(1).shiftLeft(nbLeastSignificantBit);
-                int maskOneBit = bigMaskOneBit.intValue();
-
-                int bitValueToSet = getMaskedValue(tmpValueToAdd, maskOneBit);
-                maskedValue = maskedValue | bitValueToSet << nbLeastSignificantBit;
-                nbLeastSignificantBit++;
-            }
-        }
-        return maskedValue;
-    }
-
     public static HashMap<String, Object> toMap(JSONObject obj) throws JSONException {
         HashMap<String, Object> map = new HashMap<>();
 
@@ -134,32 +83,6 @@ public class CommonUtils {
             obj.put(entry.getKey(), entry.getValue());
 
         return obj;
-    }
-
-    @Nullable
-    public static File getSecondaryStorage() {
-        final String value = System.getenv("SECONDARY_STORAGE");
-        if (!value.isEmpty()) {
-            final String[] paths = value.split(":");
-            for (String path : paths) {
-                File file = new File(path);
-                if (file.isDirectory())
-                    return file;
-            }
-        }
-
-        return null;
-    }
-
-    public static boolean isOnSecondaryStorage(File file) {
-        File secondaryStorage = getSecondaryStorage();
-        if (secondaryStorage == null) return false;
-
-        try {
-            return file.getCanonicalPath().startsWith(secondaryStorage.getAbsolutePath());
-        } catch (IOException ex) {
-            return false;
-        }
     }
 
     public static boolean isExpanded(View v) {
@@ -478,5 +401,18 @@ public class CommonUtils {
         JSONArray array = new JSONArray();
         for (String key : keys) array.put(key);
         return array;
+    }
+
+    public static <T> List<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
+        List<T> items = new ArrayList<>();
+
+        try {
+            for (int i = 0; i < array.length(); i++)
+                items.add(tClass.getConstructor(JSONObject.class).newInstance(array.getJSONObject(i)));
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return items;
     }
 }

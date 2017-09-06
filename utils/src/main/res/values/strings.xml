@@ -7,7 +7,7 @@
     <string name="infoTag" translatable="false">INFO:</string>
     <string name="unknown">Unknown</string>
     <string name="email" translatable="false">altomanigianluca@gmail.com</string>
-    <string name="ooops" translatable="false">Ooops!</string>
+    <string name="ooops">Ooops!</string>
     <string name="somethingWentWrong">Something went wrong! A report has already been sent to the developer.</string>
     <string name="emailMe">If you want to add your opinion on what happen please email me at altomanigianluca@gmail.com by clicking the button below.</string>
     <string name="send_email">Send email</string>

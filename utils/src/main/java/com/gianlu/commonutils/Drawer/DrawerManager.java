@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -34,6 +35,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private IDrawerListener<P> listener;
     private boolean isProfilesLockedUntilSelected;
     private ProfilesAdapter<P> profilesAdapter;
+    private P currentProfile;
 
     public DrawerManager(Initializer<P> initializer) {
         this.context = initializer.drawerLayout.getContext();
@@ -345,7 +347,8 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         }
     }
 
-    public DrawerManager<P> setCurrentProfile(P profile) {
+    public DrawerManager<P> setCurrentProfile(@NonNull P profile) {
+        currentProfile = profile;
         LetterIconBig currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
         currAccount.setColorScheme(setup.getColorAccent(), setup.getColorPrimaryShadow());
 
