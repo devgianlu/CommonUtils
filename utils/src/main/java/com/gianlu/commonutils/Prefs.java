@@ -52,6 +52,11 @@ public class Prefs {
         return Integer.parseInt(prefs.getString(key.getKey(), String.valueOf(fallback)));
     }
 
+    public static long getFakeLong(Context context, PrefKey key, long fallback) {
+        init(context);
+        return Long.parseLong(prefs.getString(key.getKey(), String.valueOf(fallback)));
+    }
+
     @SuppressWarnings("ConstantConditions")
     public static void removeFromSet(Context context, PrefKey key, String value) {
         init(context);
@@ -95,7 +100,7 @@ public class Prefs {
         prefs.edit().putInt(key.getKey(), value).apply();
     }
 
-    public static long getLong(Context context, PrefKey key, int fallback) {
+    public static long getLong(Context context, PrefKey key, long fallback) {
         init(context);
         return prefs.getLong(key.getKey(), fallback);
     }

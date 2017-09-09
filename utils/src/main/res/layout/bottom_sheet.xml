@@ -56,11 +56,26 @@
             android:layout_height="wrap_content">
 
             <FrameLayout
-                android:id="@+id/bottomSheet_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:minHeight="64dp">
 
-                <!-- Content goes here -->
+                <ProgressBar
+                    android:id="@+id/bottomSheet_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/bottomSheet_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Content goes here -->
+                </FrameLayout>
+
             </FrameLayout>
         </ScrollView>
     </LinearLayout>

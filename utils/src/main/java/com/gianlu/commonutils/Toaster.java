@@ -12,7 +12,7 @@ public class Toaster {
 
     public static void initHandler(Context context) {
         if (context == null) {
-            Looper.prepare();
+            if (Looper.myLooper() == null) Looper.prepare();
             handler = new FakeHandler();
             return;
         }

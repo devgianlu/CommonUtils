@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -17,6 +18,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     protected final TextView title;
     protected final Context context;
     protected final Handler mainHandler;
+    protected final ProgressBar loading;
     protected final FrameLayout content;
     private final View mask;
     private final int layoutRes;
@@ -40,6 +42,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         mask.setAlpha(.2f);
 
         title = sheet.findViewById(R.id.bottomSheet_title);
+        loading = sheet.findViewById(R.id.bottomSheet_loading);
         content = sheet.findViewById(R.id.bottomSheet_content);
         LayoutInflater.from(context).inflate(layoutRes, content, true);
 
@@ -65,6 +68,27 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
             mask.setAlpha(.2f);
         }
+    }
+
+    public void expandLoading() {
+        if (forceLayoutInflating) {
+            content.removeAllViews();
+            LayoutInflater.from(context).inflate(layoutRes, content, true);
+            bindViews();
+        }
+
+        loading.setVisibility(View.VISIBLE);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        mask.setAlpha(0);
+        mask.setVisibility(View.VISIBLE);
+        mask.animate().alpha(.2f).setDuration(500).start();
+        mask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapse();
+            }
+        });
     }
 
     @Override
@@ -111,6 +135,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
 
     private void updateViewInternal(E item) {
         if (item == null) return;
+        loading.setVisibility(View.GONE);
         current = item;
         updateView(item);
     }

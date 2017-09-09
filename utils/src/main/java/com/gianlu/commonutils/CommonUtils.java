@@ -63,6 +63,13 @@ public class CommonUtils {
         return true;
     }
 
+    public static List<String> toStringsList(JSONArray array) throws JSONException {
+        if (array == null) return new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) list.add(array.getString(i));
+        return list;
+    }
+
     public static HashMap<String, Object> toMap(JSONObject obj) throws JSONException {
         HashMap<String, Object> map = new HashMap<>();
 
@@ -70,6 +77,18 @@ public class CommonUtils {
         while (iterator.hasNext()) {
             String key = iterator.next();
             map.put(key, obj.get(key));
+        }
+
+        return map;
+    }
+
+    public static <T> HashMap<String, T> toMap(JSONObject obj, Class<T> valueClass) throws JSONException {
+        HashMap<String, T> map = new HashMap<>();
+
+        Iterator<String> iterator = obj.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            map.put(key, valueClass.cast(obj.get(key)));
         }
 
         return map;

@@ -215,7 +215,11 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (billingService != null)
-            getActivity().unbindService(serviceConnection);
+        if (billingService != null) {
+            try {
+                getActivity().unbindService(serviceConnection);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
     }
 }
