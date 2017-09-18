@@ -78,6 +78,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         }
 
         loading.setVisibility(View.VISIBLE);
+        content.setVisibility(View.GONE);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         mask.setAlpha(0);
@@ -126,6 +127,8 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
 
     private void setupViewInternal(E item) {
         if (item == null) return;
+        loading.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
         setupView(item);
     }
 
@@ -136,6 +139,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     private void updateViewInternal(E item) {
         if (item == null) return;
         loading.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
         current = item;
         updateView(item);
     }

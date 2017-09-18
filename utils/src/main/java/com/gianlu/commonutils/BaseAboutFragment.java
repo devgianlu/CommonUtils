@@ -64,8 +64,13 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
     @Override
     public void onStop() {
         Activity activity = getActivity();
-        if (serviceConnection != null && billingService != null && activity != null)
-            activity.unbindService(serviceConnection);
+        if (serviceConnection != null && billingService != null && activity != null) {
+            try {
+                activity.unbindService(serviceConnection);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+
         super.onStop();
     }
 

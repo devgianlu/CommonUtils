@@ -428,7 +428,10 @@ public class CommonUtils {
         try {
             for (int i = 0; i < array.length(); i++)
                 items.add(tClass.getConstructor(JSONObject.class).newInstance(array.getJSONObject(i)));
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+        } catch (InvocationTargetException ex) {
+            if (ex.getCause() instanceof JSONException) throw (JSONException) ex.getCause();
+            throw new RuntimeException(ex);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
             throw new RuntimeException(ex);
         }
 

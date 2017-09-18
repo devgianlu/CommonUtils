@@ -1,5 +1,6 @@
 package com.gianlu.commonutils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,6 +23,8 @@ public class Toaster {
     }
 
     public static void show(final Context context, final String message, final int duration, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
+        if (context instanceof Activity) if (((Activity) context).isFinishing()) return;
+
         initHandler(context);
 
         handler.post(new Runnable() {
