@@ -18,14 +18,19 @@ public class Toaster {
     public static void show(final Context context, final String message, final int duration, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
         if (context instanceof Activity) if (((Activity) context).isFinishing()) return;
 
-        initHandler();
-
-        handler.post(new Runnable() {
+        Runnable action = new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(context, message, duration).show();
             }
-        });
+        };
+
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+          action.run();
+        } else {
+            initHandler();
+            handler.post(action);
+        }
 
         Logging.logMe(context, message + (message_extra != null ? (" Details: " + message_extra) : ""), ex != null);
         if (extra != null) handler.post(extra);
