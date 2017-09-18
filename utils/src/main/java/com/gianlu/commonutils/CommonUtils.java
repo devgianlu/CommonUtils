@@ -185,7 +185,7 @@ public class CommonUtils {
     }
 
     public static void showDialog(final Context context, final Dialog dialog) {
-        Toaster.initHandler(context);
+        Toaster.initHandler();
         Toaster.handler.post(new Runnable() {
             @Override
             public void run() {
@@ -196,7 +196,7 @@ public class CommonUtils {
     }
 
     public static void showDialog(final Context context, final AlertDialog.Builder builder) {
-        Toaster.initHandler(context);
+        Toaster.initHandler();
         Toaster.handler.post(new Runnable() {
             @Override
             public void run() {

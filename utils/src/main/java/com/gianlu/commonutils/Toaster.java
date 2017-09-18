@@ -60,18 +60,6 @@ public class Toaster {
         show(context, message, null, null, extra);
     }
 
-    private static class FakeHandler extends Handler {
-
-        @Override
-        public boolean sendMessageAtTime(android.os.Message msg, long uptimeMillis) {
-            return false;
-        }
-
-        @Override
-        public void dispatchMessage(android.os.Message msg) {
-        }
-    }
-
     @SuppressWarnings("unused")
     public static class Message {
         public static final Message NO_EMAIL_CLIENT = new Message(R.string.noMailClients, true);
