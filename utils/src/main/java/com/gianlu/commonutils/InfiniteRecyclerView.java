@@ -2,6 +2,7 @@ package com.gianlu.commonutils;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
@@ -78,7 +79,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             this.countForSeparator = countForSeparator;
             this.items = new ArrayList<>();
             this.maxPages = maxPages;
-            this.handler = new Handler(context.getMainLooper());
+            this.handler = new Handler(Looper.getMainLooper());
 
             populate(items);
         }

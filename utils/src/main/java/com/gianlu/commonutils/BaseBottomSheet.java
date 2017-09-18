@@ -3,6 +3,7 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -55,7 +56,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
             }
         });
 
-        mainHandler = new Handler(context.getMainLooper());
+        mainHandler = new Handler(Looper.getMainLooper());
 
         bindViews();
     }

@@ -11,21 +11,14 @@ import android.widget.Toast;
 public class Toaster {
     public static Handler handler;
 
-    public static void initHandler(Context context) {
-        if (context == null) {
-            if (Looper.myLooper() == null) Looper.prepare();
-            handler = new FakeHandler();
-            return;
-        }
-
-        if (handler == null || handler instanceof FakeHandler || handler.getLooper() != context.getMainLooper())
-            handler = new Handler(context.getMainLooper());
+    public static void initHandler() {
+        if (handler == null) handler = new Handler(Looper.getMainLooper());
     }
 
     public static void show(final Context context, final String message, final int duration, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
         if (context instanceof Activity) if (((Activity) context).isFinishing()) return;
 
-        initHandler(context);
+        initHandler();
 
         handler.post(new Runnable() {
             @Override
@@ -100,10 +93,7 @@ public class Toaster {
         }
 
         public String getMessage(Context context) {
-            if (context == null) {
-                return "Unknown message!";
-            }
-
+            if (context == null) return "Unknown message!";
             return context.getString(messageRes);
         }
     }

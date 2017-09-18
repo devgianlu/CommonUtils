@@ -31,7 +31,7 @@ public class MessageLayout {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             _hide(parent);
         } else {
-            new Handler(parent.getContext().getMainLooper()).post(new Runnable() {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     _hide(parent);
