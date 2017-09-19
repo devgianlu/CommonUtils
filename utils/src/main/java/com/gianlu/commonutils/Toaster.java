@@ -16,6 +16,7 @@ public class Toaster {
     }
 
     public static void show(final Context context, final String message, final int duration, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
+        if (context == null) return;
         if (context instanceof Activity) if (((Activity) context).isFinishing()) return;
 
         Runnable action = new Runnable() {
@@ -27,13 +28,14 @@ public class Toaster {
 
         if (Looper.myLooper() == Looper.getMainLooper()) {
           action.run();
+            if (extra != null) extra.run();
         } else {
             initHandler();
             handler.post(action);
+            handler.post(extra);
         }
 
         Logging.logMe(context, message + (message_extra != null ? (" Details: " + message_extra) : ""), ex != null);
-        if (extra != null) handler.post(extra);
         if (ex != null) Logging.logMe(context, ex);
     }
 
