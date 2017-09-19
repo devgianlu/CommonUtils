@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.ColorInt;
-import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -18,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("unused,WeakerAccess")
-@Keep
 public class InfiniteRecyclerView extends RecyclerView {
     private IFailedLoadingContent listener;
 
