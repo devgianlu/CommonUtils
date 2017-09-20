@@ -32,7 +32,7 @@ public class Toaster {
         } else {
             initHandler();
             handler.post(action);
-            handler.post(extra);
+            if (extra != null) handler.post(extra);
         }
 
         Logging.logMe(context, message + (message_extra != null ? (" Details: " + message_extra) : ""), ex != null);
