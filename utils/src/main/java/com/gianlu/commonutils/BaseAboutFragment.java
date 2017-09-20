@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.Preference;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -101,6 +102,9 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
     @StringRes
     protected abstract int getAppNameRes();
 
+    @NonNull
+    protected abstract String getPackageName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +133,18 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 CommonUtils.sendEmail(getActivity(), getString(getAppNameRes()), null);
+                return true;
+            }
+        });
+
+        findPreference("rate").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+                }
                 return true;
             }
         });

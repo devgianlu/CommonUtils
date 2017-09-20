@@ -32,4 +32,7 @@
     <string name="failedBuying">购买失败！请联系我。</string>
     <string name="failedBillingConnection">连接账单服务失败！</string>
     <string name="noLogs">没有日志。</string>
+
+    <string name="rateApp">为这个应用软件评分</string>
+    <string name="leaveReview">请在Play Store上查看</string>
 </resources>

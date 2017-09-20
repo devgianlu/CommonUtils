@@ -8,6 +8,11 @@
         android:title="@string/tracking" />
 
     <Preference
+        android:key="rate"
+        android:summary="@string/leaveReview"
+        android:title="@string/rateApp" />
+
+    <Preference
         android:key="donateGoogle"
         android:summary="@string/donateGoogleSummary"
         android:title="@string/donateGoogle" />

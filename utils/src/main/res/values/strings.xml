@@ -37,4 +37,6 @@
     <string name="failedBuying">Failed to buy this item! Please contact me.</string>
     <string name="failedBillingConnection">Failed to connect to the billing service!</string>
     <string name="noLogs">There are no logs.</string>
+    <string name="rateApp">Rate this app</string>
+    <string name="leaveReview">Leave a review on the Play Store</string>
 </resources>
