@@ -53,10 +53,11 @@ public class LogsActivity extends AppCompatActivity {
                         @Override
                         public void onLogLineSelected(Logging.LogLine line) {
                             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("stack trace", line.message);
-                            clipboard.setPrimaryClip(clip);
-
-                            Toaster.show(LogsActivity.this, Toaster.Message.COPIED_TO_CLIPBOARD);
+                            if (clipboard != null) {
+                                ClipData clip = ClipData.newPlainText("stack trace", line.message);
+                                clipboard.setPrimaryClip(clip);
+                                Toaster.show(LogsActivity.this, Toaster.Message.COPIED_TO_CLIPBOARD);
+                            }
                         }
                     }));
                 } catch (IOException ex) {

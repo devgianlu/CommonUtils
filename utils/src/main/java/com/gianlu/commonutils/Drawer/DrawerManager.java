@@ -35,7 +35,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private IDrawerListener<P> listener;
     private boolean isProfilesLockedUntilSelected;
     private ProfilesAdapter<P> profilesAdapter;
-    private P currentProfile;
 
     public DrawerManager(Initializer<P> initializer) {
         this.context = initializer.drawerLayout.getContext();
@@ -348,7 +347,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     public DrawerManager<P> setCurrentProfile(@NonNull P profile) {
-        currentProfile = profile;
         LetterIconBig currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
         currAccount.setColorScheme(setup.getColorAccent(), setup.getColorPrimaryShadow());
 

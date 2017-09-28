@@ -156,8 +156,6 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         }
     }
 
-    protected abstract void sendAnalytics();
-
     private void donate() {
         CommonUtils.showDialog(getActivity(), pd);
         if (billingService == null)
@@ -209,8 +207,6 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                         .setTitle(getString(R.string.donate))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setView(list));
-
-                sendAnalytics();
             }
 
             @Override

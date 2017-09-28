@@ -1,5 +1,6 @@
 package com.gianlu.commonutils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -145,6 +146,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             return count;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         @SuppressWarnings("unchecked")
         public final void onBindViewHolder(ViewHolder holder, int position) {
