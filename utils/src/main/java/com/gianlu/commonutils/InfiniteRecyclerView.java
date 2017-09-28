@@ -65,6 +65,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         private final int primary_shadow;
         private final boolean countForSeparator;
         private final Handler handler;
+        @SuppressWarnings("CanBeFinal")
         protected int maxPages;
         int page = 1;
         long currDay = -1;

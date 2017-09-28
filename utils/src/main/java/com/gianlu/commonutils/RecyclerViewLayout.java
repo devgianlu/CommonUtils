@@ -49,7 +49,7 @@ public class RecyclerViewLayout extends FrameLayout {
         swipeRefreshEnabled = true;
         swipeRefresh.setEnabled(true);
         swipeRefresh.setColorSchemeResources(colors);
-        list.setVisibility(GONE);
+        list.setVisibility(VISIBLE);
     }
 
     public void disableSwipeRefresh() {
@@ -59,20 +59,40 @@ public class RecyclerViewLayout extends FrameLayout {
         list.setVisibility(GONE);
     }
 
-    private void hideList() {
+    public void hideList() {
         if (swipeRefreshEnabled) {
             swipeRefresh.setVisibility(GONE);
         } else {
             list.setVisibility(GONE);
         }
+
+        stopLoading();
     }
 
-    private void showList() {
+    public boolean isLoading() {
+        return loading.getVisibility() == VISIBLE;
+    }
+
+    public void showList() {
         if (swipeRefreshEnabled) {
             swipeRefresh.setVisibility(VISIBLE);
         } else {
             list.setVisibility(VISIBLE);
         }
+
+        MessageLayout.hide(this);
+        stopLoading();
+    }
+
+    public void startLoading() {
+        hideList();
+        hideMessage();
+        loading.setVisibility(VISIBLE);
+    }
+
+    public void stopLoading() {
+        swipeRefresh.setRefreshing(false);
+        loading.setVisibility(GONE);
     }
 
     public void showMessage(@StringRes int message, boolean error, Object... formatArgs) {
@@ -80,16 +100,13 @@ public class RecyclerViewLayout extends FrameLayout {
     }
 
     public void showMessage(@NonNull String message, boolean error) {
-        loading.setVisibility(GONE);
         hideList();
         MessageLayout.show(this, message, error ? R.drawable.ic_error_outline_black_48dp : R.drawable.ic_info_outline_black_48dp);
     }
 
     public void loadListData(RecyclerView.Adapter adapter) {
-        loading.setVisibility(GONE);
-        showList();
-        MessageLayout.hide(this);
         list.setAdapter(adapter);
+        showList();
     }
 
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
@@ -104,7 +121,15 @@ public class RecyclerViewLayout extends FrameLayout {
         return list;
     }
 
-    public SwipeRefreshLayout getSwipeRefreshlayout() {
+    public SwipeRefreshLayout getSwipeRefreshLayout() {
         return swipeRefresh;
+    }
+
+    public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
+        swipeRefresh.setOnRefreshListener(listener);
+    }
+
+    public void hideMessage() {
+        MessageLayout.hide(this);
     }
 }
