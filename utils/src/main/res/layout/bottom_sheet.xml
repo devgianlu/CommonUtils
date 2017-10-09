@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:elevation="16dp"
+    android:focusable="true"
     android:orientation="vertical"
     android:paddingTop="21dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">

@@ -63,10 +63,13 @@ public class CommonUtils {
         return true;
     }
 
-    public static List<String> toStringsList(JSONArray array) throws JSONException {
+    public static List<String> toStringsList(JSONArray array, boolean checkForDuplicates) throws JSONException {
         if (array == null) return new ArrayList<>();
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) list.add(array.getString(i));
+        for (int i = 0; i < array.length(); i++) {
+            String val = array.getString(i);
+            if (!checkForDuplicates || !list.contains(val)) list.add(val);
+        }
         return list;
     }
 
@@ -422,8 +425,8 @@ public class CommonUtils {
         return array;
     }
 
-    public static <T> List<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
-        List<T> items = new ArrayList<>();
+    public static <T> ArrayList<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
+        ArrayList<T> items = new ArrayList<>();
 
         try {
             for (int i = 0; i < array.length(); i++)
