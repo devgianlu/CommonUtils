@@ -36,11 +36,12 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         behavior.setBottomSheetCallback(this);
         behavior.setPeekHeight(0);
         behavior.setHideable(true);
-        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         mask = parent.findViewById(R.id.bottomSheet_mask);
+        mask.setVisibility(View.VISIBLE);
         mask.setBackgroundColor(Color.BLACK);
-        mask.setAlpha(.2f);
+        mask.setClickable(false);
+        mask.setAlpha(0);
 
         title = sheet.findViewById(R.id.bottomSheet_title);
         loading = sheet.findViewById(R.id.bottomSheet_loading);
@@ -59,15 +60,32 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         mainHandler = new Handler(Looper.getMainLooper());
 
         bindViews();
+        collapse();
+    }
+
+    private void showMask() {
+        mask.clearAnimation();
+        mask.setAlpha(0);
+        mask.animate().alpha(.2f).setDuration(200).start();
+        mask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapse();
+            }
+        });
+    }
+
+    private void hideMask() {
+        mask.clearAnimation();
+        mask.animate().alpha(0).setDuration(200).start();
+        mask.setClickable(false);
     }
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {
         if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior.setPeekHeight(0);
-            mask.setVisibility(View.GONE);
-        } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-            mask.setAlpha(.2f);
+            if (mask.getAnimation() != null && mask.getAnimation().hasEnded()) hideMask();
         }
     }
 
@@ -82,15 +100,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         content.setVisibility(View.GONE);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        mask.setAlpha(0);
-        mask.setVisibility(View.VISIBLE);
-        mask.animate().alpha(.2f).setDuration(500).start();
-        mask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                collapse();
-            }
-        });
+        showMask();
     }
 
     @Override
@@ -115,15 +125,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         updateViewInternal(item);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        mask.setAlpha(0);
-        mask.setVisibility(View.VISIBLE);
-        mask.animate().alpha(.2f).setDuration(500).start();
-        mask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                collapse();
-            }
-        });
+        showMask();
     }
 
     private void setupViewInternal(E item) {
@@ -154,7 +156,6 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         current = null;
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        mask.animate().alpha(0).setDuration(500).start();
-        mask.setClickable(false);
+        hideMask();
     }
 }
