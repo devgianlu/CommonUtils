@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-// FIXME: We shouldn't do that
 public class SuppressingLinearLayoutManager extends LinearLayoutManager {
     public SuppressingLinearLayoutManager(Context context) {
         super(context);
@@ -28,7 +27,7 @@ public class SuppressingLinearLayoutManager extends LinearLayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         try {
             super.onLayoutChildren(recycler, state);
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (IndexOutOfBoundsException ex) { // We shouldn't do that
             recycler.clear();
         }
     }

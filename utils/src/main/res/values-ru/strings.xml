@@ -7,6 +7,11 @@
     <string name="emailMe">Если вы хотите оставить свое мнение о том, что произошло, напишите мне по адресу altomanigianluca@gmail.com, нажав кнопку ниже.</string>
     <string name="send_email">Отправить письмо</string>
     <string name="donate">Пожертвования</string>
+    <string name="openDrawer">Открыть ящик</string>
+    <string name="closeDrawer">Закрыть ящик</string>
+    <string name="preferences">Настройки</string>
+    <string name="logs">Лог-файлы</string>
+    <string name="third_part">Третьи стороны проекта</string>
     <string name="donateGoogle">Пожертвовать через Google Play</string>
     <string name="donateGoogleSummary">Часть денег заберет комиссия Google</string>
     <string name="donatePaypal">Пожертвовать через PayPal</string>
@@ -28,7 +33,7 @@
     <string name="failedBuying">Не удалось купить этот товар! Пожалуйста свяжись со мной.</string>
     <string name="failedBillingConnection">Не удалось подключиться к службе выставления счетов!</string>
     <string name="noLogs">Список логов пуст.</string>
-
+    <string name="apacheLicense">Лицензия от Apache License 2.0</string>
     <string name="rateApp">Оцени это приложение</string>
     <string name="leaveReview">Оставить отзыв в Play Store</string>
 </resources>

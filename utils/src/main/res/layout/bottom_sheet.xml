@@ -4,7 +4,6 @@
     android:id="@+id/bottomSheet_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:elevation="16dp"
     android:orientation="vertical"
     android:paddingTop="21dp"
@@ -51,7 +50,7 @@
             android:layout_height="1dp"
             android:background="#40000000" />
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -77,6 +76,6 @@
                 </FrameLayout>
 
             </FrameLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 </LinearLayout>

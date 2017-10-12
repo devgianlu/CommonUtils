@@ -6,6 +6,9 @@
     <string name="somethingWentWrong">发生了某些错误。已经发送报告给开发者。</string>
     <string name="emailMe">对于所发生的，如果您想添加您的想法，请通过点击下面按钮给我的邮箱altomanigianluca@gmail.com发邮件。</string>
     <string name="send_email">发送邮件</string>
+    <string name="logs">日志文件</string>
+    <string name="third_part">第三方项目</string>
+    <string name="apacheLicense">Apache License 2.0许可</string>
     <string name="openDrawer">打开抽屉</string>
     <string name="donate">捐献</string>
     <string name="closeDrawer">关闭抽屉</string>
@@ -23,6 +26,7 @@
     <string name="app_version">应用版本</string>
     <string name="developer">开发者：Gianlu （反馈问题和建议）</string>
     <string name="noMailClients">没有安装邮件客户端！</string>
+    <string name="preferences">偏好</string>
     <string name="offline">您处理离线状态！</string>
     <string name="copiedToClipboard">已复制到剪贴板！</string>
     <string name="logDeleted">所有日志已被删除。</string>
@@ -32,7 +36,6 @@
     <string name="failedBuying">购买失败！请联系我。</string>
     <string name="failedBillingConnection">连接账单服务失败！</string>
     <string name="noLogs">没有日志。</string>
-
     <string name="rateApp">为这个应用软件评分</string>
     <string name="leaveReview">请在Play Store上查看</string>
 </resources>
