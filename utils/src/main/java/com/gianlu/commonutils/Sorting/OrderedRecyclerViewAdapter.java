@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -83,13 +84,28 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         }
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public final void onBindViewHolder(VH holder, int position, List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            WeakReference<E> payload = (WeakReference<E>) payloads.get(0);
+            if (payload.get() != null) onBindViewHolder(holder, position, payload.get());
+        }
+    }
+
+    protected abstract void onBindViewHolder(VH holder, int position, @NonNull E payload);
+
     public final void notifyItemChanged(E payload) {
         if (!notifyItemChangedOriginal(payload) && !filters.contains(payload.getFilterable()) && matchQuery(payload, query)) {
             Pair<Integer, Integer> res = objs.addAndSort(payload);
-            if (res.first == -1) super.notifyItemInserted(res.second);
+            if (res.first == -1)
+                super.notifyItemInserted(res.second);
             else if (Objects.equals(res.first, res.second))
-                super.notifyItemChanged(res.first, payload);
-            else super.notifyItemMoved(res.first, res.second);
+                super.notifyItemChanged(res.first, new WeakReference<>(payload));
+            else
+                super.notifyItemMoved(res.first, res.second);
         }
     }
 

@@ -64,28 +64,35 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
     }
 
     private void showMask() {
-        mask.clearAnimation();
+        mask.animate().cancel();
         mask.setAlpha(0);
+        mask.setClickable(true);
         mask.animate().alpha(.2f).setDuration(200).start();
-        mask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                collapse();
-            }
-        });
     }
 
     private void hideMask() {
-        mask.clearAnimation();
-        mask.animate().alpha(0).setDuration(200).start();
-        mask.setClickable(false);
+        mask.animate().cancel();
+        mask.animate().alpha(0).setDuration(200).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mask.setOnClickListener(null);
+                mask.setClickable(false);
+            }
+        }).start();
     }
 
     @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {
         if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
             behavior.setPeekHeight(0);
-            if (mask.getAnimation() != null && mask.getAnimation().hasEnded()) hideMask();
+            hideMask();
+        } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+            mask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    collapse();
+                }
+            });
         }
     }
 

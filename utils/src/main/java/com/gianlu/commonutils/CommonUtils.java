@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -218,7 +219,7 @@ public class CommonUtils {
     }
 
     public static ProgressDialog fastIndeterminateProgressDialog(Context context, @StringRes int message) {
-        return fastIndeterminateProgressDialog(context, context.getString(message));
+        return fastIndeterminateProgressDialog(context, context == null ? "" : context.getString(message));
     }
 
     @Nullable
@@ -439,5 +440,31 @@ public class CommonUtils {
         }
 
         return items;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] toTArray(JSONArray jsonArray, Class<T> tClass) throws JSONException {
+        if (jsonArray == null) return null;
+
+        T[] array = (T[]) Array.newInstance(tClass, jsonArray.length());
+        try {
+            for (int i = 0; i < jsonArray.length(); i++)
+                array[i] = tClass.getConstructor(JSONObject.class).newInstance(jsonArray.getJSONObject(i));
+        } catch (InvocationTargetException ex) {
+            if (ex.getCause() instanceof JSONException) throw (JSONException) ex.getCause();
+            throw new RuntimeException(ex);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return array;
+    }
+
+    public static String[] toStringArray(JSONArray jsonArray) throws JSONException {
+        if (jsonArray == null) return null;
+
+        String[] array = new String[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) array[i] = jsonArray.getString(i);
+        return array;
     }
 }

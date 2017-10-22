@@ -26,6 +26,8 @@ public class ConnectivityChecker {
     }
 
     private static boolean checkInternal(@Nullable Context context, boolean shouldTryDotCom) {
+        if (provider == null) provider = new GoogleURLProvider();
+
         try {
             HttpURLConnection conn = (HttpURLConnection) provider.getUrl(shouldTryDotCom).openConnection();
             conn.setRequestProperty("User-Agent", userAgent);
@@ -45,7 +47,7 @@ public class ConnectivityChecker {
         boolean validateResponse(HttpURLConnection connection) throws IOException;
     }
 
-    public class GoogleURLProvider implements URLProvider {
+    public static class GoogleURLProvider implements URLProvider {
 
         private String pickCountryURL(boolean useDotCom) {
             String country = Locale.getDefault().getCountry();
