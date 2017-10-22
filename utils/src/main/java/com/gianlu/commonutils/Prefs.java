@@ -3,7 +3,6 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import java.util.HashSet;
@@ -57,7 +56,6 @@ public class Prefs {
         return Long.parseLong(prefs.getString(key.getKey(), String.valueOf(fallback)));
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static void removeFromSet(Context context, PrefKey key, String value) {
         init(context);
         Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));
@@ -65,7 +63,6 @@ public class Prefs {
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static void addToSet(Context context, PrefKey key, String value) {
         init(context);
         Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));
@@ -73,7 +70,7 @@ public class Prefs {
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 
-    public static Set<String> getSet(Context context, PrefKey key, @Nullable Set<String> fallback) {
+    public static Set<String> getSet(Context context, PrefKey key, Set<String> fallback) {
         init(context);
         Set<String> set = prefs.getStringSet(key.getKey(), fallback);
         if (set == null) return null;
@@ -108,6 +105,11 @@ public class Prefs {
     public static void putLong(Context context, PrefKey key, long value) {
         init(context);
         prefs.edit().putLong(key.getKey(), value).apply();
+    }
+
+    public static boolean has(Context context, PrefKey key) {
+        init(context);
+        return prefs.contains(key.getKey());
     }
 
     public enum Keys implements PrefKey {

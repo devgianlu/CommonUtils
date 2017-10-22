@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused,WeakerAccess")
 public class InfiniteRecyclerView extends RecyclerView {
@@ -56,6 +57,8 @@ public class InfiniteRecyclerView extends RecyclerView {
     }
 
     public static abstract class InfiniteAdapter<T extends ViewHolder, E> extends RecyclerView.Adapter<ViewHolder> {
+        protected static final int ONE_PAGE = -2;
+        protected static final int UNDETERMINED_PAGES = -1;
         static final int ITEM_LOADING = 0;
         static final int ITEM_NORMAL = 1;
         static final int ITEM_SEPARATOR = 2;
@@ -82,6 +85,20 @@ public class InfiniteRecyclerView extends RecyclerView {
             this.handler = new Handler(Looper.getMainLooper());
 
             populate(items);
+        }
+
+        protected int remove(E video) {
+            int pos = indexOf(video);
+            if (pos != -1) items.remove(pos);
+            return pos;
+        }
+
+        protected int indexOf(E element) {
+            for (int i = 0; i < items.size(); i++)
+                if (Objects.equals(element, items.get(i).item))
+                    return i;
+
+            return -1;
         }
 
         @Override
