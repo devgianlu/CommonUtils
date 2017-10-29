@@ -72,33 +72,34 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         if (recyclerView != null) recyclerView.scrollToPosition(0);
     }
 
-    private boolean notifyItemChangedOriginal(E payload) {
-        int pos = originalObjs.indexOf(payload);
-        if (pos == -1) {
-            originalObjs.add(payload);
-            processFilters();
-            return true;
-        } else {
-            originalObjs.set(pos, payload);
-            return false;
-        }
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public final void onBindViewHolder(VH holder, int position, List<Object> payloads) {
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
-            WeakReference<E> payload = (WeakReference<E>) payloads.get(0);
-            if (payload.get() != null) onBindViewHolder(holder, position, payload.get());
+            Object payload = payloads.get(0);
+            if (payload instanceof WeakReference) {
+                WeakReference<E> castPayload = (WeakReference<E>) payload;
+                if (castPayload.get() != null)
+                    onBindViewHolder(holder, position, castPayload.get());
+            } else {
+                onBindViewHolder(holder, position, payload);
+            }
         }
+    }
+
+    protected void onBindViewHolder(VH holder, int position, Object payload) {
     }
 
     protected abstract void onBindViewHolder(VH holder, int position, @NonNull E payload);
 
     public final void notifyItemChanged(E payload) {
-        if (!notifyItemChangedOriginal(payload) && !filters.contains(payload.getFilterable()) && matchQuery(payload, query)) {
+        int pos = originalObjs.indexOf(payload);
+        if (pos == -1) originalObjs.add(payload);
+        else originalObjs.set(pos, payload);
+
+        if (!filters.contains(payload.getFilterable()) && matchQuery(payload, query)) {
             Pair<Integer, Integer> res = objs.addAndSort(payload);
             if (res.first == -1)
                 super.notifyItemInserted(res.second);

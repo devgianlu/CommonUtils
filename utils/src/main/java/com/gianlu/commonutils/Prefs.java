@@ -8,6 +8,7 @@ import android.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class Prefs {
     private static SharedPreferences prefs;
 
@@ -56,6 +57,7 @@ public class Prefs {
         return Long.parseLong(prefs.getString(key.getKey(), String.valueOf(fallback)));
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void removeFromSet(Context context, PrefKey key, String value) {
         init(context);
         Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));
@@ -63,6 +65,7 @@ public class Prefs {
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void addToSet(Context context, PrefKey key, String value) {
         init(context);
         Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));

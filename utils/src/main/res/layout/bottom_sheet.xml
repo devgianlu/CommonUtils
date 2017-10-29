@@ -44,6 +44,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:lines="1"
+                android:textColor="@android:color/primary_text_light"
                 android:textSize="18sp" />
         </LinearLayout>
 
