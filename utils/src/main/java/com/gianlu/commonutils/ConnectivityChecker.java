@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
+@SuppressWarnings("unused")
 public class ConnectivityChecker {
     private static URLProvider provider;
     private static String userAgent = "@devgianlu connectivity test script";
