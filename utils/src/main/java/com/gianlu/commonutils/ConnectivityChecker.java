@@ -37,7 +37,7 @@ public class ConnectivityChecker {
             conn.connect();
             return provider.validateResponse(conn);
         } catch (IOException ex) {
-            if (context != null) Logging.logMe(context, ex);
+            Logging.logMe(ex);
             return !shouldTryDotCom && checkInternal(context, true);
         }
     }

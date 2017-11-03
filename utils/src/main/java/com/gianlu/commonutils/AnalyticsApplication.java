@@ -64,6 +64,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
         super.onCreate();
 
         CommonUtils.setDebug(isDebug());
+        Logging.init(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
 
         if (!isDebug()) {
