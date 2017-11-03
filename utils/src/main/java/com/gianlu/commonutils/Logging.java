@@ -17,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -33,10 +32,11 @@ import java.util.Locale;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Logging {
-    public static boolean DEBUG = BuildConfig.DEBUG;
+    public static boolean DEBUG = BuildConfig.DEBUG; // Overwritten by CommonUtils
+    private static File logFile;
+    private static File secretLogFile;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    @SuppressLint("SimpleDateFormat")
     public static void clearLogs(Context context) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
@@ -48,11 +48,39 @@ public class Logging {
             }
         })) {
             try {
-                Date date = new SimpleDateFormat("d-LL-yyyy").parse(file.getName().replace(".log", "").replace(".secret", ""));
+                Date date = getFileDateFormatter().parse(file.getName().replace(".log", "").replace(".secret", ""));
                 if (date.before(cal.getTime())) file.delete();
             } catch (ParseException ignored) {
             }
         }
+    }
+
+    private static SimpleDateFormat getFileDateFormatter() {
+        return new SimpleDateFormat("d-LL-yyyy", Locale.getDefault());
+    }
+
+    public static void init(Context context) {
+        logFile = new File(context.getFilesDir(), getFileDateFormatter().format(new Date()) + ".log");
+        secretLogFile = new File(context.getFilesDir(), getFileDateFormatter().format(new Date()) + ".secret");
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static boolean shouldLog() {
+        if (logFile != null && secretLogFile != null) {
+            try {
+                logFile.createNewFile();
+                secretLogFile.createNewFile();
+            } catch (IOException ignored) {
+            }
+
+            return logFile.canWrite() && secretLogFile.canWrite();
+        }
+
+        return false;
+    }
+
+    private static SimpleDateFormat getTimeFormatter() {
+        return new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
     }
 
     @Nullable
@@ -104,12 +132,12 @@ public class Logging {
         return logLines;
     }
 
-    public static void secretLog(Context context, Throwable exx) {
+    public static void secretLog(Throwable exx) {
         if (DEBUG) exx.printStackTrace();
-        if (context == null) return;
+        if (!shouldLog()) return;
 
-        try (OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".secret", Context.MODE_APPEND))) {
-            out.write(new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + getStackTrace(exx) + "\n\n");
+        try (FileOutputStream out = new FileOutputStream(secretLogFile, true)) {
+            out.write((getTimeFormatter().format(new Date()) + " >> " + getStackTrace(exx) + "\n\n").getBytes());
             out.flush();
         } catch (IOException ex) {
             if (DEBUG) ex.printStackTrace();
@@ -123,29 +151,27 @@ public class Logging {
         return sw.toString();
     }
 
-    public static void logMe(Context context, Throwable ex) {
+    public static void logMe(Throwable ex) {
         if (ex == null) return;
-        logMe(context, ex.getMessage(), true);
-        secretLog(context, ex);
+        logMe(ex.getMessage(), true);
+        secretLog(ex);
     }
 
-    public static void logMe(Context context, String message, boolean isError) {
+    public static void logMe(String message, boolean isError) {
         if (message == null) message = "No message given";
 
-        if (DEBUG)
+        if (DEBUG) {
             if (isError) System.err.println(message);
             else System.out.println(message);
+        }
 
-        if (context == null) return;
+        if (!shouldLog()) return;
 
-        try {
-            FileOutputStream fOut = context.openFileOutput(new SimpleDateFormat("d-LL-yyyy", Locale.getDefault()).format(new java.util.Date()) + ".log", Context.MODE_APPEND);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
-            osw.write((isError ? "--ERROR--" : "--INFO--") + new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new java.util.Date()) + " >> " + message.replace("\n", " ") + "\n");
-            osw.flush();
-            osw.close();
-        } catch (IOException ignored) {
+        try (FileOutputStream out = new FileOutputStream(logFile, true)) {
+            out.write(((isError ? "--ERROR--" : "--INFO--") + getTimeFormatter().format(new Date()) + " >> " + message.replace("\n", " ") + "\n").getBytes());
+            out.flush();
+        } catch (IOException ex) {
+            if (DEBUG) ex.printStackTrace();
         }
     }
 
@@ -190,13 +216,11 @@ public class Logging {
     }
 
     public static class LogLineAdapter extends RecyclerView.Adapter<LogLineAdapter.ViewHolder> {
-        private final Context context;
         private final List<LogLine> objs;
         private final IAdapter listener;
         private final LayoutInflater inflater;
 
         public LogLineAdapter(Context context, List<LogLine> objs, @Nullable IAdapter listener) {
-            this.context = context;
             this.inflater = LayoutInflater.from(context);
             this.objs = objs;
             this.listener = listener;

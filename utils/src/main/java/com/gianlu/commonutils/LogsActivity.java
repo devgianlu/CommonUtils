@@ -61,7 +61,7 @@ public class LogsActivity extends AppCompatActivity {
                         }
                     }));
                 } catch (IOException ex) {
-                    Logging.logMe(LogsActivity.this, ex);
+                    Logging.logMe(ex);
                     onBackPressed();
                 }
             }

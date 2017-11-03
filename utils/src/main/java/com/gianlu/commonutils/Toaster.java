@@ -35,8 +35,8 @@ public class Toaster {
             if (extra != null) handler.post(extra);
         }
 
-        Logging.logMe(context, message + (message_extra != null ? (" Details: " + message_extra) : ""), ex != null);
-        if (ex != null) Logging.logMe(context, ex);
+        Logging.logMe(message + (message_extra != null ? (" Details: " + message_extra) : ""), ex != null);
+        if (ex != null) Logging.logMe(ex);
     }
 
     public static void show(Context context, Message message, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
