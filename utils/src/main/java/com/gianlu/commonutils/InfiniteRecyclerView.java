@@ -118,6 +118,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             }
         }
 
+        @SuppressWarnings("SameReturnValue")
         @Nullable
         protected abstract Date getDateFromItem(E item);
 

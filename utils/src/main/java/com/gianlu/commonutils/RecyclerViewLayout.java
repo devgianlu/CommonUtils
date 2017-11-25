@@ -2,6 +2,7 @@ package com.gianlu.commonutils;
 
 import android.content.Context;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -97,6 +98,11 @@ public class RecyclerViewLayout extends FrameLayout {
 
     public void showMessage(@StringRes int message, boolean error, Object... formatArgs) {
         showMessage(getContext().getString(message, formatArgs), error);
+    }
+
+    public void showMessage(@StringRes int message, @DrawableRes int icon) {
+        hideList();
+        MessageLayout.show(this, message, icon);
     }
 
     public void showMessage(@NonNull String message, boolean error) {
