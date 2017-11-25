@@ -23,7 +23,7 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public class DrawerManager<P extends BaseDrawerProfile> {
     private final Context context;
     private final ActionBarDrawerToggle drawerToggle;
@@ -373,6 +373,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         void editProfile(List<P> items);
     }
 
+    @SuppressWarnings("SameReturnValue")
     public interface ISetup<P extends BaseDrawerProfile> {
         @ColorRes
         int getColorAccent();

@@ -401,9 +401,14 @@ public class CommonUtils {
         return builder.toString();
     }
 
-    public static void setCardTopMargin(Context context, RecyclerView.ViewHolder holder) {
+    public static void setRecyclerViewTopMargin(Context context, RecyclerView.ViewHolder holder) {
         if (holder.itemView.getLayoutParams() == null) return;
         ((RecyclerView.LayoutParams) holder.itemView.getLayoutParams()).topMargin = holder.getLayoutPosition() == 0 ? (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics()) : 0;
+    }
+
+    public static void setRecyclerViewBottomMargin(Context context, RecyclerView.ViewHolder holder, int items) {
+        if (holder.itemView.getLayoutParams() == null) return;
+        ((RecyclerView.LayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.getLayoutPosition() == items - 1 ? (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics()) : 0;
     }
 
     public static <T> boolean contains(T[] elements, T element) {

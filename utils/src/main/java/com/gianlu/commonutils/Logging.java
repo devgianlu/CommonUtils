@@ -64,7 +64,7 @@ public class Logging {
         secretLogFile = new File(context.getFilesDir(), getFileDateFormatter().format(new Date()) + ".secret");
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "BooleanMethodIsAlwaysInverted"})
     private static boolean shouldLog() {
         if (logFile != null && secretLogFile != null) {
             try {
@@ -80,7 +80,7 @@ public class Logging {
     }
 
     private static SimpleDateFormat getTimeFormatter() {
-        return new SimpleDateFormat("hh:mm:ss", Locale.getDefault());
+        return new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     }
 
     @Nullable

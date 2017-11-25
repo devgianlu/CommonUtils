@@ -2,22 +2,22 @@ package com.gianlu.commonutils;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.XmlRes;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {
-    private Tracker tracker;
+    private FirebaseAnalytics tracker;
 
-    public static void sendAnalytics(Context context, HitBuilders.HitBuilder<?> builder) {
+    public static void sendAnalytics(Context context, String event, @Nullable Bundle bundle) {
         AnalyticsApplication app = get(context);
-        if (app != null) app.sendAnalytics(builder);
+        if (app != null) app.sendAnalytics(event, bundle);
+    }
+
+    public static void sendAnalytics(Context context, String event) {
+        sendAnalytics(context, event, null);
     }
 
     private static String getAppName(Context context) {
@@ -39,25 +39,18 @@ public abstract class AnalyticsApplication extends Application implements Thread
         if (CommonUtils.isDebug()) {
             throwable.printStackTrace();
         } else {
-            StringWriter writer = new StringWriter();
-            throwable.printStackTrace(new PrintWriter(writer));
-
-            sendAnalytics(this, new HitBuilders.ExceptionBuilder()
-                    .setDescription(writer.toString())
-                    .setFatal(true));
-
+            Crashlytics.logException(throwable);
             UncaughtExceptionActivity.startActivity(this, getAppName(this), throwable);
         }
     }
 
-    public final void sendAnalytics(HitBuilders.HitBuilder<?> builder) {
-        if (tracker != null && builder != null) tracker.send(builder.build());
+    public final void sendAnalytics(String event, @Nullable Bundle bundle) {
+        if (tracker != null && event != null && !isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false))
+            tracker.logEvent(event, bundle);
     }
 
+    @SuppressWarnings("SameReturnValue")
     protected abstract boolean isDebug();
-
-    @XmlRes
-    protected abstract int getTrackerConfiguration();
 
     @Override
     public void onCreate() {
@@ -67,12 +60,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
         Logging.init(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
 
-        if (!isDebug()) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(getApplicationContext());
-            analytics.enableAutoActivityReports(this);
-            tracker = analytics.newTracker(getTrackerConfiguration());
-            tracker.enableAdvertisingIdCollection(true);
-            tracker.enableExceptionReporting(true);
-        }
+        tracker = FirebaseAnalytics.getInstance(this);
+        tracker.setAnalyticsCollectionEnabled(!isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false));
     }
 }

@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
+@Deprecated
 public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheetCallback {
     protected final TextView title;
     protected final Context context;
@@ -37,7 +38,7 @@ public abstract class BaseBottomSheet<E> extends BottomSheetBehavior.BottomSheet
         behavior.setPeekHeight(0);
         behavior.setHideable(true);
 
-        mask = parent.findViewById(R.id.bottomSheet_mask);
+        mask = parent.findViewById(R.id.niceBottomSheet_mask);
         mask.setVisibility(View.VISIBLE);
         mask.setBackgroundColor(Color.BLACK);
         mask.setClickable(false);
