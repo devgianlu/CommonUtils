@@ -4,10 +4,10 @@
     android:id="@+id/niceBottomSheet_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
+    android:clickable="false"
     android:elevation="16dp"
-    android:focusable="true"
     android:orientation="vertical"
+    android:paddingTop="96dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <View
@@ -19,11 +19,15 @@
         android:id="@+id/niceBottomSheet_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:padding="16dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true">
 
         <FrameLayout
             android:id="@+id/niceBottomSheet_content"
