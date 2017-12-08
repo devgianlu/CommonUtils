@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomSheetCallback {
     private final int headerRes;
@@ -20,7 +21,8 @@ public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomShee
     private final FrameLayout content;
     private final FrameLayout header;
     private final View mask;
-    private FloatingActionButton action;
+    private final ProgressBar loading;
+    private final FloatingActionButton action;
 
     public NiceBaseBottomSheet(final ViewGroup parent, @LayoutRes int headerRes, @LayoutRes int contentRes, boolean forceLayoutInflating) {
         this.headerRes = headerRes;
@@ -39,6 +41,8 @@ public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomShee
         mask.setBackgroundColor(Color.BLACK);
         mask.setClickable(false);
         mask.setAlpha(0);
+
+        loading = parent.findViewById(R.id.niceBottomSheet_loading);
 
         content = sheet.findViewById(R.id.niceBottomSheet_content);
         header = sheet.findViewById(R.id.niceBottomSheet_header);
@@ -70,11 +74,14 @@ public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomShee
 
     public final void expand(Object... payloads) {
         bindViewsInternal();
-        if (action != null && !onPrepareAction(action, payloads)) action = null;
+        if (action != null)
+            action.setVisibility(onPrepareAction(action, payloads) ? View.VISIBLE : View.GONE);
+
         onCreateHeaderView(header, payloads);
         onCreateContentView(content, payloads);
 
-        if (action != null) action.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
@@ -122,5 +129,15 @@ public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomShee
     public final void update(Object... payloads) {
         if (!isExpanded()) return;
         onUpdateViews(payloads);
+    }
+
+    public void expandAsLoading() {
+        bindViewsInternal();
+        if (action != null) action.setVisibility(View.GONE);
+        onCreateHeaderView(header);
+
+        content.setVisibility(View.GONE);
+        loading.setVisibility(View.VISIBLE);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 }

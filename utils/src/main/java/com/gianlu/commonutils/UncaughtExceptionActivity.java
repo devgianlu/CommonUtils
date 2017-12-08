@@ -14,7 +14,8 @@ public class UncaughtExceptionActivity extends AppCompatActivity {
         if (context != null)
             context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
                     .putExtra("appName", appName)
-                    .putExtra("exception", ex));
+                    .putExtra("exception", ex)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
     @Override

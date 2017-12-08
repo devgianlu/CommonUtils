@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -53,7 +54,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused,WeakerAccess")
-public class CommonUtils {
+public final class CommonUtils {
     private static boolean DEBUG = BuildConfig.DEBUG;
 
     public static boolean equals(List<?> a, List<?> b) {
@@ -64,10 +65,13 @@ public class CommonUtils {
         return true;
     }
 
-    public static List<String> toStringsList(JSONArray array) throws JSONException {
+    public static ArrayList<String> toStringsList(JSONArray array, boolean checkForDuplicates) throws JSONException {
         if (array == null) return new ArrayList<>();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) list.add(array.getString(i));
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            String val = array.getString(i);
+            if (!checkForDuplicates || !list.contains(val)) list.add(val);
+        }
         return list;
     }
 
@@ -428,12 +432,27 @@ public class CommonUtils {
         return array;
     }
 
-    public static <T> List<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
-        List<T> items = new ArrayList<>();
+    public static <T> ArrayList<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
+        return toTList(array, tClass, null);
+    }
+
+    public static <T, P> ArrayList<T> toTList(JSONArray array, Class<T> tClass, P parent) throws JSONException {
+        ArrayList<T> items = new ArrayList<>();
 
         try {
-            for (int i = 0; i < array.length(); i++)
-                items.add(tClass.getConstructor(JSONObject.class).newInstance(array.getJSONObject(i)));
+            for (int i = 0; i < array.length(); i++) {
+                Constructor<T> constructor;
+                if (parent != null)
+                    constructor = tClass.getDeclaredConstructor(parent.getClass(), JSONObject.class);
+                else constructor = tClass.getConstructor(JSONObject.class);
+
+                T instance;
+                if (parent != null)
+                    instance = constructor.newInstance(parent, array.getJSONObject(i));
+                else instance = constructor.newInstance(array.getJSONObject(i));
+                items.add(instance);
+            }
+
         } catch (InvocationTargetException ex) {
             if (ex.getCause() instanceof JSONException) throw (JSONException) ex.getCause();
             throw new RuntimeException(ex);
@@ -442,6 +461,12 @@ public class CommonUtils {
         }
 
         return items;
+    }
+
+    public static void handleCollapseClick(ImageButton button, View target) {
+        animateCollapsingArrowBellows(button, isExpanded(target));
+        if (isExpanded(target)) collapse(target);
+        else expand(target);
     }
 
     @SuppressWarnings("unchecked")
@@ -468,5 +493,9 @@ public class CommonUtils {
         String[] array = new String[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) array[i] = jsonArray.getString(i);
         return array;
+    }
+
+    public static boolean isStupidNull(JSONObject obj, String key) throws JSONException {
+        return obj.isNull(key) || Objects.equals(obj.getString(key), "null");
     }
 }

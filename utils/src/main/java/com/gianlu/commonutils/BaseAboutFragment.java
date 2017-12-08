@@ -57,21 +57,32 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                 }
             };
 
-            getActivity().bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND").setPackage("com.android.vending"),
-                    serviceConnection, Context.BIND_AUTO_CREATE);
+            getActivity().bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND")
+                    .setPackage("com.android.vending"), serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    private void unbindBillingService() {
+        Activity activity = getActivity();
+        if (serviceConnection != null && activity != null) {
+            try {
+                activity.unbindService(serviceConnection);
+            } catch (IllegalArgumentException ignored) {
+            } finally {
+                serviceConnection = null;
+            }
         }
     }
 
     @Override
-    public void onStop() {
-        Activity activity = getActivity();
-        if (serviceConnection != null && billingService != null && activity != null) {
-            try {
-                activity.unbindService(serviceConnection);
-            } catch (IllegalArgumentException ignored) {
-            }
-        }
+    public void onDestroy() {
+        unbindBillingService();
+        super.onDestroy();
+    }
 
+    @Override
+    public void onStop() {
+        unbindBillingService();
         super.onStop();
     }
 
