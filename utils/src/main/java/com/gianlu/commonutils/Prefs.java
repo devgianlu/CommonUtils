@@ -42,6 +42,11 @@ public class Prefs {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    private static void init(SharedPreferences prefs) {
+        if (Prefs.prefs != null) return;
+        Prefs.prefs = prefs;
+    }
+
     public static int getInt(Context context, PrefKey key, int fallback) {
         init(context);
         return prefs.getInt(key.getKey(), fallback);
@@ -75,13 +80,27 @@ public class Prefs {
 
     public static Set<String> getSet(Context context, PrefKey key, Set<String> fallback) {
         init(context);
+        return getSet(key, fallback);
+    }
+
+    private static Set<String> getSet(PrefKey key, Set<String> fallback) {
         Set<String> set = prefs.getStringSet(key.getKey(), fallback);
         if (set == null) return null;
         return new HashSet<>(set);
     }
 
+    public static Set<String> getSet(SharedPreferences prefs, PrefKey key, Set<String> fallback) {
+        init(prefs);
+        return getSet(key, fallback);
+    }
+
     public static void putSet(Context context, PrefKey key, Set<String> set) {
         init(context);
+        prefs.edit().putStringSet(key.getKey(), set).apply();
+    }
+
+    public static void putSet(SharedPreferences prefs, PrefKey key, Set<String> set) {
+        init(prefs);
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 

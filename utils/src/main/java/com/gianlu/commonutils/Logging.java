@@ -241,6 +241,7 @@ public class Logging {
             return new ViewHolder(parent);
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             final LogLine item = objs.get(position);
@@ -248,15 +249,15 @@ public class Logging {
             holder.msg.setText(item.message);
             switch (item.type) {
                 case INFO:
-                    holder.level.setText(R.string.infoTag);
+                    holder.level.setText("INFO: ");
                     holder.level.setTextColor(Color.BLACK);
                     break;
                 case WARNING:
-                    holder.level.setText(R.string.warningTag);
+                    holder.level.setText("WARNING: ");
                     holder.level.setTextColor(Color.YELLOW);
                     break;
                 case ERROR:
-                    holder.level.setText(R.string.errorTag);
+                    holder.level.setText("ERROR: ");
                     holder.level.setTextColor(Color.RED);
                     break;
             }

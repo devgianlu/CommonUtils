@@ -8,6 +8,7 @@ import android.util.Pair;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,11 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
 
         sort(defaultSorting);
         shouldUpdateItemCount(objs.size());
+    }
+
+    @SafeVarargs
+    public final void setFilters(F... filters) {
+        setFilters(Arrays.asList(filters));
     }
 
     @Nullable

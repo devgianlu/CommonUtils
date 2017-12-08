@@ -2,9 +2,6 @@
 <resources>
     <string name="log_activity_title">Logs</string>
     <string name="deleteAllLogs">Delete all logs</string>
-    <string name="warningTag" translatable="false">WARNING:</string>
-    <string name="errorTag" translatable="false">ERROR:</string>
-    <string name="infoTag" translatable="false">INFO:</string>
     <string name="unknown">Unknown</string>
     <string name="email" translatable="false">altomanigianluca@gmail.com</string>
     <string name="ooops">Ooops!</string>
@@ -44,4 +41,6 @@
     <string name="noLogs">There are no logs.</string>
     <string name="rateApp">Rate this app</string>
     <string name="leaveReview">Leave a review on the Play Store</string>
+
+    <string-array name="empty_array" translatable="false" />
 </resources>

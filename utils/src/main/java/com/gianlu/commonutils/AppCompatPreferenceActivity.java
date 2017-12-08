@@ -20,7 +20,6 @@ import android.view.ViewGroup;
  */
 @SuppressWarnings("ALL")
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
-
     private AppCompatDelegate mDelegate;
 
     public static boolean isXLargeTablet(Context context) {
