@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class Logging {
+public final class Logging {
     public static boolean DEBUG = BuildConfig.DEBUG; // Overwritten by CommonUtils
     private static File logFile;
     private static File secretLogFile;

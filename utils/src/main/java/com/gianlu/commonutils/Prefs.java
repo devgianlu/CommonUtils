@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public class Prefs {
+public final class Prefs {
     private static SharedPreferences prefs;
 
     public static String getBase64String(Context context, PrefKey key, String fallback) {

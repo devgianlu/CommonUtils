@@ -14,9 +14,12 @@ public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
         if (item.getItemId() == android.R.id.home) {
             if (AppCompatPreferenceActivity.isXLargeTablet(getActivity()))
                 getActivity().onBackPressed();
-            else startActivity(new Intent(getActivity(), getParent()));
+            else
+                startActivity(new Intent(getActivity(), getParent()));
+
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
