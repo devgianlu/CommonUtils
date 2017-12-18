@@ -58,6 +58,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
 
         CommonUtils.setDebug(isDebug());
         Logging.init(this);
+        Logging.clearLogs(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
 
         tracker = FirebaseAnalytics.getInstance(this);

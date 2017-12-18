@@ -49,8 +49,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused,WeakerAccess")
@@ -63,6 +65,16 @@ public final class CommonUtils {
             if (!Objects.equals(a.get(i), b.get(i))) return false;
 
         return true;
+    }
+
+    public static void shuffleArray(int[] ar) {
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = ar.length - 1; i > 0; i--) {
+            int index = rnd.nextInt(i + 1);
+            int a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
     }
 
     public static ArrayList<String> toStringsList(JSONArray array, boolean checkForDuplicates) throws JSONException {
