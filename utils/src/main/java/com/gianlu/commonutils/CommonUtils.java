@@ -35,9 +35,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +62,45 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused,WeakerAccess")
 public final class CommonUtils {
     private static boolean DEBUG = BuildConfig.DEBUG;
+
+    public static List<NameValuePair> splitQuery(URL url) {
+        return splitQuery(url.getQuery());
+    }
+
+    public static List<NameValuePair> splitQuery(String query) {
+        try {
+            List<NameValuePair> queryPairs = new ArrayList<>();
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                int idx = pair.indexOf("=");
+                queryPairs.add(new NameValuePair(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
+            }
+
+            return queryPairs;
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static String formQuery(List<NameValuePair> pairs) {
+        StringBuilder builder = new StringBuilder();
+        boolean first = true;
+
+        try {
+            for (NameValuePair pair : pairs) {
+                if (!first) builder.append("&");
+                builder.append(URLEncoder.encode(pair.key(), "UTF-8"))
+                        .append("=")
+                        .append(URLEncoder.encode(pair.value(""), "UTF-8"));
+
+                first = false;
+            }
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return builder.toString();
+    }
 
     public static boolean equals(List<?> a, List<?> b) {
         if (a.size() != b.size()) return false;

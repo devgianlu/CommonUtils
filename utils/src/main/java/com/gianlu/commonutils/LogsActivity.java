@@ -47,7 +47,7 @@ public class LogsActivity extends AppCompatActivity implements Logging.LogLineAd
                 try {
                     layout.loadListData(new Logging.LogLineAdapter(LogsActivity.this, Logging.getLogLines(LogsActivity.this, logFiles.get(i)), LogsActivity.this));
                 } catch (IOException ex) {
-                    Logging.logMe(ex);
+                    Logging.log(ex);
                     onBackPressed();
                 }
             }

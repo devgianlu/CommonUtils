@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.Analytics;
 
 import android.app.Application;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
+import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.Logging;
+import com.gianlu.commonutils.Preferences.Prefs;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {

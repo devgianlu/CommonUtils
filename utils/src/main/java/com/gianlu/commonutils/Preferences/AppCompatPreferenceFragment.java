@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.Preferences;
 
 import android.content.Intent;
 import android.preference.PreferenceFragment;

@@ -1,9 +1,12 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.Preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +14,16 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public final class Prefs {
     private static SharedPreferences prefs;
+
+    public static JSONArray getJSONArray(Context context, PrefKey key, JSONArray fallback) throws JSONException {
+        init(context);
+        return new JSONArray(getBase64String(context, key, fallback.toString()));
+    }
+
+    public static void putJSONArray(Context context, PrefKey key, JSONArray value) {
+        init(context);
+        putBase64String(context, key, value.toString());
+    }
 
     public static String getBase64String(Context context, PrefKey key, String fallback) {
         init(context);

@@ -1,4 +1,4 @@
-package com.gianlu.commonutils.Sorting;
+package com.gianlu.commonutils.Adapters;
 
 import android.support.annotation.NonNull;
 import android.util.Pair;

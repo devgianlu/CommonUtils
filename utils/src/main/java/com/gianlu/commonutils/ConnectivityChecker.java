@@ -35,9 +35,11 @@ public class ConnectivityChecker {
             conn.setRequestProperty("Connection", "close");
             conn.setConnectTimeout(2000);
             conn.connect();
-            return provider.validateResponse(conn);
+            boolean a = provider.validateResponse(conn);
+            conn.disconnect();
+            return a;
         } catch (IOException ex) {
-            Logging.logMe(ex);
+            Logging.log(ex);
             return !shouldTryDotCom && checkInternal(context, true);
         }
     }
