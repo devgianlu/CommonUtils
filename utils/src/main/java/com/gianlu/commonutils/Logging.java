@@ -132,7 +132,7 @@ public final class Logging {
         return logLines;
     }
 
-    public static void secretLog(Throwable exx) {
+    public static void secret(Throwable exx) {
         if (DEBUG) exx.printStackTrace();
         if (!shouldLog()) return;
 
@@ -151,13 +151,13 @@ public final class Logging {
         return sw.toString();
     }
 
-    public static void logMe(Throwable ex) {
+    public static void log(Throwable ex) {
         if (ex == null) return;
-        logMe(ex.getMessage(), true);
-        secretLog(ex);
+        log(ex.getMessage(), true);
+        secret(ex);
     }
 
-    public static void logMe(String message, boolean isError) {
+    public static void log(String message, boolean isError) {
         if (message == null) message = "No message given";
 
         if (DEBUG) {

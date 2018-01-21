@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.Preferences;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -24,6 +24,9 @@ import com.gianlu.commonutils.Billing.Billing;
 import com.gianlu.commonutils.Billing.Product;
 import com.gianlu.commonutils.Billing.ProductAdapter;
 import com.gianlu.commonutils.Billing.PurchasedProduct;
+import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.R;
+import com.gianlu.commonutils.Toaster;
 
 import org.json.JSONException;
 

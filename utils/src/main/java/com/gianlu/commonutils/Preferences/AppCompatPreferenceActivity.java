@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.Preferences;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -15,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.gianlu.commonutils.R;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
