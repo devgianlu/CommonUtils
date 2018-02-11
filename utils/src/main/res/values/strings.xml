@@ -36,6 +36,6 @@
     <string name="noLogs">There are no logs.</string>
     <string name="rateApp">Rate this app</string>
     <string name="leaveReview">Leave a review on the Play Store</string>
-
-    <string-array name="empty_array" translatable="false" />
+    <string name="offline_message">Looks like either you or the application service are offline.</string>
+    <string name="retry">Retry</string>
 </resources>

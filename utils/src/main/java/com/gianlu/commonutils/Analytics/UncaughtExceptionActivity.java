@@ -3,6 +3,7 @@ package com.gianlu.commonutils.Analytics;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,14 +12,14 @@ import android.widget.Button;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
 
-@SuppressWarnings("unused,WeakerAccess")
 public class UncaughtExceptionActivity extends AppCompatActivity {
-    public static void startActivity(Context context, String appName, Throwable ex) {
-        if (context != null)
+    public static void startActivity(Context context, @StringRes int appName, Throwable ex) {
+        if (context != null && appName != 0) {
             context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
-                    .putExtra("appName", appName)
+                    .putExtra("appName", context.getString(appName))
                     .putExtra("exception", ex)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        }
     }
 
     @Override
@@ -27,8 +28,7 @@ public class UncaughtExceptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_unchaught_exception);
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.hide();
+        if (actionBar != null) actionBar.hide();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN

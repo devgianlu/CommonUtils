@@ -73,7 +73,10 @@ public final class CommonUtils {
             String[] pairs = query.split("&");
             for (String pair : pairs) {
                 int idx = pair.indexOf("=");
-                queryPairs.add(new NameValuePair(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
+                if (idx > 0)
+                    queryPairs.add(new NameValuePair(
+                            URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                            URLDecoder.decode(pair.substring(idx + 1), "UTF-8")));
             }
 
             return queryPairs;
@@ -168,7 +171,7 @@ public final class CommonUtils {
         return v.getVisibility() == View.VISIBLE;
     }
 
-    public static void expand(final View v) {
+    public static void expand(final View v, @Nullable Animation.AnimationListener listener) {
         final int targetHeight;
         if (v.getMinimumHeight() != 0) {
             targetHeight = v.getMinimumHeight();
@@ -194,11 +197,13 @@ public final class CommonUtils {
             }
         };
 
+        if (listener != null) a.setAnimationListener(listener);
+
         a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
 
-    public static void collapse(final View v) {
+    public static void collapse(final View v, @Nullable Animation.AnimationListener listener) {
         final int initialHeight = v.getMeasuredHeight();
 
         Animation a = new Animation() {
@@ -217,6 +222,8 @@ public final class CommonUtils {
                 return true;
             }
         };
+
+        if (listener != null) a.setAnimationListener(listener);
 
         a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
@@ -519,9 +526,13 @@ public final class CommonUtils {
     }
 
     public static void handleCollapseClick(ImageButton button, View target) {
+        handleCollapseClick(button, target, null);
+    }
+
+    public static void handleCollapseClick(ImageButton button, View target, @Nullable Animation.AnimationListener listener) {
         animateCollapsingArrowBellows(button, isExpanded(target));
-        if (isExpanded(target)) collapse(target);
-        else expand(target);
+        if (isExpanded(target)) collapse(target, listener);
+        else expand(target, listener);
     }
 
     @SuppressWarnings("unchecked")

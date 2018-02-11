@@ -1,7 +1,7 @@
 package com.gianlu.commonutils;
 
-import android.content.Context;
-import android.support.annotation.Nullable;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -22,11 +22,33 @@ public class ConnectivityChecker {
         ConnectivityChecker.userAgent = userAgent;
     }
 
-    public static boolean checkSync(@Nullable Context context) {
-        return provider != null && checkInternal(context, false);
+    public static void checkAsync(final OnCheck listener) {
+        if (provider == null) throw new RuntimeException("God damn developer!");
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+        new Thread() {
+            @Override
+            public void run() {
+                if (checkInternal(false)) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.goodToGo();
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.offline();
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
-    private static boolean checkInternal(@Nullable Context context, boolean shouldTryDotCom) {
+    private static boolean checkInternal(boolean shouldTryDotCom) {
         if (provider == null) provider = new GoogleURLProvider();
 
         try {
@@ -40,8 +62,14 @@ public class ConnectivityChecker {
             return a;
         } catch (IOException ex) {
             Logging.log(ex);
-            return !shouldTryDotCom && checkInternal(context, true);
+            return !shouldTryDotCom && checkInternal(true);
         }
+    }
+
+    public interface OnCheck {
+        void goodToGo();
+
+        void offline();
     }
 
     public interface URLProvider {

@@ -70,7 +70,6 @@ public class Toaster {
     @SuppressWarnings("unused")
     public static class Message {
         public static final Message NO_EMAIL_CLIENT = new Message(R.string.noMailClients, true);
-        public static final Message OFFLINE = new Message(R.string.offline, false);
         public static final Message COPIED_TO_CLIPBOARD = new Message(R.string.copiedToClipboard, false);
         public static final Message LOGS_DELETED = new Message(R.string.logDeleted, false);
         public static final Message PURCHASING_CANCELED = new Message(R.string.purchaseCanceled, false);

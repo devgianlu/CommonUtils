@@ -22,7 +22,7 @@ dependencies {
     api 'com.google.firebase:firebase-core:11.8.0'
     api 'com.android.support:appcompat-v7:27.0.2'
     api 'com.android.support:design:27.0.2'
-    api('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    api('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
 }
