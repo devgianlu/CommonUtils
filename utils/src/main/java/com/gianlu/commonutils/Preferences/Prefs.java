@@ -40,13 +40,28 @@ public final class Prefs {
         return prefs.getBoolean(key.getKey(), fallback);
     }
 
+    public static boolean getBoolean(SharedPreferences prefs, PrefKey key, boolean fallback) {
+        init(prefs);
+        return prefs.getBoolean(key.getKey(), fallback);
+    }
+
     public static String getString(Context context, PrefKey key, String fallback) {
         init(context);
         return prefs.getString(key.getKey(), fallback);
     }
 
+    public static String getString(SharedPreferences prefs, PrefKey key, String fallback) {
+        init(prefs);
+        return prefs.getString(key.getKey(), fallback);
+    }
+
     public static void putString(Context context, PrefKey key, String value) {
         init(context);
+        prefs.edit().putString(key.getKey(), value).apply();
+    }
+
+    public static void putString(SharedPreferences prefs, PrefKey key, String value) {
+        init(prefs);
         prefs.edit().putString(key.getKey(), value).apply();
     }
 

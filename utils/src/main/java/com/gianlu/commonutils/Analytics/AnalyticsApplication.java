@@ -23,10 +23,8 @@ public abstract class AnalyticsApplication extends Application implements Thread
         sendAnalytics(context, event, null);
     }
 
-    private static String getAppName(Context context) {
-        int id = context.getResources().getIdentifier("app_name", "string", context.getPackageName());
-        if (id == 0) return context.getString(com.gianlu.commonutils.R.string.unknown);
-        else return context.getString(id);
+    private static int getAppNameRes(Context context) {
+        return context.getResources().getIdentifier("app_name", "string", context.getPackageName());
     }
 
     @Nullable
@@ -43,8 +41,13 @@ public abstract class AnalyticsApplication extends Application implements Thread
             throwable.printStackTrace();
         } else {
             Crashlytics.logException(throwable);
-            UncaughtExceptionActivity.startActivity(this, getAppName(this), throwable);
+            if (uncaughtNotDebug(thread, throwable))
+                UncaughtExceptionActivity.startActivity(this, getAppNameRes(this), throwable);
         }
+    }
+
+    protected boolean uncaughtNotDebug(Thread thread, Throwable throwable) {
+        return true;
     }
 
     public final void sendAnalytics(String event, @Nullable Bundle bundle) {

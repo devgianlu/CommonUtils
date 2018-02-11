@@ -14,5 +14,7 @@
             android:name=".Analytics.UncaughtExceptionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme" />
+        <activity android:name=".OfflineActivity"></activity>
     </application>
+
 </manifest>

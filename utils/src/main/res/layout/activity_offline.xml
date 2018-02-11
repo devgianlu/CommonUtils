@@ -11,13 +11,13 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:alpha="0.54"
-        android:src="@drawable/ic_sad" />
+        android:src="@drawable/ic_cloud_off_black_48dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/ooops"
+        android:text="@string/offline"
         android:textSize="32sp"
         android:textStyle="bold" />
 
@@ -27,7 +27,7 @@
         android:gravity="center"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:text="@string/somethingWentWrong"
+        android:text="@string/offline_message"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -40,11 +40,25 @@
         android:text="@string/emailMe"
         android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/uncaughtException_email"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/send_email" />
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/offline_email"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_email" />
+
+        <Button
+            android:id="@+id/offline_retry"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retry" />
+    </LinearLayout>
 </LinearLayout>
