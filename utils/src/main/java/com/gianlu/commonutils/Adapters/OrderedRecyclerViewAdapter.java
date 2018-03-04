@@ -39,30 +39,13 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     @Nullable
     protected abstract RecyclerView getRecyclerView();
 
-    private void processFilters() {
+
+    private void processQueryAndFilters() {
         objs.clear();
 
         for (E obj : originalObjs)
-            if (!filters.contains(obj.getFilterable()))
+            if (!filters.contains(obj.getFilterable()) && (query == null || matchQuery(obj, query)))
                 objs.add(obj);
-
-        objs.resort();
-
-        shouldUpdateItemCount(objs.size());
-        super.notifyDataSetChanged();
-        scrollToTop();
-    }
-
-    private void processQuery() {
-        objs.clear();
-
-        if (query == null) {
-            objs.addAll(originalObjs);
-        } else {
-            for (E obj : originalObjs)
-                if (matchQuery(obj, query))
-                    objs.add(obj);
-        }
 
         objs.resort();
 
@@ -139,12 +122,12 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     public final void setFilters(List<F> newFilters) {
         filters.clear();
         filters.addAll(newFilters);
-        processFilters();
+        processQueryAndFilters();
     }
 
     public final void filterWithQuery(String query) {
         this.query = query;
-        processQuery();
+        processQueryAndFilters();
     }
 
     @Override
