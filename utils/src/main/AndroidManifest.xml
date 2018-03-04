@@ -10,11 +10,13 @@
 
     <application>
         <activity android:name=".LogsActivity" />
+
         <activity
             android:name=".Analytics.UncaughtExceptionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".OfflineActivity"></activity>
+
+        <activity android:name=".OfflineActivity" />
     </application>
 
 </manifest>

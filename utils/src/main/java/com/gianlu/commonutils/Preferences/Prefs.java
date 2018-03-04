@@ -132,6 +132,11 @@ public final class Prefs {
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 
+    public static void remove(SharedPreferences prefs, PrefKey key) {
+        init(prefs);
+        prefs.edit().remove(key.getKey()).apply();
+    }
+
     public static void remove(Context context, PrefKey key) {
         init(context);
         prefs.edit().remove(key.getKey()).apply();
