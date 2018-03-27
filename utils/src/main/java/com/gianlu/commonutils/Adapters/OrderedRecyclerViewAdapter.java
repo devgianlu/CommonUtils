@@ -32,13 +32,12 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     }
 
     @SafeVarargs
-    public final void setFilters(F... filters) {
+    public final void setFilters(@NonNull F... filters) {
         setFilters(Arrays.asList(filters));
     }
 
     @Nullable
     protected abstract RecyclerView getRecyclerView();
-
 
     private void processQueryAndFilters() {
         objs.clear();
@@ -54,7 +53,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         scrollToTop();
     }
 
-    protected abstract boolean matchQuery(E item, @Nullable String query);
+    protected abstract boolean matchQuery(@NonNull E item, @Nullable String query);
 
     private void scrollToTop() {
         RecyclerView recyclerView = getRecyclerView();
@@ -63,7 +62,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
 
     @Override
     @SuppressWarnings("unchecked")
-    public final void onBindViewHolder(VH holder, int position, List<Object> payloads) {
+    public final void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
@@ -83,7 +82,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
 
     protected abstract void onBindViewHolder(VH holder, int position, @NonNull E payload);
 
-    public final void notifyItemChanged(E payload) {
+    public final void notifyItemChanged(@NonNull E payload) {
         int pos = originalObjs.indexOf(payload);
         if (pos == -1) originalObjs.add(payload);
         else originalObjs.set(pos, payload);
@@ -119,7 +118,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         shouldUpdateItemCount(objs.size());
     }
 
-    public final void setFilters(List<F> newFilters) {
+    public final void setFilters(@NonNull List<F> newFilters) {
         filters.clear();
         filters.addAll(newFilters);
         processQueryAndFilters();

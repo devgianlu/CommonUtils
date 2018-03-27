@@ -1,11 +1,18 @@
 package com.gianlu.commonutils.Preferences;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
+
+import com.gianlu.commonutils.Dialogs.DialogUtils;
 
 @SuppressWarnings("unused")
 public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
+    private Dialog mDialog;
 
     protected abstract Class getParent();
 
@@ -21,5 +28,35 @@ public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Nullable
+    protected Dialog getCurrentDialog() {
+        return mDialog;
+    }
+
+    public void showDialog(@NonNull Dialog dialog) {
+        mDialog = dialog;
+        DialogUtils.showDialogInternal(getActivity(), mDialog);
+    }
+
+    public void showDialog(@NonNull AlertDialog.Builder builder) {
+        DialogUtils.showDialogInternal(getActivity(), builder, new DialogUtils.IDialog() {
+            @Override
+            public void created(Dialog dialog) {
+                mDialog = dialog;
+            }
+        });
+    }
+
+    public void dismissDialog() {
+        if (mDialog != null) mDialog.dismiss();
+        mDialog = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dismissDialog();
     }
 }

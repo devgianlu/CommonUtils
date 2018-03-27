@@ -9,11 +9,7 @@ import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 public class Toaster {
-    public static Handler handler;
-
-    public static void initHandler() {
-        if (handler == null) handler = new Handler(Looper.getMainLooper());
-    }
+    public final static Handler handler = new Handler(Looper.getMainLooper());
 
     public static void show(final Context context, final String message, final int duration, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
         if (context == null) return;
@@ -27,10 +23,9 @@ public class Toaster {
         };
 
         if (Looper.myLooper() == Looper.getMainLooper()) {
-          action.run();
+            action.run();
             if (extra != null) extra.run();
         } else {
-            initHandler();
             handler.post(action);
             if (extra != null) handler.post(extra);
         }

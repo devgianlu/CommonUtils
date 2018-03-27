@@ -3,6 +3,7 @@ package com.gianlu.commonutils.Drawer;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,7 +39,8 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == ITEM_SEPARATOR) return new SeparatorViewHolder(context, separator);
         else return new ViewHolder(inflater, parent);
     }
@@ -54,7 +56,7 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             ViewHolder castHolder = (ViewHolder) holder;
             final BaseDrawerItem item = menuItems.get(position);

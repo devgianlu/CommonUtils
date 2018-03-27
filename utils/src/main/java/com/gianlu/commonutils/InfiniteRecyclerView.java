@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -133,8 +134,9 @@ public class InfiniteRecyclerView extends RecyclerView {
             else return ITEM_NORMAL;
         }
 
+        @NonNull
         @Override
-        public final ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public final ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType == ITEM_LOADING)
                 return new LoadingViewHolder(inflater.inflate(R.layout.loading_item, parent, false));
             else if (viewType == ITEM_SEPARATOR)
@@ -168,7 +170,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         @SuppressLint("SetTextI18n")
         @Override
         @SuppressWarnings("unchecked")
-        public final void onBindViewHolder(ViewHolder holder, int position) {
+        public final void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ItemEnclosure<E> item = items.get(position);
             if (item != null) {
                 if (item.item == null) {

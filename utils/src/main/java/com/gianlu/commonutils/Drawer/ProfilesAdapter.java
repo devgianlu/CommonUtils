@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +42,8 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(parent);
     }
 
@@ -55,7 +57,7 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
 
     protected abstract void runTest(int pos);
 
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final P profile = getItem(position);
 
         holder.name.setText(profile.getProfileName(context));
