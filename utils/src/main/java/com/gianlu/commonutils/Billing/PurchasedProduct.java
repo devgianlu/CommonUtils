@@ -3,7 +3,6 @@ package com.gianlu.commonutils.Billing;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("unused,WeakerAccess")
 public class PurchasedProduct {
     public static final int PURCHASED = 0;
     public static final int CANCELED = 1;

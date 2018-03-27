@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 
-@SuppressWarnings("unused")
 public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
     private Dialog mDialog;
 

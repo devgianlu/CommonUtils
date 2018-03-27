@@ -23,7 +23,6 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public class DrawerManager<P extends BaseDrawerProfile> {
     private final Context context;
     private final ActionBarDrawerToggle drawerToggle;

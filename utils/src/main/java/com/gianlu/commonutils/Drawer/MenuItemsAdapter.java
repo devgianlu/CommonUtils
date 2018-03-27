@@ -18,7 +18,6 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
 class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int ITEM_NORMAL = 0;
     private static final int ITEM_SEPARATOR = 1;

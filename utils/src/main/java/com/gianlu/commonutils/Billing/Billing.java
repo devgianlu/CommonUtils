@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-@SuppressWarnings("unused,WeakerAccess")
 public class Billing {
     public static final int RESULT_BILLING_UNAVAILABLE = 3;
     private static final ArrayList<String> donationProducts = new ArrayList<>(Arrays.asList(

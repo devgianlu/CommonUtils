@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class MessageLayout {
     public static void show(final ViewGroup parent, final String message, @DrawableRes final int icon) {
         if (Looper.myLooper() == Looper.getMainLooper()) {

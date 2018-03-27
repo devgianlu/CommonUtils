@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public class Initializer<P extends BaseDrawerProfile> {
     final Activity activity;
     final DrawerLayout drawerLayout;

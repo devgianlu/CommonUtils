@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unused,WeakerAccess")
 public class InfiniteRecyclerView extends RecyclerView {
     private IFailedLoadingContent listener;
 
