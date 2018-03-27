@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-@SuppressWarnings({"WeakerAccess", "unused", "SameReturnValue"})
 public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
     private int requestCode;
     private String devString;

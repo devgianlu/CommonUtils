@@ -3,7 +3,6 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
-import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatTextView;
@@ -12,8 +11,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
-@Keep
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class SuperTextView extends AppCompatTextView {
     private boolean isCompact;
 

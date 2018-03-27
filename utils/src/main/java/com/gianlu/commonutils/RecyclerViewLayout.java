@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-@SuppressWarnings("unused")
 public class RecyclerViewLayout extends FrameLayout {
     private final ProgressBar loading;
     private final RecyclerView list;

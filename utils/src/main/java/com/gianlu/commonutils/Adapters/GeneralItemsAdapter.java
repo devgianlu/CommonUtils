@@ -15,7 +15,6 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-
 public class GeneralItemsAdapter<E extends GeneralItemsAdapter.Item> extends BaseAdapter {
     private final List<E> items;
     private final LayoutInflater inflater;

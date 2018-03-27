@@ -11,7 +11,6 @@ import org.json.JSONException;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings("unused")
 public final class Prefs {
     private static SharedPreferences prefs;
 

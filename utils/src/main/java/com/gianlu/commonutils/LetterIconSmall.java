@@ -6,14 +6,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.annotation.ColorRes;
-import android.support.annotation.Keep;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
-@Keep
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class LetterIconSmall extends View {
     private final Rect lettersBounds = new Rect();
     private Paint shapePaint;

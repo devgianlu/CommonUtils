@@ -14,7 +14,6 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@SuppressWarnings("unused,WeakerAccess")
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private final List<Product> products;
     private final IAdapter handler;

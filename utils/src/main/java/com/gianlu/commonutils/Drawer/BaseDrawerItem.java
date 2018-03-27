@@ -2,7 +2,6 @@ package com.gianlu.commonutils.Drawer;
 
 import android.support.annotation.DrawableRes;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseDrawerItem {
     public final int id;
     public final int icon;

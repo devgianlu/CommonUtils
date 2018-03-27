@@ -19,7 +19,6 @@ import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> {
     protected final Context context;
     protected final List<P> profiles;

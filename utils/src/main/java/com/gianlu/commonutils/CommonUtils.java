@@ -55,7 +55,6 @@ import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("unused,WeakerAccess")
 public final class CommonUtils {
     private static boolean DEBUG = BuildConfig.DEBUG;
 
