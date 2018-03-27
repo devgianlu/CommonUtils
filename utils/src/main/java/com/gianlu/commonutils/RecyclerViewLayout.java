@@ -110,9 +110,13 @@ public class RecyclerViewLayout extends FrameLayout {
         MessageLayout.show(this, message, error ? R.drawable.ic_error_outline_black_48dp : R.drawable.ic_info_outline_black_48dp);
     }
 
-    public void loadListData(RecyclerView.Adapter adapter) {
+    public void loadListData(RecyclerView.Adapter adapter, boolean show) {
         list.setAdapter(adapter);
-        showList();
+        if (show) showList();
+    }
+
+    public void loadListData(RecyclerView.Adapter adapter) {
+        loadListData(adapter, true);
     }
 
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {

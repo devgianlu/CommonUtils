@@ -90,7 +90,6 @@ public final class Prefs {
         return Long.parseLong(prefs.getString(key.getKey(), String.valueOf(fallback)));
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static void removeFromSet(Context context, PrefKey key, String value) {
         init(context);
         Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));
@@ -98,7 +97,6 @@ public final class Prefs {
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static void addToSet(Context context, PrefKey key, String value) {
         init(context);
         Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));

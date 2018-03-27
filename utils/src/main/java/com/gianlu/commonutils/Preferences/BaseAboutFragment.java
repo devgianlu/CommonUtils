@@ -2,7 +2,6 @@ package com.gianlu.commonutils.Preferences;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import com.gianlu.commonutils.Billing.Product;
 import com.gianlu.commonutils.Billing.ProductAdapter;
 import com.gianlu.commonutils.Billing.PurchasedProduct;
 import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.Toaster;
 
@@ -38,7 +38,6 @@ import java.util.Random;
 public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
     private int requestCode;
     private String devString;
-    private ProgressDialog pd;
     private IInAppBillingService billingService;
     private ServiceConnection serviceConnection;
 
@@ -56,7 +55,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     billingService = IInAppBillingService.Stub.asInterface(service);
-                    if (pd != null && pd.isShowing()) donate();
+                    if (getCurrentDialog() != null && getCurrentDialog().isShowing()) donate();
                 }
             };
 
@@ -126,7 +125,6 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         getActivity().setTitle(R.string.about_app);
         setHasOptionsMenu(true);
 
-        pd = CommonUtils.fastIndeterminateProgressDialog(getActivity(), R.string.connectingBillingService);
         findPreference("donateGoogle").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -171,7 +169,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
     }
 
     private void donate() {
-        CommonUtils.showDialog(getActivity(), pd);
+        showDialog(DialogUtils.progressDialog(getActivity(), R.string.connectingBillingService));
         if (billingService == null)
             return;
 
@@ -206,7 +204,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                         Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
                     }
                 };
-                pd.dismiss();
+                dismissDialog();
 
                 RecyclerView list = new RecyclerView(getActivity());
                 list.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -217,7 +215,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                     }
                 }));
 
-                CommonUtils.showDialog(getActivity(), new AlertDialog.Builder(getActivity())
+                showDialog(new AlertDialog.Builder(getActivity())
                         .setTitle(getString(R.string.donate))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setView(list));

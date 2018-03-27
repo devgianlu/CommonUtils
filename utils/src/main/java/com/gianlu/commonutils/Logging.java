@@ -236,14 +236,15 @@ public final class Logging {
             notifyItemInserted(objs.size() - 1);
         }
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new ViewHolder(parent);
         }
 
         @SuppressLint("SetTextI18n")
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final LogLine item = objs.get(position);
 
             holder.msg.setText(item.message);

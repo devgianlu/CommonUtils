@@ -1,8 +1,5 @@
 package com.gianlu.commonutils;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,17 +8,16 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -157,7 +153,7 @@ public final class CommonUtils {
         return map;
     }
 
-    public static JSONObject toJSONObject(HashMap<String, Object> map) throws JSONException {
+    public static JSONObject toJSONObject(Map<String, Object> map) throws JSONException {
         JSONObject obj = new JSONObject();
         if (map == null) return obj;
 
@@ -231,12 +227,10 @@ public final class CommonUtils {
 
     public static void collapseTitle(TextView v) {
         v.setSingleLine(true);
-        v.setEllipsize(TextUtils.TruncateAt.MARQUEE);
     }
 
     public static void expandTitle(TextView v) {
         v.setSingleLine(false);
-        v.setEllipsize(null);
     }
 
     public static Drawable resolveAttrAsDrawable(Context context, @AttrRes int id) {
@@ -251,47 +245,22 @@ public final class CommonUtils {
         else view.animate().rotation(180).setDuration(200).start();
     }
 
-    public static void showDialog(final Context context, final Dialog dialog) {
-        Toaster.initHandler();
-        Toaster.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (context instanceof Activity && ((Activity) context).isFinishing()) return;
-                dialog.show();
-            }
-        });
+    @NonNull
+    public static EditText getEditText(TextInputLayout layout) {
+        if (layout.getEditText() == null)
+            throw new IllegalStateException("TextInputLayout hasn't a TextInputEditText");
+        return layout.getEditText();
     }
 
-    public static void showDialog(final Context context, final AlertDialog.Builder builder) {
-        Toaster.initHandler();
-        Toaster.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (context instanceof Activity && ((Activity) context).isFinishing()) return;
-                builder.create().show();
-            }
-        });
+    @NonNull
+    public static String getText(TextInputLayout layout) {
+        if (layout.getEditText() == null)
+            throw new IllegalStateException("TextInputLayout hasn't a TextInputEditText");
+        return layout.getEditText().getText().toString();
     }
 
-    private static ProgressDialog fastIndeterminateProgressDialog(Context context, String message) {
-        ProgressDialog pd = new ProgressDialog(context);
-        pd.setMessage(message);
-        pd.setIndeterminate(true);
-        pd.setCancelable(false);
-        return pd;
-    }
-
-    public static ProgressDialog fastIndeterminateProgressDialog(Context context, @StringRes int message) {
-        return fastIndeterminateProgressDialog(context, context == null ? "" : context.getString(message));
-    }
-
-    @Nullable
-    public static String getText(TextInputLayout field) {
-        return field.getEditText() == null ? null : field.getEditText().getText().toString();
-    }
-
-    public static void setText(TextInputLayout field, String val) {
-        if (field.getEditText() != null) field.getEditText().setText(val);
+    public static void setText(TextInputLayout layout, CharSequence val) {
+        if (layout.getEditText() != null) layout.getEditText().setText(val);
     }
 
     public static String dimensionFormatter(float v, boolean si) {
@@ -363,14 +332,6 @@ public final class CommonUtils {
     public static <T> int indexOf(T[] items, T item) {
         for (int i = 0; i < items.length; i++)
             if (items[i] == item)
-                return i;
-
-        return -1;
-    }
-
-    public static <T> int indexOf(List<T> items, T item) {
-        for (int i = 0; i < items.size(); i++)
-            if (items.get(i) == item)
                 return i;
 
         return -1;
