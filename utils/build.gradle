@@ -19,10 +19,10 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-core:12.0.0'
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    api 'com.google.firebase:firebase-core:12.0.0'
+    api 'com.android.support:appcompat-v7:27.1.0'
+    api 'com.android.support:design:27.1.0'
+    api('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
 }
