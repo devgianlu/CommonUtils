@@ -254,7 +254,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                 @Override
                 public void onFailed(Exception ex) {
                     if (listener != null && maxPages != -1) listener.onFailedLoadingContent(ex);
-                    if (CommonUtils.isDebug()) ex.printStackTrace();
+                    Logging.log(ex);
 
                     handler.post(new Runnable() {
                         @Override

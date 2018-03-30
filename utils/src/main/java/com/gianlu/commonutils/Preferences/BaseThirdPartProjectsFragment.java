@@ -79,7 +79,7 @@ public abstract class BaseThirdPartProjectsFragment extends AppCompatPreferenceF
 
             private final int msg;
             private final String url;
-            public int title;
+            public final int title;
 
             License(@StringRes int title, @StringRes int msg, String url) {
                 this.title = title;
