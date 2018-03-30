@@ -43,6 +43,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -415,13 +416,15 @@ public final class CommonUtils {
         return join(Arrays.asList(objs), separator);
     }
 
-    public static String join(List<?> objs, String separator) {
+    public static String join(Collection<?> objs, String separator) {
         if (objs == null) return "";
         StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < objs.size(); i++) {
-            builder.append(objs.get(i).toString());
-            if (i < objs.size() - 1) builder.append(separator);
+        boolean first = true;
+        for (Object obj : objs) {
+            if (!first) builder.append(separator);
+            first = false;
+            builder.append(obj.toString());
         }
 
         return builder.toString();
@@ -452,6 +455,22 @@ public final class CommonUtils {
         JSONArray array = new JSONArray();
         for (String key : keys) array.put(key);
         return array;
+    }
+
+    public static JSONArray toJSONArray(List<String> keys, boolean skipNulls) {
+        JSONArray array = new JSONArray();
+        for (String key : keys) {
+            if (skipNulls && key == null) continue;
+            array.put(key);
+        }
+        return array;
+    }
+
+    public static Integer[] toIntsList(String str, String separator) throws NumberFormatException {
+        String[] split = str.split(separator);
+        Integer[] ints = new Integer[split.length];
+        for (int i = 0; i < split.length; i++) ints[i] = Integer.parseInt(split[i].trim());
+        return ints;
     }
 
     public static <T> ArrayList<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
