@@ -8,12 +8,12 @@
     <string name="somethingWentWrong">Something went wrong! A report has already been sent to the developer.</string>
     <string name="emailMe">If you want to add your opinion on what happen please email me at altomanigianluca@gmail.com by clicking the button below.</string>
     <string name="send_email">Send email</string>
-    <string name="mitLicense">Licensed under the MIT license</string>
     <string name="openDrawer">Open drawer</string>
     <string name="donate">Donate</string>
     <string name="logs">Log files</string>
     <string name="preferences">Preferences</string>
-    <string name="apacheLicense">Licensed under Apache License 2.0</string>
+    <string name="licensedApache">Licensed under Apache License 2.0</string>
+    <string name="licensedMit">Licensed under the MIT license</string>
     <string name="third_part">Third-part projects</string>
     <string name="closeDrawer">Close drawer</string>
     <string name="addProfile">Add profile</string>
@@ -43,4 +43,6 @@
     <string name="leaveReview">Leave a review on the Play Store</string>
     <string name="offline_message">Looks like either you or the application service are offline.</string>
     <string name="retry">Retry</string>
+    <string name="apacheLicenseName">Apache License 2.0</string>
+    <string name="mitLicenseName">MIT license</string>
 </resources>

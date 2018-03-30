@@ -193,9 +193,7 @@ public final class Logging {
     public static class LogFileComparator implements Comparator<LogFile> {
         @Override
         public int compare(LogFile o1, LogFile o2) {
-            if (o1.date == o2.date) return 0;
-            else if (o1.date > o2.date) return -1;
-            else return 1;
+            return Long.compare(o2.date, o1.date);
         }
     }
 

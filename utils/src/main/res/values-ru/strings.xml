@@ -33,7 +33,6 @@
     <string name="failedBuying">Не удалось купить этот товар! Пожалуйста свяжись со мной.</string>
     <string name="failedBillingConnection">Не удалось подключиться к службе выставления счетов!</string>
     <string name="noLogs">Список логов пуст.</string>
-    <string name="apacheLicense">Лицензия от Apache License 2.0</string>
     <string name="rateApp">Оцени это приложение</string>
     <string name="leaveReview">Оставить отзыв в Play Store</string>
 </resources>
