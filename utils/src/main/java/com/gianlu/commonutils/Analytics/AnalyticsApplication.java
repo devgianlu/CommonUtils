@@ -37,9 +37,9 @@ public abstract class AnalyticsApplication extends Application implements Thread
 
     @Override
     public final void uncaughtException(Thread thread, Throwable throwable) {
-        if (CommonUtils.isDebug()) {
-            throwable.printStackTrace();
-        } else {
+        Logging.log(throwable);
+
+        if (!CommonUtils.isDebug()) {
             Crashlytics.logException(throwable);
             if (uncaughtNotDebug(thread, throwable))
                 UncaughtExceptionActivity.startActivity(this, getAppNameRes(this), throwable);

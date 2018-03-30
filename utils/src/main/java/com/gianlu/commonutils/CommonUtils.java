@@ -457,7 +457,7 @@ public final class CommonUtils {
         return array;
     }
 
-    public static JSONArray toJSONArray(List<String> keys, boolean skipNulls) {
+    public static JSONArray toJSONArray(Collection<String> keys, boolean skipNulls) {
         JSONArray array = new JSONArray();
         for (String key : keys) {
             if (skipNulls && key == null) continue;
