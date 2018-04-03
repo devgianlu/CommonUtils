@@ -49,7 +49,8 @@ public final class Logging {
             try {
                 Date date = getFileDateFormatter().parse(file.getName().replace(".log", "").replace(".secret", ""));
                 if (date.before(cal.getTime())) file.delete();
-            } catch (ParseException ignored) {
+            } catch (ParseException ex) {
+                if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
     }
@@ -69,7 +70,8 @@ public final class Logging {
             try {
                 logFile.createNewFile();
                 secretLogFile.createNewFile();
-            } catch (IOException ignored) {
+            } catch (IOException ex) {
+                if (CommonUtils.isDebug()) ex.printStackTrace();
             }
 
             return logFile.canWrite() && secretLogFile.canWrite();
@@ -106,7 +108,8 @@ public final class Logging {
         for (File file : files) {
             try {
                 logFiles.add(new LogFile(file));
-            } catch (ParseException ignored) {
+            } catch (ParseException ex) {
+                if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
 
