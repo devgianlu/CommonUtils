@@ -25,6 +25,7 @@ import com.gianlu.commonutils.Billing.ProductAdapter;
 import com.gianlu.commonutils.Billing.PurchasedProduct;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
+import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.Toaster;
 
@@ -68,7 +69,8 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         if (serviceConnection != null && activity != null) {
             try {
                 activity.unbindService(serviceConnection);
-            } catch (IllegalArgumentException ignored) {
+            } catch (IllegalArgumentException ex) {
+                Logging.log(ex);
             } finally {
                 serviceConnection = null;
             }
@@ -246,7 +248,8 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         if (billingService != null) {
             try {
                 getActivity().unbindService(serviceConnection);
-            } catch (IllegalArgumentException ignored) {
+            } catch (IllegalArgumentException ex) {
+                Logging.log(ex);
             }
         }
     }

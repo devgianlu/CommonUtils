@@ -7,6 +7,7 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.gianlu.commonutils.Logging;
 
 import org.json.JSONException;
 
@@ -77,7 +78,8 @@ public class Billing {
                     for (String productDetails : jResponse) {
                         try {
                             products.add(new Product(productDetails));
-                        } catch (JSONException ignored) {
+                        } catch (JSONException ex) {
+                            Logging.log(ex);
                         }
                     }
 

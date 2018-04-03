@@ -318,7 +318,8 @@ public final class CommonUtils {
         if (log != null) {
             try {
                 intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(context, log)));
-            } catch (ParseException | IOException ignored) {
+            } catch (ParseException | IOException ex) {
+                Logging.log(ex);
             }
         }
 
