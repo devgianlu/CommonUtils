@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -150,6 +151,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
             }
         });
 
+
         findPreference("rate").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -167,7 +169,26 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         } catch (PackageManager.NameNotFoundException ex) {
             findPreference("app_version").setSummary(R.string.unknown);
         }
+
+        final Uri openSourceUrl = getOpenSourceUrl();
+        if (openSourceUrl != null) {
+            Preference pref = new Preference(getActivity());
+            pref.setTitle(R.string.openSource);
+            pref.setSummary(R.string.openSource_desc);
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, openSourceUrl));
+                    return true;
+                }
+            });
+
+            getPreferenceScreen().addPreference(pref);
+        }
     }
+
+    @Nullable
+    protected abstract Uri getOpenSourceUrl();
 
     private void donate() {
         showDialog(DialogUtils.progressDialog(getActivity(), R.string.connectingBillingService));

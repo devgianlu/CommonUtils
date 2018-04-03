@@ -45,4 +45,6 @@
     <string name="retry">Retry</string>
     <string name="apacheLicenseName">Apache License 2.0</string>
     <string name="mitLicenseName">MIT license</string>
+    <string name="openSource">Open source</string>
+    <string name="openSource_desc">This app is all open source!</string>
 </resources>
