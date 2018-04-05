@@ -3,6 +3,7 @@ package com.gianlu.commonutils.Preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import org.json.JSONArray;
@@ -103,6 +104,13 @@ public final class Prefs {
         prefs.edit().putStringSet(key.getKey(), set).apply();
     }
 
+    public static void addToSet(SharedPreferences prefs, PrefKey key, String value) {
+        init(prefs);
+        Set<String> set = new HashSet<>(getSet(prefs, key, new HashSet<String>()));
+        if (!set.contains(value)) set.add(value);
+        prefs.edit().putStringSet(key.getKey(), set).apply();
+    }
+
     public static Set<String> getSet(Context context, PrefKey key, Set<String> fallback) {
         init(context);
         return getSet(key, fallback);
@@ -174,6 +182,7 @@ public final class Prefs {
             this.key = key;
         }
 
+        @NonNull
         @Override
         public String getKey() {
             return key;
@@ -181,6 +190,7 @@ public final class Prefs {
     }
 
     public interface PrefKey {
+        @NonNull
         String getKey();
     }
 }
