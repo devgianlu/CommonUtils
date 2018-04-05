@@ -23,6 +23,7 @@ public class DialogUtils {
         activityWithDialog(activity).showDialog(dialog);
     }
 
+    @NonNull
     private static ActivityWithDialog activityWithDialog(@Nullable Activity activity) {
         if (activity instanceof ActivityWithDialog)
             return (ActivityWithDialog) activity;
