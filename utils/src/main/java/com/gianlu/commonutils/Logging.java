@@ -55,8 +55,9 @@ public final class Logging {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private static SimpleDateFormat getFileDateFormatter() {
-        return new SimpleDateFormat("d-LL-yyyy", Locale.getDefault());
+        return new SimpleDateFormat("d-LL-yyyy");
     }
 
     public static void init(Context context) {
