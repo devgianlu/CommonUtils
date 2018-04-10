@@ -11,4 +11,8 @@
     </style>
 
     <color name="black_overlay">#66000000</color>
+
+    <style name="Drawer">
+        <item name="android:layout_width">wrap_content</item>
+    </style>
 </resources>
