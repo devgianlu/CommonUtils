@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.AttrRes;
@@ -263,6 +262,7 @@ public final class CommonUtils {
         if (layout.getEditText() != null) layout.getEditText().setText(val);
     }
 
+    @NonNull
     public static String dimensionFormatter(float v, boolean si) {
         if (v <= 0) {
             return "0 B";
@@ -274,6 +274,7 @@ public final class CommonUtils {
         }
     }
 
+    @NonNull
     public static String speedFormatter(float v, boolean si) {
         if (v <= 0) {
             return "0 B/s";
@@ -363,6 +364,7 @@ public final class CommonUtils {
         copy(new FileInputStream(src), new FileOutputStream(dst));
     }
 
+    @NonNull
     public static String timeFormatter(long sec) {
         int day = (int) TimeUnit.SECONDS.toDays(sec);
         long hours = TimeUnit.SECONDS.toHours(sec) - TimeUnit.DAYS.toHours(day);
@@ -392,12 +394,14 @@ public final class CommonUtils {
         }
     }
 
+    @NonNull
     public static SimpleDateFormat getVerbalDateFormatter() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf;
     }
 
+    @NonNull
     public static SimpleDateFormat getFullDateFormatter() {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss dd/MM/yyyy", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
@@ -413,10 +417,12 @@ public final class CommonUtils {
         Logging.DEBUG = debug;
     }
 
+    @NonNull
     public static String join(Object[] objs, String separator) {
         return join(Arrays.asList(objs), separator);
     }
 
+    @NonNull
     public static String join(Collection<?> objs, String separator) {
         if (objs == null) return "";
         StringBuilder builder = new StringBuilder();
@@ -448,16 +454,14 @@ public final class CommonUtils {
         return false;
     }
 
-    public static String breakText(String str, Paint paint, float maxWidth) {
-        return str.substring(0, paint.breakText(str, 0, str.length(), true, maxWidth, null));
-    }
-
+    @NonNull
     public static JSONArray toJSONArray(String[] keys) {
         JSONArray array = new JSONArray();
         for (String key : keys) array.put(key);
         return array;
     }
 
+    @NonNull
     public static JSONArray toJSONArray(Collection<String> keys, boolean skipNulls) {
         JSONArray array = new JSONArray();
         for (String key : keys) {
@@ -467,6 +471,7 @@ public final class CommonUtils {
         return array;
     }
 
+    @NonNull
     public static Integer[] toIntsList(String str, String separator) throws NumberFormatException {
         String[] split = str.split(separator);
         Integer[] ints = new Integer[split.length];
@@ -474,10 +479,12 @@ public final class CommonUtils {
         return ints;
     }
 
+    @NonNull
     public static <T> ArrayList<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
         return toTList(array, tClass, null);
     }
 
+    @NonNull
     public static <T, P> ArrayList<T> toTList(JSONArray array, Class<T> tClass, P parent) throws JSONException {
         ArrayList<T> items = new ArrayList<>();
 
@@ -539,6 +546,12 @@ public final class CommonUtils {
         String[] array = new String[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) array[i] = jsonArray.getString(i);
         return array;
+    }
+
+    @Nullable
+    public static String getStupidString(JSONObject obj, String key) throws JSONException {
+        String val = obj.getString(key);
+        return val == null || val.equals("null") ? null : val;
     }
 
     public static boolean isStupidNull(JSONObject obj, String key) throws JSONException {
