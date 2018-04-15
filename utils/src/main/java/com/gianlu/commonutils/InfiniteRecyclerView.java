@@ -1,6 +1,5 @@
 package com.gianlu.commonutils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class InfiniteRecyclerView extends RecyclerView {
@@ -56,39 +57,32 @@ public class InfiniteRecyclerView extends RecyclerView {
         void onFailedLoadingContent(Exception ex);
     }
 
-    public static abstract class InfiniteAdapter<T extends ViewHolder, E> extends RecyclerView.Adapter<ViewHolder> {
+    public static abstract class InfiniteAdapter<VH extends ViewHolder, E> extends RecyclerView.Adapter<ViewHolder> {
         protected static final int ONE_PAGE = -2;
         protected static final int UNDETERMINED_PAGES = -1;
         static final int ITEM_LOADING = 0;
         static final int ITEM_NORMAL = 1;
         static final int ITEM_SEPARATOR = 2;
         protected final LayoutInflater inflater;
-        protected final Context context;
         protected final List<ItemEnclosure<E>> items;
-        private final int primary_shadow;
-        private final boolean countForSeparator;
         private final Handler handler;
-        @SuppressWarnings("CanBeFinal")
-        protected int maxPages;
+        private final Config config;
         int page = 1;
         long currDay = -1;
         private IFailedLoadingContent listener;
         private boolean loading = false;
 
-        public InfiniteAdapter(Context context, List<E> items, int maxPages, @ColorInt int primary_shadow, boolean countForSeparator) {
-            this.inflater = LayoutInflater.from(context);
-            this.context = context;
-            this.primary_shadow = primary_shadow;
-            this.countForSeparator = countForSeparator;
-            this.items = new ArrayList<>();
-            this.maxPages = maxPages;
+        public InfiniteAdapter(Config<E> config) {
+            this.config = config;
+            this.inflater = LayoutInflater.from(config.context);
             this.handler = new Handler(Looper.getMainLooper());
+            this.items = new ArrayList<>();
 
-            populate(items);
+            populate(config.items);
         }
 
-        protected int remove(E video) {
-            int pos = indexOf(video);
+        protected int remove(E element) {
+            int pos = indexOf(element);
             if (pos != -1) items.remove(pos);
             return pos;
         }
@@ -109,7 +103,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         private void populate(List<E> elements) {
             for (E element : elements) {
                 Date date = getDateFromItem(element);
-                if (date != null && currDay != date.getTime() / 86400000 && primary_shadow != -1) {
+                if (config.hasSeparators && date != null && currDay != date.getTime() / 86400000) {
                     items.add(new ItemEnclosure<E>(null, date));
                     currDay = date.getTime() / 86400000;
                 }
@@ -118,7 +112,6 @@ public class InfiniteRecyclerView extends RecyclerView {
             }
         }
 
-        @SuppressWarnings("SameReturnValue")
         @Nullable
         protected abstract Date getDateFromItem(E item);
 
@@ -166,27 +159,29 @@ public class InfiniteRecyclerView extends RecyclerView {
             return count;
         }
 
-        @SuppressLint("SetTextI18n")
         @Override
         @SuppressWarnings("unchecked")
         public final void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ItemEnclosure<E> item = items.get(position);
             if (item != null) {
-                if (item.item == null) {
-                    SeparatorViewHolder separator = (SeparatorViewHolder) holder;
-                    separator.line.setBackgroundColor(primary_shadow);
-                    if (countForSeparator) {
-                        separator.date.setText(CommonUtils.getVerbalDateFormatter().format(item.date) + " (" + countFor(item.date) + ")");
-                    } else {
+                if (item.item == null && item.date != null && config.hasSeparators) {
+                    SeparatorViewHolder separator = (SeparatorViewHolder) holder; // TODO: Use decoration
+                    separator.line.setBackgroundColor(config.separatorColor);
+                    if (config.separatorWithCount)
+                        separator.date.setText(String.format(Locale.getDefault(), "%s (%d)", CommonUtils.getVerbalDateFormatter().format(item.date), countFor(item.date)));
+                    else
                         separator.date.setText(CommonUtils.getVerbalDateFormatter().format(item.date));
-                    }
-                } else {
-                    userBindViewHolder((T) holder, position);
+                } else if (item.item != null) {
+                    userBindViewHolder((VH) holder, item, position);
                 }
             }
         }
 
-        protected abstract void userBindViewHolder(T holder, int position);
+        protected final void maxPages(int max) {
+            config.maxPages = max;
+        }
+
+        protected abstract void userBindViewHolder(@NonNull VH holder, @NonNull ItemEnclosure<E> item, int position);
 
         protected abstract ViewHolder createViewHolder(ViewGroup parent);
 
@@ -200,8 +195,8 @@ public class InfiniteRecyclerView extends RecyclerView {
         }
 
         private void loadMoreContent() {
-            if (maxPages == -2) return;
-            if ((maxPages != -1 && page > maxPages) || loading) return;
+            if (config.maxPages == ONE_PAGE || loading) return;
+            if (config.maxPages != UNDETERMINED_PAGES && page > config.maxPages) return;
 
             loading = true;
 
@@ -225,7 +220,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                             int start = items.size();
                             int lastSeparator = findLastSeparator();
                             populate(content);
-                            if (countForSeparator && lastSeparator != -1)
+                            if (config.separatorWithCount && lastSeparator != -1)
                                 notifyItemChanged(lastSeparator);
                             notifyItemRangeInserted(start, content.size());
                             loading = false;
@@ -253,7 +248,8 @@ public class InfiniteRecyclerView extends RecyclerView {
 
                 @Override
                 public void onFailed(Exception ex) {
-                    if (listener != null && maxPages != -1) listener.onFailedLoadingContent(ex);
+                    if (listener != null && config.maxPages != UNDETERMINED_PAGES)
+                        listener.onFailedLoadingContent(ex);
                     Logging.log(ex);
 
                     handler.post(new Runnable() {
@@ -281,11 +277,62 @@ public class InfiniteRecyclerView extends RecyclerView {
             void onFailed(Exception ex);
         }
 
+        public final static class Config<E> {
+            private final Context context;
+            private final List<E> items;
+            private int maxPages = UNDETERMINED_PAGES;
+            private boolean hasSeparators = false;
+            private int separatorColor = 0;
+            private boolean separatorWithCount = false;
+
+            public Config(Context context) {
+                this.context = context;
+                this.items = new ArrayList<>();
+            }
+
+            public Config<E> items(Collection<? extends E> items) {
+                this.items.addAll(items);
+                return this;
+            }
+
+            public Config<E> maxPages(int max) {
+                maxPages = max;
+                return this;
+            }
+
+            public Config<E> onePage() {
+                maxPages = ONE_PAGE;
+                return this;
+            }
+
+            public Config<E> undeterminedPages() {
+                maxPages = UNDETERMINED_PAGES;
+                return this;
+            }
+
+            public Config<E> noSeparators() {
+                hasSeparators = false;
+                separatorColor = 0;
+                separatorWithCount = false;
+                return this;
+            }
+
+            public Config<E> separators(@ColorInt int color, boolean withCount) {
+                hasSeparators = true;
+                separatorColor = color;
+                separatorWithCount = withCount;
+                return this;
+            }
+        }
+
         public static class ItemEnclosure<E> {
             final Date date;
             final E item;
 
-            public ItemEnclosure(@Nullable E item, Date date) {
+            public ItemEnclosure(@Nullable E item, @Nullable Date date) {
+                if (item == null && date == null)
+                    throw new NullPointerException("item and date cannot be both null!");
+
                 this.date = date;
                 this.item = item;
             }
