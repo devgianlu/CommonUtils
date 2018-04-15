@@ -1,9 +1,10 @@
 package com.gianlu.commonutils;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -103,7 +104,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         private void populate(List<E> elements) {
             for (E element : elements) {
                 Date date = getDateFromItem(element);
-                if (config.hasSeparators && date != null && currDay != date.getTime() / 86400000) {
+                if (config.separator != null && date != null && currDay != date.getTime() / 86400000) {
                     items.add(new ItemEnclosure<E>(null, date));
                     currDay = date.getTime() / 86400000;
                 }
@@ -164,9 +165,9 @@ public class InfiniteRecyclerView extends RecyclerView {
         public final void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ItemEnclosure<E> item = items.get(position);
             if (item != null) {
-                if (item.item == null && item.date != null && config.hasSeparators) {
-                    SeparatorViewHolder separator = (SeparatorViewHolder) holder; // TODO: Use decoration
-                    separator.line.setBackgroundColor(config.separatorColor);
+                if (item.item == null && item.date != null && config.separator != null) {
+                    SeparatorViewHolder separator = (SeparatorViewHolder) holder;
+                    separator.line.setBackground(position == 0 ? null : config.separator);
                     if (config.separatorWithCount)
                         separator.date.setText(String.format(Locale.getDefault(), "%s (%d)", CommonUtils.getVerbalDateFormatter().format(item.date), countFor(item.date)));
                     else
@@ -281,8 +282,7 @@ public class InfiniteRecyclerView extends RecyclerView {
             private final Context context;
             private final List<E> items;
             private int maxPages = UNDETERMINED_PAGES;
-            private boolean hasSeparators = false;
-            private int separatorColor = 0;
+            private Drawable separator = null;
             private boolean separatorWithCount = false;
 
             public Config(Context context) {
@@ -311,16 +311,16 @@ public class InfiniteRecyclerView extends RecyclerView {
             }
 
             public Config<E> noSeparators() {
-                hasSeparators = false;
-                separatorColor = 0;
+                separator = null;
                 separatorWithCount = false;
                 return this;
             }
 
-            public Config<E> separators(@ColorInt int color, boolean withCount) {
-                hasSeparators = true;
-                separatorColor = color;
+            public Config<E> separators(boolean withCount) {
                 separatorWithCount = withCount;
+                TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.listDivider});
+                separator = a.getDrawable(0);
+                a.recycle();
                 return this;
             }
         }
