@@ -16,7 +16,7 @@ import java.io.Serializable;
 
 public abstract class BaseThirdPartProjectsFragment extends AppCompatPreferenceFragment {
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.third_part);
         setHasOptionsMenu(true);
