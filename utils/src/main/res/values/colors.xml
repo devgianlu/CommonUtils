@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorAccent" />
     <color name="white">#FFFFFF</color>
     <color name="red">#f44336</color>
     <color name="pink">#e91e63</color>

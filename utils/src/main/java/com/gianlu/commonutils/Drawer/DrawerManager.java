@@ -1,6 +1,7 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.ColorRes;
@@ -12,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,40 +23,38 @@ import android.widget.TextView;
 import com.gianlu.commonutils.LetterIconBig;
 import com.gianlu.commonutils.R;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DrawerManager<P extends BaseDrawerProfile> {
     private final Context context;
     private final ActionBarDrawerToggle drawerToggle;
     private final DrawerLayout drawerLayout;
-    private final ISetup<P> setup;
-    private final List<BaseDrawerItem> menuItems;
-    private final List<P> profiles;
     private MenuItemsAdapter menuItemsAdapter;
     private IDrawerListener<P> listener;
     private boolean isProfilesLockedUntilSelected;
     private ProfilesAdapter<P> profilesAdapter;
+    private final Config<P> config;
 
-    public DrawerManager(Initializer<P> initializer) {
-        this.context = initializer.drawerLayout.getContext();
-        this.setup = initializer.setup;
-        this.drawerLayout = initializer.drawerLayout;
-        this.menuItems = initializer.menuItems;
-        this.profiles = initializer.profiles;
-        drawerToggle = new ActionBarDrawerToggle(initializer.activity, drawerLayout, initializer.toolbar, R.string.openDrawer, R.string.closeDrawer);
+    private DrawerManager(Config<P> config, Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
+        this.config = config;
+        this.context = drawerLayout.getContext();
+        this.drawerLayout = drawerLayout;
+        drawerToggle = new ActionBarDrawerToggle(activity, this.drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
-        LinearLayout realLayout = (LinearLayout) drawerLayout.getChildAt(1);
-        realLayout.setBackgroundResource(setup.getColorAccent());
+        LinearLayout realLayout = (LinearLayout) this.drawerLayout.getChildAt(1);
+        realLayout.setBackgroundResource(config.colorAccent);
 
         ImageView headerBackground = realLayout.findViewById(R.id.drawerHeader_background);
-        headerBackground.setImageResource(setup.getHeaderBackground());
+        headerBackground.setImageResource(config.headerDrawable);
 
         setupMenuItems();
-        if (initializer.singleProfile != null) {
-            setupSingleProfile(initializer.logoutHandler);
-            setCurrentProfile(initializer.singleProfile);
+        if (config.singleProfile != null) {
+            setupSingleProfile(config.logoutHandler);
+            setCurrentProfile(config.singleProfile);
         } else {
             setupProfiles();
             setupProfilesFooter();
@@ -69,7 +69,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
     @Nullable
     private BaseDrawerItem findMenuItem(int id) {
-        for (BaseDrawerItem item : menuItems)
+        for (BaseDrawerItem item : config.menuItems)
             if (item.id == id)
                 return item;
 
@@ -92,7 +92,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         LinearLayout profilesFooter = drawerLayout.findViewById(R.id.drawer_profilesFooter);
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, setup.getColorPrimaryShadow()));
+        profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, config.colorPrimaryShadow));
 
         MenuItemsAdapter.ViewHolder addProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter);
         addProfile.name.setText(context.getString(R.string.addProfile));
@@ -119,9 +119,9 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         profilesFooter.addView(editProfile.itemView);
     }
 
-    public DrawerManager refreshProfiles(List<P> newProfiles) {
-        profiles.clear();
-        profiles.addAll(newProfiles);
+    public DrawerManager<P> refreshProfiles(List<P> newProfiles) {
+        config.profiles.clear();
+        config.profiles.addAll(newProfiles);
 
         setupProfiles();
         profilesAdapter.startProfilesTest();
@@ -131,7 +131,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private void setupProfiles() {
         RecyclerView profilesList = drawerLayout.findViewById(R.id.drawer_profilesList);
         profilesList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        profilesAdapter = setup.getProfilesAdapter(context, profiles, listener);
+        profilesAdapter = config.adapterProvider.provide(context, config.profiles, listener);
         profilesList.setAdapter(profilesAdapter);
 
         final ImageView dropdownToggle = drawerLayout.findViewById(R.id.drawerHeader_action);
@@ -269,7 +269,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private void setupMenuItems() {
         RecyclerView menuList = drawerLayout.findViewById(R.id.drawer_menuList);
         menuList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        menuItemsAdapter = new MenuItemsAdapter(context, menuItems, setup.getDrawerBadge(), setup.getColorPrimaryShadow(), new MenuItemsAdapter.IAdapter() {
+        menuItemsAdapter = new MenuItemsAdapter(context, config.menuItems, R.drawable.drawer_badge, config.colorPrimaryShadow, new MenuItemsAdapter.IAdapter() {
             @Override
             public void onMenuItemSelected(BaseDrawerItem which) {
                 if (listener != null) setDrawerState(false, listener.onMenuItemSelected(which));
@@ -325,7 +325,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     public boolean hasProfiles() {
-        return !profiles.isEmpty();
+        return !config.profiles.isEmpty();
     }
 
     private void setProfilesDrawerOpen() {
@@ -347,7 +347,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
     public DrawerManager<P> setCurrentProfile(@NonNull P profile) {
         LetterIconBig currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
-        currAccount.setColorScheme(setup.getColorAccent(), setup.getColorPrimaryShadow());
+        currAccount.setColorScheme(config.colorAccent, config.colorPrimaryShadow);
 
         TextView profileName = drawerLayout.findViewById(R.id.drawerHeader_profileName);
         TextView secondaryText = drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
@@ -372,28 +372,57 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         void editProfile(List<P> items);
     }
 
-    @SuppressWarnings("SameReturnValue")
-    public interface ISetup<P extends BaseDrawerProfile> {
-        @ColorRes
-        int getColorAccent();
-
-        @DrawableRes
-        int getHeaderBackground();
-
-        @DrawableRes
-        int getDrawerBadge();
-
-        @ColorRes
-        int getColorPrimaryShadow();
-
-        @ColorRes
-        int getColorPrimary();
-
-        @Nullable
-        ProfilesAdapter<P> getProfilesAdapter(Context context, List<P> profiles, DrawerManager.IDrawerListener<P> listener);
-    }
-
     public interface ILogout {
         void logout();
+    }
+
+    public static class Config<P extends BaseDrawerProfile> {
+        private final List<BaseDrawerItem> menuItems = new ArrayList<>();
+        private final List<P> profiles = new ArrayList<>();
+        private final int colorPrimaryShadow;
+        private final int headerDrawable;
+        private DrawerManager.ILogout logoutHandler = null;
+        private P singleProfile = null;
+        private int colorAccent;
+        private AdapterProvider<P> adapterProvider;
+
+        public Config(@ColorRes int colorAccent, @ColorRes int colorPrimaryShadow, @DrawableRes int headerDrawable) {
+            this.colorAccent = colorAccent;
+            this.colorPrimaryShadow = colorPrimaryShadow; // TODO: Darken primary
+            this.headerDrawable = headerDrawable;
+        }
+
+        public Config<P> singleProfile(P profile, @Nullable DrawerManager.ILogout handler) {
+            this.singleProfile = profile;
+            this.logoutHandler = handler;
+            this.profiles.clear();
+            return this;
+        }
+
+        public Config<P> addMenuItemSeparator() {
+            menuItems.add(null);
+            return this;
+        }
+
+        public Config<P> addMenuItem(BaseDrawerItem item) {
+            menuItems.add(item);
+            return this;
+        }
+
+        public Config<P> addProfiles(Collection<P> profiles, @NonNull AdapterProvider<P> adapterProvider) {
+            this.adapterProvider = adapterProvider;
+            this.profiles.addAll(profiles);
+            this.logoutHandler = null;
+            this.singleProfile = null;
+            return this;
+        }
+
+        public DrawerManager<P> build(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
+            return new DrawerManager<>(this, activity, drawerLayout, toolbar);
+        }
+
+        public interface AdapterProvider<P extends BaseDrawerProfile> {
+            ProfilesAdapter<P> provide(@NonNull Context context, @NonNull List<P> profiles, IDrawerListener<P> listener);
+        }
     }
 }
