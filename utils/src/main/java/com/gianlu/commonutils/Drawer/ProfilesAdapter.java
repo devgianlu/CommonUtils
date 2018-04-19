@@ -83,10 +83,6 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile> extends Recyc
         void onProfileSelected(P profile);
     }
 
-    public interface IFinished {
-        void onFinished();
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final ProgressBar loading;
         public final ImageView status;
