@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -25,9 +26,9 @@ public class LetterIconBig extends View {
             letters = "AA";
     }
 
-    public void setColorScheme(@ColorRes int colorAccent, @ColorRes int colorPrimary_shadow) {
+    public void setColorScheme(@ColorInt int accent, @ColorInt int shadow) {
         letterPaint = new Paint();
-        letterPaint.setColor(ContextCompat.getColor(getContext(), colorAccent));
+        letterPaint.setColor(accent);
         letterPaint.setAntiAlias(true);
         letterPaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Roboto-Light.ttf"));
         letterPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 26, getResources().getDisplayMetrics()));
@@ -35,8 +36,12 @@ public class LetterIconBig extends View {
         shapePaint = new Paint();
         shapePaint.setAntiAlias(true);
         shapePaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
-        shapePaint.setShadowLayer(4, 0, 4, ContextCompat.getColor(getContext(), colorPrimary_shadow));
+        shapePaint.setShadowLayer(4, 0, 4, shadow);
         setLayerType(LAYER_TYPE_SOFTWARE, shapePaint);
+    }
+
+    public void setColorSchemeRes(@ColorRes int accent, @ColorRes int shadow) {
+        setColorScheme(ContextCompat.getColor(getContext(), accent), ContextCompat.getColor(getContext(), shadow));
     }
 
     public void setInitials(String initials) {

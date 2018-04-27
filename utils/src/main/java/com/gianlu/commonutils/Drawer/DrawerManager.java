@@ -4,10 +4,10 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.LetterIconBig;
 import com.gianlu.commonutils.R;
 
@@ -31,11 +32,13 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private final Context context;
     private final ActionBarDrawerToggle drawerToggle;
     private final DrawerLayout drawerLayout;
+    private final Config<P> config;
+    private final int colorAccent;
+    private final int colorPrimaryShadow;
     private MenuItemsAdapter menuItemsAdapter;
     private IDrawerListener<P> listener;
     private boolean isProfilesLockedUntilSelected;
     private ProfilesAdapter<P> profilesAdapter;
-    private final Config<P> config;
 
     private DrawerManager(Config<P> config, Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
         this.config = config;
@@ -45,8 +48,11 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
+        colorAccent = ContextCompat.getColor(context, config.colorAccentRes);
+        colorPrimaryShadow = CommonUtils.manipulateAlpha(ContextCompat.getColor(context, config.colorPrimaryRes), 0.54f);
+
         LinearLayout realLayout = (LinearLayout) this.drawerLayout.getChildAt(1);
-        realLayout.setBackgroundResource(config.colorAccent);
+        realLayout.setBackgroundColor(colorAccent);
 
         ImageView headerBackground = realLayout.findViewById(R.id.drawerHeader_background);
         headerBackground.setImageResource(config.headerDrawable);
@@ -92,7 +98,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         LinearLayout profilesFooter = drawerLayout.findViewById(R.id.drawer_profilesFooter);
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, config.colorPrimaryShadow));
+        profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, colorPrimaryShadow));
 
         MenuItemsAdapter.ViewHolder addProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter);
         addProfile.name.setText(context.getString(R.string.addProfile));
@@ -269,7 +275,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private void setupMenuItems() {
         RecyclerView menuList = drawerLayout.findViewById(R.id.drawer_menuList);
         menuList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        menuItemsAdapter = new MenuItemsAdapter(context, config.menuItems, R.drawable.drawer_badge, config.colorPrimaryShadow, new MenuItemsAdapter.IAdapter() {
+        menuItemsAdapter = new MenuItemsAdapter(context, config.menuItems, R.drawable.drawer_badge, colorPrimaryShadow, new MenuItemsAdapter.IAdapter() {
             @Override
             public void onMenuItemSelected(BaseDrawerItem which) {
                 if (listener != null) setDrawerState(false, listener.onMenuItemSelected(which));
@@ -347,7 +353,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
     public DrawerManager<P> setCurrentProfile(@NonNull P profile) {
         LetterIconBig currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
-        currAccount.setColorScheme(config.colorAccent, config.colorPrimaryShadow);
+        currAccount.setColorScheme(colorAccent, colorPrimaryShadow);
 
         TextView profileName = drawerLayout.findViewById(R.id.drawerHeader_profileName);
         TextView secondaryText = drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
@@ -371,7 +377,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
         void editProfile(List<P> items);
     }
-
     public interface ILogout {
         void logout();
     }
@@ -379,16 +384,16 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     public static class Config<P extends BaseDrawerProfile> {
         private final List<BaseDrawerItem> menuItems = new ArrayList<>();
         private final List<P> profiles = new ArrayList<>();
-        private final int colorPrimaryShadow;
         private final int headerDrawable;
         private DrawerManager.ILogout logoutHandler = null;
         private P singleProfile = null;
-        private int colorAccent;
+        private final int colorAccentRes;
+        private final int colorPrimaryRes;
         private AdapterProvider<P> adapterProvider;
 
-        public Config(@ColorRes int colorAccent, @ColorRes int colorPrimaryShadow, @DrawableRes int headerDrawable) {
-            this.colorAccent = colorAccent;
-            this.colorPrimaryShadow = colorPrimaryShadow; // TODO: Darken primary
+        public Config(@DrawableRes int headerDrawable) {
+            this.colorAccentRes = R.color.colorAccent;
+            this.colorPrimaryRes = R.color.colorPrimary;
             this.headerDrawable = headerDrawable;
         }
 

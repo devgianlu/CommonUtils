@@ -1,7 +1,7 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +28,7 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private IAdapter listener;
 
-    MenuItemsAdapter(Context context, List<BaseDrawerItem> menuItems, @DrawableRes int badge, @ColorRes int separator, IAdapter listener) {
+    MenuItemsAdapter(Context context, List<BaseDrawerItem> menuItems, @DrawableRes int badge, @ColorInt int separator, IAdapter listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.menuItems = menuItems;
@@ -107,15 +107,15 @@ class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     static class SeparatorViewHolder extends RecyclerView.ViewHolder {
-        SeparatorViewHolder(Context context, @ColorRes int separator) {
+        SeparatorViewHolder(Context context, @ColorInt int separator) {
             super(getSeparator(context, separator));
         }
 
-        static View getSeparator(Context context, @ColorRes int separator) {
+        static View getSeparator(Context context, @ColorInt int separator) {
             View view = new View(context);
             view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, context.getResources().getDisplayMetrics())));
-            view.setBackgroundResource(separator);
+            view.setBackgroundColor(separator);
             return view;
         }
     }
