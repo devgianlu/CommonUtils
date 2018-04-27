@@ -82,6 +82,11 @@ public class InfiniteRecyclerView extends RecyclerView {
             populate(config.items);
         }
 
+        @NonNull
+        protected Context getContext() {
+            return config.context;
+        }
+
         protected int remove(E element) {
             int pos = indexOf(element);
             if (pos != -1) items.remove(pos);
