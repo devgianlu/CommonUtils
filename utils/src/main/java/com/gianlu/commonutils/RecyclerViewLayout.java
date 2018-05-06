@@ -39,16 +39,21 @@ public class RecyclerViewLayout extends FrameLayout {
         loading = findViewById(R.id.recyclerViewLayout_loading);
         list = findViewById(R.id.recyclerViewLayout_list);
         swipeRefresh = findViewById(R.id.recyclerViewLayout_swipeRefresh);
+
+        disableSwipeRefresh();
     }
 
     public RecyclerViewLayout(@NonNull LayoutInflater inflater) {
         this(inflater.getContext(), null, 0);
     }
 
-    public void enableSwipeRefresh(@ColorRes int... colors) {
+    public void enableSwipeRefresh(SwipeRefreshLayout.OnRefreshListener listener, @ColorRes int... colors) {
+        if (colors.length <= 0) throw new IllegalArgumentException("Provide at least one color!");
+
         swipeRefreshEnabled = true;
         swipeRefresh.setEnabled(true);
         swipeRefresh.setColorSchemeResources(colors);
+        swipeRefresh.setOnRefreshListener(listener);
         list.setVisibility(VISIBLE);
     }
 
@@ -132,10 +137,6 @@ public class RecyclerViewLayout extends FrameLayout {
 
     public SwipeRefreshLayout getSwipeRefreshLayout() {
         return swipeRefresh;
-    }
-
-    public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
-        swipeRefresh.setOnRefreshListener(listener);
     }
 
     public void hideMessage() {
