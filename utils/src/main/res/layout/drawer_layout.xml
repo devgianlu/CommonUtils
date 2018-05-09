@@ -22,7 +22,7 @@
             android:orientation="vertical"
             android:paddingTop="24dp">
 
-            <com.gianlu.commonutils.LetterIconBig
+            <com.gianlu.commonutils.LettersIcons.LettersImageView
                 android:id="@+id/drawerHeader_currentAccount"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
