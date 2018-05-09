@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gianlu.commonutils.CommonUtils;
-import com.gianlu.commonutils.LetterIconBig;
+import com.gianlu.commonutils.LettersIcons.LettersImageView;
 import com.gianlu.commonutils.R;
 
 import java.util.ArrayList;
@@ -352,15 +352,12 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     }
 
     public DrawerManager<P> setCurrentProfile(@NonNull P profile) {
-        LetterIconBig currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
-        currAccount.setColorScheme(colorAccent, colorPrimaryShadow);
-
         TextView profileName = drawerLayout.findViewById(R.id.drawerHeader_profileName);
-        TextView secondaryText = drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
-
         profileName.setText(profile.getProfileName(context));
+        TextView secondaryText = drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
         secondaryText.setText(profile.getSecondaryText(context));
-        currAccount.setInitials(profile.getInitials(context));
+        LettersImageView currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
+        currAccount.setLetters(profile.getInitials(context));
         return this;
     }
 
