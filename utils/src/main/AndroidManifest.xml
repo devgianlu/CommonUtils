@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gianlu.commonutils">
 
     <!-- Google In-apk Billing -->
@@ -14,7 +15,8 @@
         <activity
             android:name=".Analytics.UncaughtExceptionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenTheme"
+            tools:ignore="InnerclassSeparator" />
 
         <activity android:name=".OfflineActivity" />
     </application>
