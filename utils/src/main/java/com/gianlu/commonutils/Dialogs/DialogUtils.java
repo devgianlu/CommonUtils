@@ -16,22 +16,25 @@ public class DialogUtils {
     private static final Handler handler = new Handler(Looper.getMainLooper());
 
     public static void showDialog(@Nullable Activity activity, AlertDialog.Builder builder) {
+        if (activity == null) return;
         activityWithDialog(activity).showDialog(builder);
     }
 
     public static void showDialog(@Nullable Activity activity, Dialog dialog) {
+        if (activity == null) return;
         activityWithDialog(activity).showDialog(dialog);
     }
 
     @NonNull
-    private static ActivityWithDialog activityWithDialog(@Nullable Activity activity) {
+    private static ActivityWithDialog activityWithDialog(@NonNull Activity activity) {
         if (activity instanceof ActivityWithDialog)
             return (ActivityWithDialog) activity;
         else
-            throw new IllegalArgumentException("Activity is not a subclass of ActivityWithDialog!");
+            throw new IllegalArgumentException("Activity is not a subclass of ActivityWithDialog: " + activity);
     }
 
     public static void dismissDialog(@Nullable Activity activity) {
+        if (activity == null) return;
         activityWithDialog(activity).dismissDialog();
     }
 
