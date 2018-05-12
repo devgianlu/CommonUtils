@@ -6,11 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class OfflineActivity extends AppCompatActivity {
+import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
+
+public class OfflineActivity extends ActivityWithDialog {
 
     public static void startActivity(Context context, @StringRes int appName, Class<? extends Activity> retryClass) {
         if (context != null) {

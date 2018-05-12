@@ -4,7 +4,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -14,12 +13,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
-public class LogsActivity extends AppCompatActivity implements Logging.LogLineAdapter.IAdapter {
+public class LogsActivity extends ActivityWithDialog implements Logging.LogLineAdapter.IAdapter {
     private static final int DELETE_LOGS_ID = 1;
 
     @Override
