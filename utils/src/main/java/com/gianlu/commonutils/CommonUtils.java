@@ -58,6 +58,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public final class CommonUtils {
+    public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
     public static List<NameValuePair> splitQuery(URL url) {
@@ -562,5 +563,22 @@ public final class CommonUtils {
 
     public static boolean isStupidNull(JSONObject obj, String key) throws JSONException {
         return obj.isNull(key) || Objects.equals(obj.getString(key), "null");
+    }
+
+    @NonNull
+    public static String randomString(int length, @NonNull Random random, @NonNull String chars) {
+        if (length < 1) throw new IllegalArgumentException();
+        if (chars.length() < 1) throw new IllegalArgumentException();
+
+        StringBuilder str = new StringBuilder(length);
+        for (int i = 0; i < length; i++)
+            str.append(chars.charAt(random.nextInt(chars.length())));
+
+        return str.toString();
+    }
+
+    @NonNull
+    public static String randomString(int length, @NonNull Random random) {
+        return randomString(length, random, LOT_OF_CHARS);
     }
 }
