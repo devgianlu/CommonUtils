@@ -16,8 +16,8 @@ import java.util.Objects;
 public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, E extends Filterable<F>, S, F> extends RecyclerView.Adapter<VH> {
     protected final SortingArrayList objs;
     protected final List<F> filters;
+    protected final List<E> originalObjs;
     private final S defaultSorting;
-    private final List<E> originalObjs;
     private String query;
 
     public OrderedRecyclerViewAdapter(List<E> objs, S defaultSorting) {
@@ -59,29 +59,35 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         if (recyclerView != null) recyclerView.scrollToPosition(0);
     }
 
+    protected abstract void onSetupViewHolder(@NonNull VH holder, int position, @NonNull E payload);
+
+    protected abstract void onUpdateViewHolder(@NonNull VH holder, int position, @NonNull E payload);
+
+    protected void onUpdateViewHolder(@NonNull VH holder, int position, @NonNull Object payload) {
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public final void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
+            onSetupViewHolder(holder, position, objs.get(position));
         } else {
             Object payload = payloads.get(0);
             if (payload instanceof WeakReference) {
                 WeakReference<E> castPayload = (WeakReference<E>) payload;
                 if (castPayload.get() != null)
-                    onBindViewHolder(holder, position, castPayload.get());
+                    onUpdateViewHolder(holder, position, castPayload.get());
             } else {
-                onBindViewHolder(holder, position, payload);
+                onUpdateViewHolder(holder, position, payload);
             }
         }
     }
 
-    protected void onBindViewHolder(VH holder, int position, Object payload) {
+    public final void onBindViewHolder(@NonNull VH holder, int position) {
+        // Never called
     }
 
-    protected abstract void onBindViewHolder(VH holder, int position, @NonNull E payload);
-
-    public final void notifyItemChanged(@NonNull E payload) {
+    public final void itemChangedOrAdded(@NonNull E payload) {
         int pos = originalObjs.indexOf(payload);
         if (pos == -1) originalObjs.add(payload);
         else originalObjs.set(pos, payload);
@@ -97,7 +103,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         }
     }
 
-    private void notifyItemRemoved(E item) {
+    public final void removeItem(E item) {
         originalObjs.remove(item);
 
         int pos = objs.indexOf(item);
@@ -107,12 +113,12 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         }
     }
 
-    public final void notifyItemsChanged(List<E> items) {
+    public final void itemsChanged(List<E> items) {
         for (E obj : new ArrayList<>(objs))
             if (!items.contains(obj))
-                notifyItemRemoved(obj);
+                removeItem(obj);
 
-        for (E item : items) notifyItemChanged(item);
+        for (E item : items) itemChangedOrAdded(item);
 
         shouldUpdateItemCount(objs.size());
     }
