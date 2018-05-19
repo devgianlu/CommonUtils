@@ -3,6 +3,7 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatTextView;
@@ -53,6 +54,7 @@ public class SuperTextView extends AppCompatTextView {
         if (textColor != -1) setTextColor(textColor);
     }
 
+    @NonNull
     public static String makeBold(String str) {
         return "<b>" + str + "</b>";
     }
