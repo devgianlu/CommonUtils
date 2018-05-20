@@ -2,6 +2,8 @@ package com.gianlu.commonutils.Dialogs;
 
 import android.app.Dialog;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -20,6 +22,11 @@ public abstract class ActivityWithDialog extends AppCompatActivity {
                 mDialog = dialog;
             }
         });
+    }
+
+    public void showDialog(@NonNull DialogFragment dialog) {
+        FragmentManager manager = getSupportFragmentManager();
+        dialog.show(manager, null);
     }
 
     public void dismissDialog() {
