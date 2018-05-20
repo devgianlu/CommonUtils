@@ -11,7 +11,7 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:alpha="0.54"
-        android:src="@drawable/ic_cloud_off_black_48dp" />
+        android:src="@drawable/ic_cloud_off_black_96dp" />
 
     <TextView
         android:layout_width="match_parent"
