@@ -31,13 +31,13 @@ import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.Toaster;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
-public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
-    private int requestCode;
+public abstract class BaseAboutFragment extends AppCompatPreferenceFragment { // TODO: Can be improved, I've written this a long time ago
+    private final static int DONATE_REQUEST_CODE = 75;
     private String devString;
     private IInAppBillingService billingService;
     private ServiceConnection serviceConnection;
@@ -92,10 +92,10 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == this.requestCode) {
+        if (requestCode == DONATE_REQUEST_CODE) {
             if (data.getIntExtra("RESPONSE_CODE", Activity.RESULT_CANCELED) == Activity.RESULT_OK) {
                 try {
-                    PurchasedProduct purchasedProduct = new PurchasedProduct(data.getStringExtra("INAPP_PURCHASE_DATA"));
+                    PurchasedProduct purchasedProduct = new PurchasedProduct(new JSONObject(data.getStringExtra("INAPP_PURCHASE_DATA")));
                     if (Objects.equals(purchasedProduct.developerPayload, devString)) {
                         if (purchasedProduct.purchaseState == PurchasedProduct.PURCHASED) {
                             Toaster.show(getActivity(), Toaster.Message.THANK_YOU, "Purchased " + purchasedProduct.productId + " with order ID " + purchasedProduct.orderId);
@@ -151,7 +151,6 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
             }
         });
 
-
         findPreference("rate").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -195,17 +194,16 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
         if (billingService == null)
             return;
 
-        Billing.requestProductsDetails(getActivity(), billingService, new Billing.IRequestProductDetails() {
+        Billing.requestProductsDetails(getActivity(), billingService, new Billing.OnRequestProductDetails() {
             @Override
-            public void onReceivedDetails(final Billing.IRequestProductDetails handler, final List<Product> products) {
-                final Billing.IBuyProduct buyHandler = new Billing.IBuyProduct() {
+            public void onReceivedDetails(@NonNull final Billing.OnRequestProductDetails handler, final List<Product> products) {
+                final Billing.OnBuyProduct buyHandler = new Billing.OnBuyProduct() {
                     @Override
-                    public void onGotIntent(PendingIntent intent, String developerString) {
+                    public void onGotIntent(@NonNull PendingIntent intent, @NonNull String developerString) {
                         devString = developerString;
-                        requestCode = new Random().nextInt();
 
                         try {
-                            getActivity().startIntentSenderForResult(intent.getIntentSender(), requestCode, new Intent(), 0, 0, 0);
+                            getActivity().startIntentSenderForResult(intent.getIntentSender(), DONATE_REQUEST_CODE, new Intent(), 0, 0, 0);
                         } catch (IntentSender.SendIntentException ex) {
                             Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
                         }
@@ -222,7 +220,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
                     }
 
                     @Override
-                    public void onFailed(Exception ex) {
+                    public void onFailed(@NonNull Exception ex) {
                         Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
                     }
                 };
@@ -230,9 +228,9 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
 
                 RecyclerView list = new RecyclerView(getActivity());
                 list.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-                list.setAdapter(new ProductAdapter(getActivity(), products, new ProductAdapter.IAdapter() {
+                list.setAdapter(new ProductAdapter(getActivity(), products, new ProductAdapter.Listener() {
                     @Override
-                    public void onItemSelected(Product product) {
+                    public void onItemSelected(@NonNull Product product) {
                         Billing.buyProduct(getActivity(), billingService, product, buyHandler);
                     }
                 }));
@@ -257,7 +255,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment {
             }
 
             @Override
-            public void onFailed(Exception ex) {
+            public void onFailed(@NonNull Exception ex) {
                 Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE, ex);
             }
         });

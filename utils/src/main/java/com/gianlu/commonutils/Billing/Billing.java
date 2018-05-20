@@ -7,14 +7,16 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.Logging;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Billing {
     public static final int RESULT_BILLING_UNAVAILABLE = 3;
@@ -29,23 +31,7 @@ public class Billing {
     private static final int RESULT_OK = 0;
     private static final int RESULT_USER_CANCELED = 1;
 
-    @NonNull
-    private static String generateRandomString() {
-        StringBuilder builder = new StringBuilder();
-        String letters = "abcdefghijklmnopqrstuvwxyz";
-
-        for (int i = 0; i <= 30; i++) {
-            if (new Random().nextBoolean()) {
-                builder.append(String.valueOf(new Random().nextInt(10)));
-            } else {
-                builder.append(letters.charAt(new Random().nextInt(26)));
-            }
-        }
-
-        return builder.toString();
-    }
-
-    public static void requestProductsDetails(final Context context, final IInAppBillingService service, @NonNull final IRequestProductDetails handler) {
+    public static void requestProductsDetails(final Context context, final IInAppBillingService service, @NonNull final OnRequestProductDetails handler) {
         if (service == null) {
             handler.onFailed(new NullPointerException("IInAppBillingService is null"));
             return;
@@ -67,17 +53,17 @@ public class Billing {
 
                 int respCode = response.getInt("RESPONSE_CODE");
                 if (respCode == RESULT_OK) {
-                    List<String> jResponse = response.getStringArrayList("DETAILS_LIST");
+                    List<String> detailsList = response.getStringArrayList("DETAILS_LIST");
 
-                    if (jResponse == null) {
+                    if (detailsList == null) {
                         handler.onFailed(new NullPointerException("Response bundle is null"));
                         return;
                     }
 
                     List<Product> products = new ArrayList<>();
-                    for (String productDetails : jResponse) {
+                    for (String productDetails : detailsList) {
                         try {
-                            products.add(new Product(productDetails));
+                            products.add(new Product(new JSONObject(productDetails)));
                         } catch (JSONException ex) {
                             Logging.log(ex);
                         }
@@ -93,17 +79,17 @@ public class Billing {
         }).start();
     }
 
-    public static void buyProduct(final Context context, final IInAppBillingService service, @NonNull final Product product, @NonNull final IBuyProduct handler) {
+    public static void buyProduct(final Context context, final IInAppBillingService service, @NonNull final Product product, @NonNull final OnBuyProduct handler) {
         if (service == null) {
             handler.onFailed(new NullPointerException("IInAppBillingService is null"));
             return;
         }
 
-        final String developerString = generateRandomString();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+                String developerString = CommonUtils.randomString(30, new SecureRandom());
+
                 Bundle response;
                 try {
                     response = service.getBuyIntent(3, context.getApplicationContext().getPackageName(), product.productId, product.type, developerString);
@@ -119,7 +105,8 @@ public class Billing {
 
                 int respCode = response.getInt("RESPONSE_CODE");
                 if (respCode == RESULT_OK) {
-                    handler.onGotIntent((PendingIntent) response.getParcelable("BUY_INTENT"), developerString);
+                    PendingIntent intent = response.getParcelable("BUY_INTENT");
+                    if (intent != null) handler.onGotIntent(intent, developerString);
                 } else if (respCode == RESULT_USER_CANCELED) {
                     handler.onUserCancelled();
                 } else {
@@ -129,23 +116,23 @@ public class Billing {
         }).start();
     }
 
-    public interface IRequestProductDetails {
-        void onReceivedDetails(IRequestProductDetails handler, List<Product> products);
+    public interface OnRequestProductDetails {
+        void onReceivedDetails(@NonNull OnRequestProductDetails handler, List<Product> products);
 
         void onAPIException(int code);
 
         void onUserCancelled();
 
-        void onFailed(Exception ex);
+        void onFailed(@NonNull Exception ex);
     }
 
-    public interface IBuyProduct {
-        void onGotIntent(PendingIntent intent, String developerString);
+    public interface OnBuyProduct {
+        void onGotIntent(@NonNull PendingIntent intent, @NonNull String developerString);
 
         void onAPIException(int code);
 
         void onUserCancelled();
 
-        void onFailed(Exception ex);
+        void onFailed(@NonNull Exception ex);
     }
 }
