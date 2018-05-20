@@ -16,10 +16,10 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private final List<Product> products;
-    private final IAdapter handler;
+    private final Listener handler;
     private final LayoutInflater inflater;
 
-    public ProductAdapter(Context context, List<Product> products, IAdapter handler) {
+    public ProductAdapter(Context context, List<Product> products, Listener handler) {
         this.products = products;
         this.handler = handler;
         this.inflater = LayoutInflater.from(context);
@@ -28,7 +28,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(inflater.inflate(R.layout.product_item, parent, false));
+        return new ViewHolder(parent);
     }
 
     @Override
@@ -37,22 +37,22 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         switch (item.productId) {
             case "donation.lemonade":
-                holder.icon.setImageResource(R.drawable.ic_lemonade_48dp);
+                holder.icon.setImageResource(R.drawable.ic_juice_64dp);
                 break;
             case "donation.coffee":
-                holder.icon.setImageResource(R.drawable.ic_coffee_48dp);
+                holder.icon.setImageResource(R.drawable.ic_coffee_64dp);
                 break;
             case "donation.hamburger":
-                holder.icon.setImageResource(R.drawable.ic_cheese_burger_48dp);
+                holder.icon.setImageResource(R.drawable.ic_hamburger_64dp);
                 break;
             case "donation.pizza":
-                holder.icon.setImageResource(R.drawable.ic_pizza_48dp);
+                holder.icon.setImageResource(R.drawable.ic_pizza_64dp);
                 break;
             case "donation.sushi":
-                holder.icon.setImageResource(R.drawable.ic_sushi_48dp);
+                holder.icon.setImageResource(R.drawable.ic_sushi_64dp);
                 break;
             case "donation.champagne":
-                holder.icon.setImageResource(R.drawable.ic_champagne_48dp);
+                holder.icon.setImageResource(R.drawable.ic_champagne_64dp);
                 break;
         }
 
@@ -81,18 +81,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         return products.size();
     }
 
-    public interface IAdapter {
-        void onItemSelected(Product product);
+    public interface Listener {
+        void onItemSelected(@NonNull Product product);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public final ImageView icon;
-        public final TextView title;
+        final ImageView icon;
+        final TextView title;
         final TextView description;
         final Button buy;
 
-        ViewHolder(View itemView) {
-            super(itemView);
+        ViewHolder(ViewGroup parent) {
+            super(inflater.inflate(R.layout.product_item, parent, false));
 
             icon = itemView.findViewById(R.id.productItem_icon);
             title = itemView.findViewById(R.id.productItem_title);
