@@ -1,7 +1,6 @@
 package com.gianlu.commonutils;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -91,7 +90,7 @@ public class SuperTextView extends AppCompatTextView {
         });
     }
 
-    public void setTypeface(String path) {
-        setTypeface(Typeface.createFromAsset(getContext().getAssets(), path));
+    public void setTypeface(@NonNull String path) {
+        setTypeface(FontsManager.get().get(getContext(), path));
     }
 }
