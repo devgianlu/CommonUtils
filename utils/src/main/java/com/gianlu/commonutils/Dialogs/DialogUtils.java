@@ -9,20 +9,30 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 
 public class DialogUtils {
     private static final Handler handler = new Handler(Looper.getMainLooper());
 
-    public static void showDialog(@Nullable Activity activity, AlertDialog.Builder builder) {
+    public static void showDialog(@Nullable Activity activity, @NonNull AlertDialog.Builder builder) {
         if (activity == null) return;
         activityWithDialog(activity).showDialog(builder);
     }
 
-    public static void showDialog(@Nullable Activity activity, Dialog dialog) {
+    public static void showDialog(@Nullable Activity activity, @NonNull Dialog dialog) {
         if (activity == null) return;
         activityWithDialog(activity).showDialog(dialog);
+    }
+
+    public static void showDialog(@Nullable FragmentActivity activity, @NonNull DialogFragment dialog) {
+        if (activity == null) return;
+
+        FragmentManager manager = activity.getSupportFragmentManager();
+        dialog.show(manager, null);
     }
 
     @NonNull
