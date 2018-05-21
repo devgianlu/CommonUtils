@@ -36,8 +36,8 @@
     <string name="purchaseCanceled">The purchase has been canceled.</string>
     <string name="userCancelled">You cancelled the operation.</string>
     <string name="thankYou">Thank you!</string>
-    <string name="failedBuying">Failed to buy this item! Please contact me.</string>
-    <string name="failedBillingConnection">Failed to connect to the billing service!</string>
+    <string name="failedBuying">Failed to buy this item!</string>
+    <string name="failedBillingConnection">Failed connecting to the billing service!</string>
     <string name="noLogs">There are no logs.</string>
     <string name="rateApp">Rate this app</string>
     <string name="leaveReview">Leave a review on the Play Store</string>

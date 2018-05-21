@@ -67,7 +67,6 @@ public class Toaster {
         public static final Message NO_EMAIL_CLIENT = new Message(R.string.noMailClients, true);
         public static final Message COPIED_TO_CLIPBOARD = new Message(R.string.copiedToClipboard, false);
         public static final Message LOGS_DELETED = new Message(R.string.logDeleted, false);
-        public static final Message PURCHASING_CANCELED = new Message(R.string.purchaseCanceled, false);
         public static final Message BILLING_USER_CANCELLED = new Message(R.string.userCancelled, false);
         public static final Message THANK_YOU = new Message(R.string.thankYou, false);
         public static final Message FAILED_BUYING_ITEM = new Message(R.string.failedBuying, true);
