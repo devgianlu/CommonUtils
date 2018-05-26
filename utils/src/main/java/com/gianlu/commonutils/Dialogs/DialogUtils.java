@@ -14,6 +14,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
+import com.gianlu.commonutils.Logging;
+
 
 public class DialogUtils {
     private static final Handler handler = new Handler(Looper.getMainLooper());
@@ -32,7 +34,11 @@ public class DialogUtils {
         if (activity == null) return;
 
         FragmentManager manager = activity.getSupportFragmentManager();
-        dialog.show(manager, null);
+        try {
+            dialog.show(manager, null);
+        } catch (IllegalStateException ex) {
+            Logging.log(ex); // We can't do nothing
+        }
     }
 
     @NonNull
