@@ -58,7 +58,6 @@ public class SuperTextView extends AppCompatTextView {
         return "<b>" + str + "</b>";
     }
 
-    @SuppressWarnings("deprecation")
     public void setHtml(String html) {
         setText(Html.fromHtml(html));
     }
