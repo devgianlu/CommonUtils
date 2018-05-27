@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.BottomSheet;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+
+import com.gianlu.commonutils.R;
 
 public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomSheetCallback {
     private final int headerRes;
