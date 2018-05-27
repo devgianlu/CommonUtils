@@ -33,7 +33,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private final ActionBarDrawerToggle drawerToggle;
     private final DrawerLayout drawerLayout;
     private final Config<P> config;
-    private final int colorAccent;
     private final int colorPrimaryShadow;
     private MenuItemsAdapter menuItemsAdapter;
     private IDrawerListener<P> listener;
@@ -48,7 +47,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
-        colorAccent = ContextCompat.getColor(context, config.colorAccentRes);
+        int colorAccent = ContextCompat.getColor(context, config.colorAccentRes);
         colorPrimaryShadow = CommonUtils.manipulateAlpha(ContextCompat.getColor(context, config.colorPrimaryRes), 0.54f);
 
         LinearLayout realLayout = (LinearLayout) this.drawerLayout.getChildAt(1);
