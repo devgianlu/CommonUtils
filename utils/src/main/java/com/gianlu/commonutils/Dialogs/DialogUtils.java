@@ -90,6 +90,10 @@ public class DialogUtils {
         return progressDialog(context, context.getString(message));
     }
 
+    public static boolean hasVisibleDialog(@Nullable Activity activity) {
+        return activity != null && activityWithDialog(activity).hasVisibleDialog();
+    }
+
     public interface IDialog {
         void created(Dialog dialog);
     }

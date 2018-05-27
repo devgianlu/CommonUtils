@@ -27,11 +27,16 @@ public abstract class ActivityWithDialog extends AppCompatActivity {
     public void showDialog(@NonNull DialogFragment dialog) {
         FragmentManager manager = getSupportFragmentManager();
         dialog.show(manager, null);
+        mDialog = dialog.getDialog();
     }
 
     public void dismissDialog() {
         if (mDialog != null) mDialog.dismiss();
         mDialog = null;
+    }
+
+    public boolean hasVisibleDialog() {
+        return mDialog != null && mDialog.isShowing();
     }
 
     @Override
