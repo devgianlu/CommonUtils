@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -212,9 +213,9 @@ public class InfiniteRecyclerView extends RecyclerView {
             }
 
             page++;
-            moreContent(page, new IContentProvider<E>() {
+            moreContent(page, new ContentProvider<E>() {
                 @Override
-                public void onMoreContent(final List<E> content) {
+                public void onMoreContent(@NonNull final List<E> content) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -235,7 +236,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                 }
 
                 @Override
-                public void onReloadAllContent(final List<E> content) {
+                public void onReloadAllContent(@NonNull final List<E> content) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -253,7 +254,7 @@ public class InfiniteRecyclerView extends RecyclerView {
                 }
 
                 @Override
-                public void onFailed(Exception ex) {
+                public void onFailed(@NonNull Exception ex) {
                     if (listener != null && config.maxPages != UNDETERMINED_PAGES)
                         listener.onFailedLoadingContent(ex);
                     Logging.log(ex);
@@ -273,14 +274,18 @@ public class InfiniteRecyclerView extends RecyclerView {
             });
         }
 
-        protected abstract void moreContent(int page, IContentProvider<E> provider);
+        @UiThread
+        protected abstract void moreContent(int page, @NonNull ContentProvider<E> provider);
 
-        protected interface IContentProvider<E> {
-            void onMoreContent(List<E> content);
+        protected interface ContentProvider<E> {
+            @UiThread
+            void onMoreContent(@NonNull List<E> content);
 
-            void onReloadAllContent(List<E> content);
+            @UiThread
+            void onReloadAllContent(@NonNull List<E> content);
 
-            void onFailed(Exception ex);
+            @UiThread
+            void onFailed(@NonNull Exception ex);
         }
 
         public final static class Config<E> {
