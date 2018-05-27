@@ -487,11 +487,14 @@ public final class CommonUtils {
     }
 
     @NonNull
+    @Deprecated
+    @SuppressWarnings("deprecation")
     public static <T> ArrayList<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
         return toTList(array, tClass, null);
     }
 
     @NonNull
+    @Deprecated
     public static <T, P> ArrayList<T> toTList(JSONArray array, Class<T> tClass, P parent) throws JSONException {
         ArrayList<T> items = new ArrayList<>();
 
@@ -556,8 +559,8 @@ public final class CommonUtils {
     }
 
     @Nullable
-    public static String getStupidString(JSONObject obj, String key) throws JSONException {
-        String val = obj.getString(key);
+    public static String getStupidString(JSONObject obj, String key) {
+        String val = obj.optString(key, null);
         return val == null || val.equals("null") ? null : val;
     }
 

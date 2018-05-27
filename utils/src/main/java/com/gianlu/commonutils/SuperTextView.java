@@ -47,10 +47,16 @@ public class SuperTextView extends AppCompatTextView {
         setHtml(str, args);
     }
 
+    public SuperTextView(Context context, @StringRes int str, @ColorInt int color) {
+        super(context, null);
+        setHtml(str);
+        setTextColor(color);
+    }
+
     public SuperTextView(Context context, String str, @ColorInt int textColor) {
         super(context);
         setHtml(str);
-        if (textColor != -1) setTextColor(textColor);
+        if (textColor != 0) setTextColor(textColor);
     }
 
     @NonNull
