@@ -1,6 +1,5 @@
 package com.gianlu.commonutils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
+
+import com.gianlu.commonutils.Dialogs.DialogUtils;
 
 public class Toaster {
     private final static Handler handler = new Handler(Looper.getMainLooper());
@@ -82,12 +83,10 @@ public class Toaster {
             return;
         }
 
-        if (context instanceof Activity) {
-            if (((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
-                if (CommonUtils.isDebug())
-                    System.out.println("Skipping toast, activity is destroying: " + context);
-                return;
-            }
+        if (!DialogUtils.isContextValid(context)) {
+            if (CommonUtils.isDebug())
+                System.out.println("Skipping toast, context is invalid: " + context);
+            return;
         }
 
         if (msg == null) {
