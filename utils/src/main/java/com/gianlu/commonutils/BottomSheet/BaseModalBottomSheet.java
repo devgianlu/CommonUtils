@@ -1,5 +1,6 @@
 package com.gianlu.commonutils.BottomSheet;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +18,11 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 
-public abstract class BaseModalBottomSheet extends BottomSheetDialogFragment {
+public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
     private BottomSheetBehavior behavior;
     private FrameLayout header;
     private FrameLayout body;
@@ -27,20 +30,31 @@ public abstract class BaseModalBottomSheet extends BottomSheetDialogFragment {
     private Toolbar toolbar;
     private FloatingActionButton action;
     private boolean onlyToolbar = false;
+    private Setup payload;
+
+    @Nullable
+    protected Setup getSetupPayload() {
+        return payload;
+    }
 
     /**
      * @return Whether the implementation provides a layout for the header
      */
-    protected abstract boolean onCreateHeader(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Bundle args) throws MissingArgumentException;
+    protected abstract boolean onCreateHeader(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Setup payload);
 
-    protected abstract void onCreateBody(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Bundle args) throws MissingArgumentException;
+    protected abstract void onCreateBody(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Setup payload);
 
-    protected abstract void onCustomizeToolbar(@NonNull Toolbar toolbar, @NonNull Bundle args) throws MissingArgumentException;
+    protected abstract void onCustomizeToolbar(@NonNull Toolbar toolbar, @NonNull Setup payload);
 
     /**
      * @return Whether the implementation provides an action
      */
-    protected abstract boolean onCustomizeAction(@NonNull FloatingActionButton action, @NonNull Bundle args) throws MissingArgumentException;
+    protected abstract boolean onCustomizeAction(@NonNull FloatingActionButton action, @NonNull Setup payload);
+
+    @Nullable
+    protected LayoutInflater createLayoutInflater(@NonNull Context context, @NonNull Setup payload) {
+        return null;
+    }
 
     @NonNull
     protected BottomSheetCallback prepareCallback() {
@@ -48,6 +62,7 @@ public abstract class BaseModalBottomSheet extends BottomSheetDialogFragment {
     }
 
     @Override
+    @CallSuper
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -58,12 +73,25 @@ public abstract class BaseModalBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
+    public final void update(@NonNull Update payload) {
+        if (getDialog() != null && getDialog().isShowing()) onRequestedUpdate(payload);
+    }
+
+    protected void onRequestedUpdate(@NonNull Update payload) {
+    }
+
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        CoordinatorLayout layout = (CoordinatorLayout) inflater.inflate(R.layout.modal_bottom_sheet, container, false);
+        if (payload == null) {
+            Logging.log(new NullPointerException("Payload is null!"));
+            dismiss();
+            return null;
+        }
 
-        Bundle args = getArguments();
-        if (args == null) args = new Bundle();
+        LayoutInflater themedInflater = createLayoutInflater(requireContext(), payload);
+        if (themedInflater != null) inflater = themedInflater;
+
+        CoordinatorLayout layout = (CoordinatorLayout) inflater.inflate(R.layout.modal_bottom_sheet, container, false);
 
         toolbar = layout.findViewById(R.id.modalBottomSheet_toolbar);
         header = layout.findViewById(R.id.modalBottomSheet_header);
@@ -71,23 +99,24 @@ public abstract class BaseModalBottomSheet extends BottomSheetDialogFragment {
         loading = layout.findViewById(R.id.modalBottomSheet_loading);
         action = layout.findViewById(R.id.modalBottomSheet_action);
 
-        try {
-            onCustomizeToolbar(toolbar, args);
-            onlyToolbar = !onCreateHeader(inflater, header, args);
-            onCreateBody(inflater, body, args);
+        onCustomizeToolbar(toolbar, payload);
+        onlyToolbar = !onCreateHeader(inflater, header, payload);
+        onCreateBody(inflater, body, payload);
 
-            if (onCustomizeAction(action, args)) action.setVisibility(View.VISIBLE);
-            else action.setVisibility(View.GONE);
-        } catch (MissingArgumentException ex) {
-            Logging.log(ex);
-            dismiss();
-            return null;
-        }
+        if (onCustomizeAction(action, payload)) action.setVisibility(View.VISIBLE);
+        else action.setVisibility(View.GONE);
 
         if (onlyToolbar) showToolbar();
         else showHeader();
 
         return layout;
+    }
+
+    public final void show(@Nullable FragmentActivity activity, @NonNull Setup payload) {
+        if (activity == null) return;
+
+        this.payload = payload;
+        DialogUtils.showDialog(activity, this);
     }
 
     private void displayClose() {
@@ -129,9 +158,6 @@ public abstract class BaseModalBottomSheet extends BottomSheetDialogFragment {
         int parentHeight = ((View) bottomSheet.getParent()).getHeight();
         int sheetHeight = bottomSheet.getHeight();
         return parentHeight == sheetHeight;
-    }
-
-    public static class MissingArgumentException extends Exception {
     }
 
     public class BottomSheetCallback extends BottomSheetBehavior.BottomSheetCallback {

@@ -23,7 +23,6 @@ public class OfflineActivity extends ActivityWithDialog {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offline);
@@ -47,7 +46,7 @@ public class OfflineActivity extends ActivityWithDialog {
         });
 
         Button offline = findViewById(R.id.offline_retry);
-        final Class<? extends Activity> retryClass = (Class<? extends Activity>) getIntent().getSerializableExtra("retry");
+        final Class<?> retryClass = (Class) getIntent().getSerializableExtra("retry");
         if (retryClass == null) {
             offline.setVisibility(View.GONE);
         } else {

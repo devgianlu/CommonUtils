@@ -1,5 +1,8 @@
 package com.gianlu.commonutils;
 
+import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
+
 import java.util.Arrays;
 
 public final class MaterialColors {
@@ -10,16 +13,19 @@ public final class MaterialColors {
         this.colors = Arrays.copyOf(colors, colors.length);
     }
 
+    @NonNull
     public static MaterialColors getInstance() {
         return new MaterialColors(COLORS);
     }
 
+    @NonNull
     public static MaterialColors getShuffledInstance() {
         MaterialColors colors = getInstance();
         colors.shuffle();
         return colors;
     }
 
+    @ColorRes
     public int getColor(int pos) {
         int i = pos;
         while (i >= colors.length)

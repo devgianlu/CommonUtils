@@ -82,7 +82,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
 
                 for (File logFile : files) logFile.delete();
 
-                Toaster.show(this, Toaster.Message.LOGS_DELETED);
+                Toaster.with(this).message(R.string.logDeleted);
                 onBackPressed();
                 return true;
         }
@@ -96,7 +96,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
         if (clipboard != null) {
             ClipData clip = ClipData.newPlainText("stack trace", line.message);
             clipboard.setPrimaryClip(clip);
-            Toaster.show(LogsActivity.this, Toaster.Message.COPIED_TO_CLIPBOARD);
+            Toaster.with(this).message(R.string.copiedToClipboard).show();
         }
     }
 }

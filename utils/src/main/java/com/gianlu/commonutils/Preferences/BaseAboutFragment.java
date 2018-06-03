@@ -55,10 +55,10 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment impl
             case BillingClient.BillingResponse.BILLING_UNAVAILABLE:
             case BillingClient.BillingResponse.SERVICE_UNAVAILABLE:
             case BillingClient.BillingResponse.SERVICE_DISCONNECTED:
-                Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE);
+                Toaster.with(getActivity()).message(R.string.failedBillingConnection).show();
                 break;
             case BillingClient.BillingResponse.USER_CANCELED:
-                Toaster.show(getActivity(), Toaster.Message.BILLING_USER_CANCELLED);
+                Toaster.with(getActivity()).message(R.string.userCancelled).show();
                 break;
             case BillingClient.BillingResponse.DEVELOPER_ERROR:
             case BillingClient.BillingResponse.ITEM_UNAVAILABLE:
@@ -66,7 +66,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment impl
             case BillingClient.BillingResponse.ITEM_ALREADY_OWNED:
             case BillingClient.BillingResponse.ITEM_NOT_OWNED:
             case BillingClient.BillingResponse.ERROR:
-                Toaster.show(getActivity(), Toaster.Message.FAILED_BUYING_ITEM);
+                Toaster.with(getActivity()).message(R.string.failedBuying).show();
                 break;
             case BillingClient.BillingResponse.OK:
                 break;
@@ -99,7 +99,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment impl
                     retried = true;
                     billingClient.startConnection(this);
                 } else {
-                    Toaster.show(getActivity(), Toaster.Message.FAILED_CONNECTION_BILLING_SERVICE);
+                    Toaster.with(getActivity()).message(R.string.failedBillingConnection);
                 }
             }
         });
@@ -244,7 +244,7 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment impl
     @Override
     public void onPurchasesUpdated(@BillingClient.BillingResponse int responseCode, List<Purchase> purchases) {
         if (responseCode == BillingClient.BillingResponse.OK)
-            Toaster.show(getActivity(), Toaster.Message.THANK_YOU, purchases.toString());
+            Toaster.with(getActivity()).message(R.string.thankYou).extra(purchases.toString()).show();
         else
             handleBillingErrors(responseCode);
     }

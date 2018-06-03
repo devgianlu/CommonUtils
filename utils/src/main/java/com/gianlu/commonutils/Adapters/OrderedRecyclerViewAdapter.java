@@ -114,7 +114,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     }
 
     public final void itemsChanged(List<E> items) {
-        for (E obj : new ArrayList<>(objs))
+        for (E obj : new ArrayList<>(objs)) // FIXME: Why objs?
             if (!items.contains(obj))
                 removeItem(obj);
 

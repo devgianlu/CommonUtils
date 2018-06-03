@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import com.gianlu.commonutils.Logging;
+import com.gianlu.commonutils.Toaster;
 
 
 public class DialogUtils {
@@ -54,7 +55,8 @@ public class DialogUtils {
         activityWithDialog(activity).dismissDialog();
     }
 
-    public static void showDialogInternal(final Context context, final Dialog dialog) {
+    // FIXME
+    public static void showDialogInternal(@NonNull final Context context, @NonNull final Dialog dialog) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -64,7 +66,8 @@ public class DialogUtils {
         });
     }
 
-    public static void showDialogInternal(final Context context, final AlertDialog.Builder builder, final IDialog listener) {
+    // FIXME
+    public static void showDialogInternal(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final IDialog listener) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -74,6 +77,11 @@ public class DialogUtils {
                 dialog.show();
             }
         });
+    }
+
+    public static void showToast(Context context, @NonNull Toaster toaster) {
+        if (context == null) return;
+        toaster.show(context);
     }
 
     @NonNull
