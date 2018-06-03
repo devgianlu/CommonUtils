@@ -15,11 +15,11 @@ public abstract class ActivityWithDialog extends AppCompatActivity {
 
     public final void showDialog(@NonNull Dialog dialog) {
         mDialog = dialog;
-        DialogUtils.showDialog(this, mDialog);
+        DialogUtils.showDialogValid(this, mDialog);
     }
 
     public final void showDialog(@NonNull AlertDialog.Builder dialog) {
-        DialogUtils.showDialog(this, dialog, new DialogUtils.OnDialogCreatedListener() {
+        DialogUtils.showDialogValid(this, dialog, new DialogUtils.OnDialogCreatedListener() {
             @Override
             public void created(@NonNull Dialog dialog) {
                 mDialog = dialog;

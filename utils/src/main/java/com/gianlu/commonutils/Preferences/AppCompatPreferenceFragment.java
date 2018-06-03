@@ -36,11 +36,11 @@ public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
 
     public void showDialog(@NonNull Dialog dialog) {
         mDialog = dialog;
-        DialogUtils.showDialogInternal(getActivity(), mDialog);
+        DialogUtils.showDialogValid(getActivity(), mDialog);
     }
 
     public void showDialog(@NonNull AlertDialog.Builder builder) {
-        DialogUtils.showDialogInternal(getActivity(), builder, new DialogUtils.OnDialogCreatedListener() {
+        DialogUtils.showDialogValid(getActivity(), builder, new DialogUtils.OnDialogCreatedListener() {
             @Override
             public void created(@NonNull Dialog dialog) {
                 mDialog = dialog;
