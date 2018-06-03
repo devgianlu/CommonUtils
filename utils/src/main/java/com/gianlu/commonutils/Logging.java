@@ -207,7 +207,7 @@ public final class Logging {
         @SuppressLint("SimpleDateFormat")
         public LogFile(File file) throws ParseException {
             super(file.getAbsolutePath());
-            date = new SimpleDateFormat("d-LL-yyyy").parse(toString()).getTime();
+            date = new SimpleDateFormat("d-MM-yyyy").parse(toString()).getTime();
         }
 
         @Override
