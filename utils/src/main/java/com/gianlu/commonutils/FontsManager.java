@@ -9,6 +9,7 @@ public class FontsManager {
     public final static String ROBOTO_MEDIUM = "fonts/Roboto-Medium.ttf";
     public final static String ROBOTO_THIN = "fonts/Roboto-Thin.ttf";
     public final static String ROBOTO_LIGHT = "fonts/Roboto-Light.ttf";
+    public static final String ROBOTO_BLACK = "fonts/Roboto-Black.ttf";
     private static FontsManager instance;
     private final LruCache<String, Typeface> cache;
 

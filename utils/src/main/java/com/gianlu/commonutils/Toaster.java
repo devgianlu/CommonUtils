@@ -4,85 +4,125 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 public class Toaster {
-    public final static Handler handler = new Handler(Looper.getMainLooper());
+    private final static Handler handler = new Handler(Looper.getMainLooper());
+    private final Context context;
+    private String msg;
+    private int msgRes;
+    private Object[] args;
+    private Throwable ex;
+    private boolean error;
+    private Object extra;
+    private boolean shown = false;
 
-    public static void show(final Context context, final String message, final int duration, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
-        if (context == null) return;
-        if (context instanceof Activity) if (((Activity) context).isFinishing()) return;
+    private Toaster(@Nullable Context context) {
+        this.context = context;
+    }
+
+    @NonNull
+    public static Toaster with(@NonNull Context context) {
+        return new Toaster(context);
+    }
+
+    @NonNull
+    public static Toaster build() {
+        return new Toaster(null);
+    }
+
+    public Toaster message(@StringRes int str, Object... args) {
+        if (context != null) {
+            this.msg = context.getString(str, args);
+            this.msgRes = 0;
+            this.args = null;
+        } else {
+            this.msgRes = str;
+            this.args = args;
+            this.msg = null;
+        }
+
+        return this;
+    }
+
+    public Toaster message(String str) {
+        this.msg = str;
+        this.msgRes = 0;
+        this.args = null;
+        return this;
+    }
+
+    public Toaster extra(Object extra) {
+        this.extra = extra;
+        return this;
+    }
+
+    public Toaster ex(Throwable ex) {
+        this.ex = ex;
+        this.error = true;
+        return this;
+    }
+
+    public Toaster error(boolean error) {
+        this.error = error;
+        return this;
+    }
+
+    public void show() {
+        if (context == null) throw new IllegalStateException("Missing context instance!");
+        show(context);
+    }
+
+    public void show(@NonNull final Context context) {
+        if (shown) {
+            if (CommonUtils.isDebug()) System.out.println("Skipping toast, already shown!");
+            return;
+        }
+
+        if (context instanceof Activity) {
+            if (((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
+                if (CommonUtils.isDebug())
+                    System.out.println("Skipping toast, activity is destroying: " + context);
+                return;
+            }
+        }
+
+        if (msg == null) {
+            if (msgRes != 0) {
+                msg = context.getString(msgRes, args);
+                msgRes = 0;
+                args = null;
+            } else {
+                throw new IllegalArgumentException("Missing toast message!");
+            }
+        }
+
+        final int duration;
+        if (error || msg.length() > 48) duration = Toast.LENGTH_LONG;
+        else duration = Toast.LENGTH_SHORT;
 
         Runnable action = new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, message, duration).show();
+                Toast.makeText(context, msg, duration).show();
             }
         };
 
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            action.run();
-            if (extra != null) extra.run();
-        } else {
-            handler.post(action);
-            if (extra != null) handler.post(extra);
-        }
+        if (Looper.myLooper() == Looper.getMainLooper()) action.run();
+        else handler.post(action);
 
-        Logging.log(message + (message_extra != null ? (" Details: " + message_extra) : ""), ex != null);
+        Logging.log(msg + (extra != null ? (" Extra: " + extra) : ""), ex != null);
         if (ex != null) Logging.log(ex);
+
+        shown = true;
     }
 
-    public static void show(Context context, Message message, @Nullable final String message_extra, @Nullable Throwable ex, @Nullable Runnable extra) {
-        show(context, message.getMessage(context), message.isError ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT, message_extra, ex, extra);
-    }
-
-    public static void show(Context context, Message message, @Nullable Throwable ex) {
-        show(context, message, null, ex, null);
-    }
-
-    public static void show(Context context, Message message, @Nullable String message_extra) {
-        show(context, message, message_extra, null, null);
-    }
-
-    public static void show(Context context, Message message) {
-        show(context, message, null, null, null);
-    }
-
-    public static void show(Context context, Message message, @Nullable Throwable ex, @Nullable Runnable extra) {
-        show(context, message, null, ex, extra);
-    }
-
-    public static void show(Context context, Message message, @Nullable String message_extra, @Nullable Runnable extra) {
-        show(context, message, message_extra, null, extra);
-    }
-
-    public static void show(Context context, Message message, @Nullable Runnable extra) {
-        show(context, message, null, null, extra);
-    }
-
-    @SuppressWarnings("unused")
-    public static class Message {
-        public static final Message NO_EMAIL_CLIENT = new Message(R.string.noMailClients, true);
-        public static final Message COPIED_TO_CLIPBOARD = new Message(R.string.copiedToClipboard, false);
-        public static final Message LOGS_DELETED = new Message(R.string.logDeleted, false);
-        public static final Message BILLING_USER_CANCELLED = new Message(R.string.userCancelled, false);
-        public static final Message THANK_YOU = new Message(R.string.thankYou, false);
-        public static final Message FAILED_BUYING_ITEM = new Message(R.string.failedBuying, true);
-        public static final Message FAILED_CONNECTION_BILLING_SERVICE = new Message(R.string.failedBillingConnection, true);
-
-        public final int messageRes;
-        public final boolean isError;
-
-        public Message(@StringRes int messageRes, boolean isError) {
-            this.messageRes = messageRes;
-            this.isError = isError;
-        }
-
-        public String getMessage(Context context) {
-            if (context == null) return "Unknown message!";
-            return context.getString(messageRes);
-        }
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (!shown && CommonUtils.isDebug()) System.err.println("Leaked " + this);
     }
 }

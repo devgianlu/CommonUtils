@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.gianlu.commonutils.R;
 
+@Deprecated
 public abstract class NiceBaseBottomSheet extends BottomSheetBehavior.BottomSheetCallback {
     private final int headerRes;
     private final int contentRes;
