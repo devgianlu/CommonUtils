@@ -60,7 +60,7 @@ public class DialogUtils {
         return context != null && context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
     }
 
-    static void showDialog(@NonNull final Context context, @NonNull final Dialog dialog) {
+    public static void showDialog(@NonNull final Context context, @NonNull final Dialog dialog) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -70,7 +70,7 @@ public class DialogUtils {
         });
     }
 
-    static void showDialog(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final OnDialogCreatedListener listener) {
+    public static void showDialog(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final OnDialogCreatedListener listener) {
         handler.post(new Runnable() {
             @Override
             public void run() {

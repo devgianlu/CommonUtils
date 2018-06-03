@@ -37,11 +37,11 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     public void showDialog(@NonNull Dialog dialog) {
         mDialog = dialog;
-        DialogUtils.showDialogInternal(this, mDialog);
+        DialogUtils.showDialog(this, mDialog);
     }
 
     public void showDialog(@NonNull AlertDialog.Builder builder) {
-        DialogUtils.showDialogInternal(this, builder, new DialogUtils.OnDialogCreatedListener() {
+        DialogUtils.showDialog(this, builder, new DialogUtils.OnDialogCreatedListener() {
             @Override
             public void created(@NonNull Dialog dialog) {
                 mDialog = dialog;
