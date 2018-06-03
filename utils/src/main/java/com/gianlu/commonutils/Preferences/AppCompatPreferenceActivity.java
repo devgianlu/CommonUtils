@@ -41,9 +41,9 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     }
 
     public void showDialog(@NonNull AlertDialog.Builder builder) {
-        DialogUtils.showDialogInternal(this, builder, new DialogUtils.IDialog() {
+        DialogUtils.showDialogInternal(this, builder, new DialogUtils.OnDialogCreatedListener() {
             @Override
-            public void created(Dialog dialog) {
+            public void created(@NonNull Dialog dialog) {
                 mDialog = dialog;
             }
         });

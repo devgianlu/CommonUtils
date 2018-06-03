@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.annotation.UiThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -55,23 +56,25 @@ public class DialogUtils {
         activityWithDialog(activity).dismissDialog();
     }
 
-    // FIXME
-    public static void showDialogInternal(@NonNull final Context context, @NonNull final Dialog dialog) {
+    public static boolean isContextValid(Context context) {
+        return context != null && context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
+    }
+
+    static void showDialog(@NonNull final Context context, @NonNull final Dialog dialog) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (context instanceof Activity && ((Activity) context).isFinishing()) return;
+                if (!isContextValid(context)) return;
                 dialog.show();
             }
         });
     }
 
-    // FIXME
-    public static void showDialogInternal(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final IDialog listener) {
+    static void showDialog(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final OnDialogCreatedListener listener) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (context instanceof Activity && ((Activity) context).isFinishing()) return;
+                if (!isContextValid(context)) return;
                 Dialog dialog = builder.create();
                 if (listener != null) listener.created(dialog);
                 dialog.show();
@@ -102,7 +105,8 @@ public class DialogUtils {
         return activity != null && activityWithDialog(activity).hasVisibleDialog();
     }
 
-    public interface IDialog {
-        void created(Dialog dialog);
+    public interface OnDialogCreatedListener {
+        @UiThread
+        void created(@NonNull Dialog dialog);
     }
 }
