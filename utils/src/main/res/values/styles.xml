@@ -18,4 +18,8 @@
     <style name="Drawer">
         <item name="android:layout_width">wrap_content</item>
     </style>
+
+    <declare-styleable name="BreadcrumbsView">
+        <attr name="arrowRes" format="reference" />
+    </declare-styleable>
 </resources>

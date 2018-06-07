@@ -423,6 +423,13 @@ public final class CommonUtils {
         return sdf;
     }
 
+    @NonNull
+    public static SimpleDateFormat getFullVerbalDateFormatter() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, hh:mm:ss dd/MM/yyyy", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf;
+    }
+
     public static boolean isDebug() {
         return DEBUG;
     }
