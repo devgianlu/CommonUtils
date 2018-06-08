@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -35,19 +37,50 @@ public final class Logging {
     private static File logFile;
     private static File secretLogFile;
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void clearLogs(Context context) {
+    @NonNull
+    private static File getLogsDirectory(@NonNull Context context) {
+        return new File(context.getFilesDir(), "logs");
+    }
+
+    @NonNull
+    private static File[] listLogsInDirectory(@NonNull File dir, final boolean secret) {
+        return dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".log") || (secret && name.toLowerCase().endsWith(".secret"));
+            }
+        });
+    }
+
+    @NonNull
+    private static String removeExtension(@NonNull File file) {
+        String name = file.getName();
+        int last = name.lastIndexOf('.');
+        return name.substring(0, last);
+    }
+
+    @NonNull
+    private static Date getDate(@NonNull File file) throws ParseException {
+        String date = removeExtension(file);
+        return getFileDateFormatter().parse(date);
+    }
+
+    private static File[] listLogFilesInternal(@NonNull Context context, boolean secret) {
+        File[] first = listLogsInDirectory(context.getFilesDir(), secret);
+        File[] second = listLogsInDirectory(getLogsDirectory(context), secret);
+        File[] files = new File[first.length + second.length];
+        System.arraycopy(first, 0, files, 0, first.length);
+        System.arraycopy(second, 0, files, first.length, second.length);
+        return files;
+    }
+
+    public static void clearLogs(@NonNull Context context) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
 
-        for (File file : context.getFilesDir().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                return s.toLowerCase().endsWith(".log") || s.toLowerCase().endsWith(".secret");
-            }
-        })) {
+        for (File file : listLogFilesInternal(context, true)) {
             try {
-                Date date = getFileDateFormatter().parse(file.getName().replace(".log", "").replace(".secret", ""));
+                Date date = getDate(file);
                 if (date.before(cal.getTime())) file.delete();
             } catch (ParseException ex) {
                 if (CommonUtils.isDebug()) ex.printStackTrace();
@@ -56,16 +89,19 @@ public final class Logging {
     }
 
     @SuppressLint("SimpleDateFormat")
+    @NonNull
     private static SimpleDateFormat getFileDateFormatter() {
         return new SimpleDateFormat("d-MM-yyyy");
     }
 
-    public static void init(Context context) {
-        logFile = new File(context.getFilesDir(), getFileDateFormatter().format(new Date()) + ".log");
-        secretLogFile = new File(context.getFilesDir(), getFileDateFormatter().format(new Date()) + ".secret");
+    public static void init(@NonNull Context context) {
+        File logs = getLogsDirectory(context);
+        if (!logs.exists()) logs.mkdir();
+
+        logFile = new File(logs, getFileDateFormatter().format(new Date()) + ".log");
+        secretLogFile = new File(logs, getFileDateFormatter().format(new Date()) + ".secret");
     }
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "BooleanMethodIsAlwaysInverted"})
     private static boolean shouldLog() {
         if (logFile != null && secretLogFile != null) {
             try {
@@ -81,48 +117,39 @@ public final class Logging {
         return false;
     }
 
+    @NonNull
     private static SimpleDateFormat getTimeFormatter() {
         return new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     }
 
     @Nullable
-    public static LogFile getLatestLogFile(Context context, boolean secret) {
+    public static LogFile getLatestLogFile(@NonNull Context context, boolean secret) {
         List<LogFile> logs = listLogFiles(context, secret);
         return logs.isEmpty() ? null : logs.get(0);
     }
 
-    public static LogFile moveLogFileToExternalStorage(Context context, LogFile log) throws ParseException, IOException {
-        LogFile dest = new LogFile(new File(context.getExternalCacheDir(), log.getName()));
-        CommonUtils.copyFile(log, dest);
-        return dest;
-    }
-
     public static List<LogFile> listLogFiles(Context context, final boolean secret) {
-        final File files[] = context.getFilesDir().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                return s.toLowerCase().endsWith(secret ? ".secret" : ".log");
-            }
-        });
+        File[] files = listLogFilesInternal(context, secret);
 
-        List<LogFile> logFiles = new ArrayList<>();
+        List<LogFile> logs = new ArrayList<>();
         for (File file : files) {
             try {
-                logFiles.add(new LogFile(file));
+                logs.add(new LogFile(file));
             } catch (ParseException ex) {
                 if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
 
-        Collections.sort(logFiles, new LogFileComparator());
+        Collections.sort(logs, new LogFilesComparator());
 
-        return logFiles;
+        return logs;
     }
 
-    public static List<LogLine> getLogLines(Context context, LogFile log) throws IOException {
+    @NonNull
+    public static List<LogLine> getLogLines(@NonNull LogFile log) throws IOException {
         List<LogLine> logLines = new ArrayList<>();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(log.getName())));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(log)));
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("--ERROR--")) {
@@ -135,7 +162,7 @@ public final class Logging {
         return logLines;
     }
 
-    public static void secret(Throwable exx) {
+    private static void secret(@NonNull Throwable exx) {
         if (DEBUG) exx.printStackTrace();
         if (!shouldLog()) return;
 
@@ -147,6 +174,7 @@ public final class Logging {
         }
     }
 
+    @NonNull
     public static String getStackTrace(@NonNull Throwable ex) {
         StringWriter sw = new StringWriter();
         PrintWriter writer = new PrintWriter(sw);
@@ -154,7 +182,7 @@ public final class Logging {
         return sw.toString();
     }
 
-    public static void log(Throwable ex) {
+    public static void log(@Nullable Throwable ex) {
         if (ex == null) return;
         log(ex.getMessage(), true);
         secret(ex);
@@ -170,8 +198,9 @@ public final class Logging {
 
         if (!shouldLog()) return;
 
+        SimpleDateFormat sdf = getTimeFormatter();
         try (FileOutputStream out = new FileOutputStream(logFile, true)) {
-            out.write(((isError ? "--ERROR--" : "--INFO--") + getTimeFormatter().format(new Date()) + " >> " + message.replace("\n", " ") + "\n").getBytes());
+            out.write(((isError ? "--ERROR--" : "--INFO--") + sdf.format(new Date()) + " >> " + message.replace("\n", " ") + "\n").getBytes());
             out.flush();
         } catch (IOException ex) {
             if (DEBUG) ex.printStackTrace();
@@ -182,7 +211,7 @@ public final class Logging {
         public final Type type;
         public final String message;
 
-        public LogLine(Type type, String message) {
+        LogLine(@NonNull Type type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
@@ -194,47 +223,48 @@ public final class Logging {
         }
     }
 
-    public static class LogFileComparator implements Comparator<LogFile> {
+    public static class LogFilesComparator implements Comparator<LogFile> {
         @Override
         public int compare(LogFile o1, LogFile o2) {
-            return Long.compare(o2.date, o1.date);
+            return -o1.date.compareTo(o2.date);
         }
     }
 
     public static class LogFile extends File {
-        public final long date;
+        public final Date date;
 
-        @SuppressLint("SimpleDateFormat")
-        public LogFile(File file) throws ParseException {
+        LogFile(@NonNull File file) throws ParseException {
             super(file.getAbsolutePath());
-            date = new SimpleDateFormat("d-MM-yyyy").parse(toString()).getTime();
+            date = getDate(file);
         }
 
         @Override
+        @NonNull
         public String toString() {
-            return getName().split("\\.")[0];
+            return removeExtension(this);
         }
     }
 
+    @UiThread
     public static class LogLineAdapter extends RecyclerView.Adapter<LogLineAdapter.ViewHolder> {
-        private final List<LogLine> objs;
-        private final IAdapter listener;
+        private final List<LogLine> logs;
+        private final Listener listener;
         private final LayoutInflater inflater;
 
-        public LogLineAdapter(Context context, List<LogLine> objs, @Nullable IAdapter listener) {
+        LogLineAdapter(Context context, List<LogLine> logs, @Nullable Listener listener) {
             this.inflater = LayoutInflater.from(context);
-            this.objs = objs;
+            this.logs = logs;
             this.listener = listener;
         }
 
         public void clear() {
-            objs.clear();
+            logs.clear();
             notifyDataSetChanged();
         }
 
-        public void add(LogLine line) {
-            objs.add(line);
-            notifyItemInserted(objs.size() - 1);
+        public void add(@NonNull LogLine line) {
+            logs.add(line);
+            notifyItemInserted(logs.size() - 1);
         }
 
         @NonNull
@@ -246,7 +276,7 @@ public final class Logging {
         @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final LogLine item = objs.get(position);
+            final LogLine item = logs.get(position);
 
             holder.msg.setText(item.message);
             switch (item.type) {
@@ -274,11 +304,11 @@ public final class Logging {
 
         @Override
         public int getItemCount() {
-            return objs.size();
+            return logs.size();
         }
 
-        public interface IAdapter {
-            void onLogLineSelected(LogLine line);
+        public interface Listener {
+            void onLogLineSelected(@NonNull LogLine line);
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

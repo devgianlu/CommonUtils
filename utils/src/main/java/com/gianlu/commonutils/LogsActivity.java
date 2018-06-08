@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -20,7 +21,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
-public class LogsActivity extends ActivityWithDialog implements Logging.LogLineAdapter.IAdapter {
+public class LogsActivity extends ActivityWithDialog implements Logging.LogLineAdapter.Listener {
     private static final int DELETE_LOGS_ID = 1;
 
     @Override
@@ -46,7 +47,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    layout.loadListData(new Logging.LogLineAdapter(LogsActivity.this, Logging.getLogLines(LogsActivity.this, logFiles.get(i)), LogsActivity.this));
+                    layout.loadListData(new Logging.LogLineAdapter(LogsActivity.this, Logging.getLogLines(logFiles.get(i)), LogsActivity.this));
                 } catch (IOException ex) {
                     Logging.log(ex);
                     onBackPressed();
@@ -91,7 +92,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
     }
 
     @Override
-    public void onLogLineSelected(Logging.LogLine line) {
+    public void onLogLineSelected(@NonNull Logging.LogLine line) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard != null) {
             ClipData clip = ClipData.newPlainText("stack trace", line.message);
