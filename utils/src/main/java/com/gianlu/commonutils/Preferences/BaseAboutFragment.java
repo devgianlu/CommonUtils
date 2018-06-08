@@ -51,6 +51,8 @@ public abstract class BaseAboutFragment extends AppCompatPreferenceFragment impl
     private BillingClient billingClient;
 
     private void handleBillingErrors(@BillingClient.BillingResponse int code) {
+        if (getActivity() == null) return;
+
         switch (code) {
             case BillingClient.BillingResponse.BILLING_UNAVAILABLE:
             case BillingClient.BillingResponse.SERVICE_UNAVAILABLE:
