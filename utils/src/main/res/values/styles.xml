@@ -22,4 +22,9 @@
     <declare-styleable name="BreadcrumbsView">
         <attr name="arrowRes" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="MessageView">
+        <attr name="errorRes" format="reference" />
+        <attr name="infoRes" format="reference" />
+    </declare-styleable>
 </resources>

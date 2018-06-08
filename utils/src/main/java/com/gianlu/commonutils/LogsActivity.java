@@ -37,7 +37,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
 
         if (logFiles.isEmpty()) {
             spinner.setVisibility(View.GONE);
-            layout.showMessage(R.string.noLogs, false);
+            layout.showInfo(R.string.noLogs);
             return;
         }
 

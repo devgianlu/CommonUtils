@@ -2,7 +2,6 @@ package com.gianlu.commonutils;
 
 import android.content.Context;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -16,6 +15,7 @@ import android.widget.ProgressBar;
 public class RecyclerViewLayout extends FrameLayout {
     private final ProgressBar loading;
     private final RecyclerView list;
+    private final MessageView message;
     private final SwipeRefreshLayout swipeRefresh;
     private boolean swipeRefreshEnabled = true;
 
@@ -39,6 +39,7 @@ public class RecyclerViewLayout extends FrameLayout {
         loading = findViewById(R.id.recyclerViewLayout_loading);
         list = findViewById(R.id.recyclerViewLayout_list);
         swipeRefresh = findViewById(R.id.recyclerViewLayout_swipeRefresh);
+        message = findViewById(R.id.recyclerViewLayout_message);
 
         disableSwipeRefresh();
     }
@@ -85,7 +86,7 @@ public class RecyclerViewLayout extends FrameLayout {
             list.setVisibility(VISIBLE);
         }
 
-        MessageLayout.hide(this);
+        message.hide();
         stopLoading();
     }
 
@@ -100,18 +101,14 @@ public class RecyclerViewLayout extends FrameLayout {
         loading.setVisibility(GONE);
     }
 
-    public void showMessage(@StringRes int message, boolean error, Object... formatArgs) {
-        showMessage(getContext().getString(message, formatArgs), error);
+    public void showError(@StringRes int textRes, Object... args) {
+        hideList();
+        message.setError(textRes, args);
     }
 
-    public void showMessage(@StringRes int message, @DrawableRes int icon) {
+    public void showInfo(@StringRes int textRes, Object... args) {
         hideList();
-        MessageLayout.show(this, message, icon);
-    }
-
-    public void showMessage(@NonNull String message, boolean error) {
-        hideList();
-        MessageLayout.show(this, message, error ? R.drawable.ic_error_outline_black_48dp : R.drawable.ic_info_outline_black_48dp);
+        message.setInfo(textRes, args);
     }
 
     public void loadListData(RecyclerView.Adapter adapter, boolean show) {
@@ -140,6 +137,6 @@ public class RecyclerViewLayout extends FrameLayout {
     }
 
     public void hideMessage() {
-        MessageLayout.hide(this);
+        message.hide();
     }
 }

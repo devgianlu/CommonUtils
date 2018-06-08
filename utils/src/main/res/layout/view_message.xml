@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/messageLayout_container"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/messageLayout_icon"
+        android:id="@+id/messageView_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_gravity="center"
         android:alpha="0.54" />
 
-    <TextView
-        android:id="@+id/messageLayout_message"
+    <com.gianlu.commonutils.SuperTextView
+        android:id="@+id/messageView_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:autoLink="web"
         android:textAlignment="center" />
-</LinearLayout>
+</merge>
