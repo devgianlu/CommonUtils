@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
@@ -44,7 +45,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -297,7 +297,7 @@ public final class CommonUtils {
         }
     }
 
-    public static void sendEmail(Context context, String appName, @Nullable Throwable sendEx) {
+    public static void sendEmail(@NonNull Context context, @NonNull String appName, @Nullable Throwable sendEx) {
         String version;
         try {
             version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
@@ -322,17 +322,15 @@ public final class CommonUtils {
             emailBody += Logging.getStackTrace(sendEx);
         }
 
-        emailBody += "\n-----------------------------" + "\n\n\nProvide bug details\n";
+        emailBody += "\n------------------------------------" + "\n\n\nProvide bug details\n";
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
         Logging.LogFile log = Logging.getLatestLogFile(context, true);
         if (log != null) {
-            try {
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(Logging.moveLogFileToExternalStorage(context, log)));
-            } catch (ParseException | IOException ex) {
-                Logging.log(ex);
-            }
+            Uri uri = FileProvider.getUriForFile(context, "com.gianlu.commonutils.logs", log);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
         }
 
         try {
