@@ -326,7 +326,7 @@ public final class CommonUtils {
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
-        Logging.LogFile log = Logging.getLatestLogFile(context, true);
+        Logging.LogFile log = Logging.getLatestLogFile(context, Logging.Type.SECRET);
         if (log != null) {
             Uri uri = FileProvider.getUriForFile(context, "com.gianlu.commonutils.logs", log);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

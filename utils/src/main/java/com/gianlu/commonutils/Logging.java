@@ -42,14 +42,33 @@ public final class Logging {
         return new File(context.getFilesDir(), "logs");
     }
 
+    private static boolean isLogFile(@NonNull String name) {
+        return name.toLowerCase().endsWith(".log");
+    }
+
+    private static boolean isSecretLogFile(@NonNull String name) {
+        return name.toLowerCase().endsWith(".secret");
+    }
+
     @NonNull
-    private static File[] listLogsInDirectory(@NonNull File dir, final boolean secret) {
+    private static File[] listLogsInDirectory(@NonNull File dir, @NonNull final Type type) {
         return dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".log") || (secret && name.toLowerCase().endsWith(".secret"));
+                if (type == Type.ALL) return isLogFile(name) || isSecretLogFile(name);
+                else if (type == Type.SECRET) return isSecretLogFile(name);
+                else return isLogFile(name);
             }
         });
+    }
+
+    private static File[] listLogFilesInternal(@NonNull Context context, @NonNull Type type) {
+        File[] first = listLogsInDirectory(context.getFilesDir(), type);
+        File[] second = listLogsInDirectory(getLogsDirectory(context), type);
+        File[] files = new File[first.length + second.length];
+        System.arraycopy(first, 0, files, 0, first.length);
+        System.arraycopy(second, 0, files, first.length, second.length);
+        return files;
     }
 
     @NonNull
@@ -65,20 +84,11 @@ public final class Logging {
         return getFileDateFormatter().parse(date);
     }
 
-    private static File[] listLogFilesInternal(@NonNull Context context, boolean secret) {
-        File[] first = listLogsInDirectory(context.getFilesDir(), secret);
-        File[] second = listLogsInDirectory(getLogsDirectory(context), secret);
-        File[] files = new File[first.length + second.length];
-        System.arraycopy(first, 0, files, 0, first.length);
-        System.arraycopy(second, 0, files, first.length, second.length);
-        return files;
-    }
-
     public static void clearLogs(@NonNull Context context) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
 
-        for (File file : listLogFilesInternal(context, true)) {
+        for (File file : listLogFilesInternal(context, Type.ALL)) {
             try {
                 Date date = getDate(file);
                 if (date.before(cal.getTime())) file.delete();
@@ -86,6 +96,12 @@ public final class Logging {
                 if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
+    }
+
+    @Nullable
+    public static LogFile getLatestLogFile(@NonNull Context context, @NonNull Type type) {
+        List<LogFile> logs = listLogFiles(context, type);
+        return logs.isEmpty() ? null : logs.get(0);
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -122,14 +138,8 @@ public final class Logging {
         return new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     }
 
-    @Nullable
-    public static LogFile getLatestLogFile(@NonNull Context context, boolean secret) {
-        List<LogFile> logs = listLogFiles(context, secret);
-        return logs.isEmpty() ? null : logs.get(0);
-    }
-
-    public static List<LogFile> listLogFiles(Context context, final boolean secret) {
-        File[] files = listLogFilesInternal(context, secret);
+    public static List<LogFile> listLogFiles(Context context, @NonNull Type type) {
+        File[] files = listLogFilesInternal(context, type);
 
         List<LogFile> logs = new ArrayList<>();
         for (File file : files) {
@@ -143,6 +153,12 @@ public final class Logging {
         Collections.sort(logs, new LogFilesComparator());
 
         return logs;
+    }
+
+    public enum Type {
+        ALL,
+        SECRET,
+        LOG
     }
 
     @NonNull
