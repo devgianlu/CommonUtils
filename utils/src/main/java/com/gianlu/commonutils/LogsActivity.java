@@ -34,7 +34,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
         final RecyclerViewLayout layout = findViewById(R.id.logs_recyclerViewLayout);
         layout.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         layout.getList().addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, false);
+        final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, Logging.Type.LOG);
 
         if (logFiles.isEmpty()) {
             spinner.setVisibility(View.GONE);
