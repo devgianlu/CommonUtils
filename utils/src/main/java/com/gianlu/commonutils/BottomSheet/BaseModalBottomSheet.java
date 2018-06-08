@@ -11,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,8 +104,13 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         onlyToolbar = !onCreateHeader(inflater, header, payload);
         onCreateBody(inflater, body, payload);
 
-        if (onCustomizeAction(action, payload)) action.setVisibility(View.VISIBLE);
-        else action.setVisibility(View.GONE);
+        if (onCustomizeAction(action, payload)) {
+            action.setVisibility(View.VISIBLE);
+            int end = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+            header.setPaddingRelative(header.getPaddingStart(), header.getPaddingTop(), end, header.getPaddingBottom());
+        } else {
+            action.setVisibility(View.GONE);
+        }
 
         if (onlyToolbar) showToolbar();
         else showHeader();
