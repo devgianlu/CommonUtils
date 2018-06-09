@@ -44,6 +44,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         this.context = drawerLayout.getContext();
         this.drawerLayout = drawerLayout;
         drawerToggle = new ActionBarDrawerToggle(activity, this.drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
+        drawerToggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
 
@@ -159,7 +160,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
                             .setListener(new Animator.AnimatorListener() {
                                 @Override
                                 public void onAnimationStart(Animator animator) {
-
                                 }
 
                                 @Override
@@ -171,12 +171,10 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
                                 @Override
                                 public void onAnimationCancel(Animator animator) {
-
                                 }
 
                                 @Override
                                 public void onAnimationRepeat(Animator animator) {
-
                                 }
                             })
                             .setDuration(200)
@@ -188,7 +186,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
                             .setListener(new Animator.AnimatorListener() {
                                 @Override
                                 public void onAnimationStart(Animator animator) {
-
                                 }
 
                                 @Override
@@ -198,12 +195,10 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
                                 @Override
                                 public void onAnimationCancel(Animator animator) {
-
                                 }
 
                                 @Override
                                 public void onAnimationRepeat(Animator animator) {
-
                                 }
                             })
                             .start();
@@ -220,7 +215,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
                             .setListener(new Animator.AnimatorListener() {
                                 @Override
                                 public void onAnimationStart(Animator animator) {
-
                                 }
 
                                 @Override
@@ -230,12 +224,10 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
                                 @Override
                                 public void onAnimationCancel(Animator animator) {
-
                                 }
 
                                 @Override
                                 public void onAnimationRepeat(Animator animator) {
-
                                 }
                             })
                             .setDuration(200)
@@ -247,7 +239,6 @@ public class DrawerManager<P extends BaseDrawerProfile> {
                             .setListener(new Animator.AnimatorListener() {
                                 @Override
                                 public void onAnimationStart(Animator animator) {
-
                                 }
 
                                 @Override
@@ -257,12 +248,10 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
                                 @Override
                                 public void onAnimationCancel(Animator animator) {
-
                                 }
 
                                 @Override
                                 public void onAnimationRepeat(Animator animator) {
-
                                 }
                             })
                             .start();
@@ -325,7 +314,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         drawerToggle.syncState();
     }
 
-    public void onTogglerConfigurationChanged(Configuration conf) {
+    public void onTogglerConfigurationChanged(@NonNull Configuration conf) {
         drawerToggle.onConfigurationChanged(conf);
     }
 
@@ -373,6 +362,7 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
         void editProfile(List<P> items);
     }
+
     public interface ILogout {
         void logout();
     }
@@ -381,10 +371,10 @@ public class DrawerManager<P extends BaseDrawerProfile> {
         private final List<BaseDrawerItem> menuItems = new ArrayList<>();
         private final List<P> profiles = new ArrayList<>();
         private final int headerDrawable;
-        private DrawerManager.ILogout logoutHandler = null;
-        private P singleProfile = null;
         private final int colorAccentRes;
         private final int colorPrimaryRes;
+        private DrawerManager.ILogout logoutHandler = null;
+        private P singleProfile = null;
         private AdapterProvider<P> adapterProvider;
 
         public Config(@DrawableRes int headerDrawable) {
