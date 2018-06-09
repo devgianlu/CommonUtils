@@ -227,7 +227,7 @@ public final class Logging {
         public final Type type;
         public final String message;
 
-        LogLine(@NonNull Type type, @NonNull String message) {
+        public LogLine(@NonNull Type type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
@@ -267,7 +267,7 @@ public final class Logging {
         private final Listener listener;
         private final LayoutInflater inflater;
 
-        LogLineAdapter(Context context, List<LogLine> logs, @Nullable Listener listener) {
+        public LogLineAdapter(Context context, List<LogLine> logs, @Nullable Listener listener) {
             this.inflater = LayoutInflater.from(context);
             this.logs = logs;
             this.listener = listener;
