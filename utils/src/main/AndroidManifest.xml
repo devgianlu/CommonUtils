@@ -23,16 +23,5 @@
 
         <!-- Offline activity -->
         <activity android:name=".OfflineActivity" />
-
-        <!-- Log files provider -->
-        <provider
-            android:name=".LogsProvider"
-            android:authorities="com.gianlu.commonutils.logs"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/logs_paths" />
-        </provider>
     </application>
 </manifest>
