@@ -101,6 +101,11 @@ public class RecyclerViewLayout extends FrameLayout {
         loading.setVisibility(GONE);
     }
 
+    public void showError(@NonNull String text) {
+        hideList();
+        message.setError(text);
+    }
+
     public void showError(@StringRes int textRes, Object... args) {
         hideList();
         message.setError(textRes, args);

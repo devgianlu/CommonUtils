@@ -3,6 +3,7 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.UiThread;
@@ -51,7 +52,7 @@ public class MessageView extends LinearLayout {
         this.setVisibility(VISIBLE);
     }
 
-    private void set(@DrawableRes int iconRes, String text) {
+    private void set(@DrawableRes int iconRes, @NonNull String text) {
         this.icon.setImageResource(iconRes);
         this.text.setHtml(text);
         this.setVisibility(VISIBLE);
@@ -65,7 +66,15 @@ public class MessageView extends LinearLayout {
         set(infoRes, textRes, args);
     }
 
+    public void setInfo(@NonNull String text) {
+        set(infoRes, text);
+    }
+
     public void setError(@StringRes int textRes, Object... args) {
         set(errorRes, textRes, args);
+    }
+
+    public void setError(@NonNull String text) {
+        set(errorRes, text);
     }
 }
