@@ -39,14 +39,33 @@ public class DrawerManager<P extends BaseDrawerProfile> {
     private boolean isProfilesLockedUntilSelected;
     private ProfilesAdapter<P> profilesAdapter;
 
-    private DrawerManager(Config<P> config, Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
+    private DrawerManager(Config<P> config, Activity activity, final DrawerLayout drawerLayout, Toolbar toolbar) {
         this.config = config;
         this.context = drawerLayout.getContext();
         this.drawerLayout = drawerLayout;
+
         drawerToggle = new ActionBarDrawerToggle(activity, this.drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
-        drawerToggle.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
+
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                drawerToggle.syncState();
+            }
+        });
 
         int colorAccent = ContextCompat.getColor(context, config.colorAccentRes);
         colorPrimaryShadow = CommonUtils.manipulateAlpha(ContextCompat.getColor(context, config.colorPrimaryRes), 0.54f);
