@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 
 public interface BaseDrawerProfile {
     @NonNull
-    String getProfileName(Context context);
+    String getProfileName(@NonNull Context context);
 
     @NonNull
-    String getSecondaryText(Context context);
+    String getSecondaryText(@NonNull Context context);
 
     @NonNull
-    String getInitials(Context context);
+    String getInitials(@NonNull Context context);
 }

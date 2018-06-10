@@ -7,6 +7,8 @@
     android:focusable="true"
     android:orientation="vertical">
 
+    <!-- TODO: Might use ConstraintLayout -->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="180dp">
@@ -55,7 +57,7 @@
                         android:layout_marginStart="16dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary_dark"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -66,58 +68,58 @@
                         android:layout_marginStart="16dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary_dark"
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <ImageView
+                <ImageButton
                     android:id="@+id/drawerHeader_action"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="16dp" />
+                    android:layout_marginEnd="16dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:scaleType="fitCenter"
+                    android:tint="@color/text_primary_dark"
+                    android:tintMode="src_in" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:background="@color/white">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_gravity="top"
             android:background="@drawable/shadow_bottom" />
 
-        <FrameLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drawer_menuItemsList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+
+        <LinearLayout
+            android:id="@+id/drawer_profilesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/drawer_menuList"
+                android:id="@+id/drawer_profilesList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
 
-            <LinearLayout
-                android:id="@+id/drawer_profileContainer"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/drawer_profilesMenuItems"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="invisible">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/drawer_profilesList"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <LinearLayout
-                    android:id="@+id/drawer_profilesFooter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

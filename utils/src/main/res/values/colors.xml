@@ -21,4 +21,21 @@
     <color name="orange">#ff9800</color>
     <color name="deepOrange">#ff5722</color>
     <color name="brown">#795548</color>
+
+    <color name="text_primary_light">#FF000000</color>
+    <color name="text_secondary_light">#323232</color>
+    <color name="text_tertiary_light">#808080</color>
+
+    <color name="text_primary_dark">#FFFFFFFF</color>
+    <color name="text_secondary_dark">#BEBEBE</color>
+    <color name="text_tertiary_dark">#808080</color>
+
+    <color name="icon_active_light">#E6000000</color> <!-- 100% -->
+    <color name="icon_inactive_light">#8C000000</color> <!-- 54% -->
+    <color name="icon_disabled_light">#66000000</color> <!-- 38% -->
+
+    <color name="icon_active_dark">#FFFFFFFF</color> <!-- 100% -->
+    <color name="icon_unfocused_dark">#B3FFFFFF</color> <!-- 70% -->
+    <color name="icon_inactive_dark">#8CFFFFFF</color> <!-- 54% -->
+    <color name="icon_disabled_dark">#66FFFFFF</color> <!-- 38% -->
 </resources>

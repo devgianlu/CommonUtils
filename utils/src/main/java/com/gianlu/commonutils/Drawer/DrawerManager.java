@@ -7,15 +7,14 @@ import android.content.res.Configuration;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,32 +22,32 @@ import android.widget.TextView;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.LettersIcons.LettersImageView;
 import com.gianlu.commonutils.R;
+import com.gianlu.commonutils.SelectiveDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class DrawerManager<P extends BaseDrawerProfile> {
+public final class DrawerManager<P extends BaseDrawerProfile> implements MenuItemsAdapter.Listener {
     private final Context context;
-    private final ActionBarDrawerToggle drawerToggle;
-    private final DrawerLayout drawerLayout;
+    private final ActionBarDrawerToggle mDrawerToggle;
+    private final DrawerLayout mDrawerLayout;
     private final Config<P> config;
-    private final int colorPrimaryShadow;
+    private final RecyclerView mMenuItemsList;
+    private final RecyclerView mProfilesList;
+    private final ImageButton mAction;
+    private final RecyclerView mProfilesMenuItemsList;
+    private final LinearLayout mProfilesContainer;
     private MenuItemsAdapter menuItemsAdapter;
-    private IDrawerListener<P> listener;
-    private boolean isProfilesLockedUntilSelected;
-    private ProfilesAdapter<P> profilesAdapter;
+    private ProfilesAdapter<P, ?> profilesAdapter;
+    private SelectiveDividerItemDecoration menuItemsDecoration;
 
-    private DrawerManager(Config<P> config, Activity activity, final DrawerLayout drawerLayout, Toolbar toolbar) {
+    private DrawerManager(@NonNull Config<P> config, @NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
         this.config = config;
         this.context = drawerLayout.getContext();
-        this.drawerLayout = drawerLayout;
 
-        drawerToggle = new ActionBarDrawerToggle(activity, this.drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
-        drawerToggle.setDrawerIndicatorEnabled(true);
-        drawerToggle.syncState();
-
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+        mDrawerLayout = drawerLayout;
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
             }
@@ -63,376 +62,310 @@ public class DrawerManager<P extends BaseDrawerProfile> {
 
             @Override
             public void onDrawerStateChanged(int newState) {
-                drawerToggle.syncState();
+                mDrawerToggle.syncState();
             }
         });
 
-        int colorAccent = ContextCompat.getColor(context, config.colorAccentRes);
-        colorPrimaryShadow = CommonUtils.manipulateAlpha(ContextCompat.getColor(context, config.colorPrimaryRes), 0.54f);
+        mProfilesContainer = drawerLayout.findViewById(R.id.drawer_profilesContainer);
 
-        LinearLayout realLayout = (LinearLayout) this.drawerLayout.getChildAt(1);
-        realLayout.setBackgroundColor(colorAccent);
+        mDrawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerToggle.syncState();
 
-        ImageView headerBackground = realLayout.findViewById(R.id.drawerHeader_background);
+        mMenuItemsList = drawerLayout.findViewById(R.id.drawer_menuItemsList);
+        mMenuItemsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mMenuItemsList.setHasFixedSize(true);
+
+        mProfilesList = drawerLayout.findViewById(R.id.drawer_profilesList);
+        mProfilesList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mProfilesList.setHasFixedSize(true);
+
+        mProfilesMenuItemsList = drawerLayout.findViewById(R.id.drawer_profilesMenuItems);
+        mProfilesMenuItemsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mProfilesMenuItemsList.setHasFixedSize(true);
+
+        mAction = drawerLayout.findViewById(R.id.drawerHeader_action);
+
+        ImageView headerBackground = drawerLayout.findViewById(R.id.drawerHeader_background);
         headerBackground.setImageResource(config.headerDrawable);
 
         setupMenuItems();
         if (config.singleProfile != null) {
-            setupSingleProfile(config.logoutHandler);
+            setupSingleProfile();
             setCurrentProfile(config.singleProfile);
         } else {
             setupProfiles();
-            setupProfilesFooter();
+            setupProfilesMenuItems();
         }
     }
 
-    public void simulateMenuItemClick(int id) {
-        BaseDrawerItem which = findMenuItem(id);
-        if (which != null && listener != null)
-            listener.onMenuItemSelected(which);
-    }
-
-    @Nullable
-    private BaseDrawerItem findMenuItem(int id) {
-        for (BaseDrawerItem item : config.menuItems)
-            if (item.id == id)
-                return item;
-
-        return null;
-    }
-
-    public void setupSingleProfile(final ILogout logoutHandler) {
-        final ImageView logout = drawerLayout.findViewById(R.id.drawerHeader_action);
-        logout.setImageResource(R.drawable.ic_exit_to_app_white_48dp);
-
-        logout.setOnClickListener(new View.OnClickListener() {
+    private void setupSingleProfile() {
+        mAction.setImageResource(R.drawable.ic_exit_to_app_white_48dp);
+        mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (logoutHandler != null) logoutHandler.logout();
+                if (config.actionListener != null) config.actionListener.drawerAction();
             }
         });
     }
 
-    private void setupProfilesFooter() {
-        LinearLayout profilesFooter = drawerLayout.findViewById(R.id.drawer_profilesFooter);
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        profilesFooter.addView(MenuItemsAdapter.SeparatorViewHolder.getSeparator(context, colorPrimaryShadow));
-
-        MenuItemsAdapter.ViewHolder addProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter);
-        addProfile.name.setText(context.getString(R.string.addProfile));
-        addProfile.icon.setImageResource(R.drawable.ic_add_black_48dp);
-        addProfile.badgeContainer.setVisibility(View.GONE);
-        addProfile.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) listener.addProfile();
-            }
-        });
-        profilesFooter.addView(addProfile.itemView);
-
-        MenuItemsAdapter.ViewHolder editProfile = new MenuItemsAdapter.ViewHolder(inflater, profilesFooter);
-        editProfile.name.setText(context.getString(R.string.editProfile));
-        editProfile.icon.setImageResource(R.drawable.ic_mode_edit_black_48dp);
-        editProfile.badgeContainer.setVisibility(View.GONE);
-        editProfile.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) listener.editProfile(profilesAdapter.getItems());
-            }
-        });
-        profilesFooter.addView(editProfile.itemView);
+    @Override
+    public void onMenuItemSelected(@NonNull BaseDrawerItem which) {
+        if (config.menuListener != null)
+            setDrawerState(false, config.menuListener.onDrawerMenuItemSelected(which));
     }
 
-    public DrawerManager<P> refreshProfiles(List<P> newProfiles) {
+    private void setupProfilesMenuItems() {
+        mProfilesMenuItemsList.setAdapter(new MenuItemsAdapter(context, config.profilesMenuItems, this));
+    }
+
+    private void setupMenuItems() {
+        menuItemsAdapter = new MenuItemsAdapter(context, config.menuItems, this);
+        mMenuItemsList.setAdapter(menuItemsAdapter);
+        mMenuItemsList.removeItemDecoration(menuItemsDecoration);
+        menuItemsDecoration = new SelectiveDividerItemDecoration(context, SelectiveDividerItemDecoration.VERTICAL, config.menuSeparators);
+        mMenuItemsList.addItemDecoration(menuItemsDecoration);
+    }
+
+    public void refreshProfiles(List<P> newProfiles) {
         config.profiles.clear();
         config.profiles.addAll(newProfiles);
 
         setupProfiles();
         profilesAdapter.startProfilesTest();
-        return this;
+    }
+
+    private void openProfilesList() {
+        CommonUtils.animateCollapsingArrowBellows(mAction, false);
+
+        mProfilesContainer.setAlpha(0);
+        mProfilesContainer.setVisibility(View.VISIBLE);
+        mProfilesContainer.animate()
+                .alpha(1)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        mProfilesContainer.setAlpha(1);
+                        if (profilesAdapter != null) profilesAdapter.startProfilesTest();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+                    }
+                })
+                .setDuration(200)
+                .start();
+
+        mMenuItemsList.animate()
+                .alpha(0)
+                .setDuration(200)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        mMenuItemsList.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+                    }
+                })
+                .start();
+    }
+
+    private void closeProfilesList() {
+        CommonUtils.animateCollapsingArrowBellows(mAction, true);
+
+        mMenuItemsList.setAlpha(0);
+        mMenuItemsList.setVisibility(View.VISIBLE);
+        mMenuItemsList.animate()
+                .alpha(1)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        mMenuItemsList.setAlpha(1);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+                    }
+                })
+                .setDuration(200)
+                .start();
+
+        mProfilesContainer.animate()
+                .alpha(0)
+                .setDuration(200)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        mProfilesContainer.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+                    }
+                })
+                .start();
+    }
+
+    private void toggleProfileList() {
+        if (mProfilesContainer.getVisibility() == View.GONE) openProfilesList();
+        else closeProfilesList();
     }
 
     private void setupProfiles() {
-        RecyclerView profilesList = drawerLayout.findViewById(R.id.drawer_profilesList);
-        profilesList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        profilesAdapter = config.adapterProvider.provide(context, config.profiles, listener);
-        profilesList.setAdapter(profilesAdapter);
+        profilesAdapter = config.adapterProvider.provide(context, config.profiles, config.profilesListener);
+        mProfilesList.setAdapter(profilesAdapter);
 
-        final ImageView dropdownToggle = drawerLayout.findViewById(R.id.drawerHeader_action);
-        dropdownToggle.setImageResource(R.drawable.ic_arrow_drop_down_white_48dp);
-        dropdownToggle.setOnClickListener(new View.OnClickListener() {
+        mAction.setImageResource(R.drawable.ic_arrow_drop_down_white_48dp);
+        mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final View profileContainer = drawerLayout.findViewById(R.id.drawer_profileContainer);
-                final View menuContainer = drawerLayout.findViewById(R.id.drawer_menuList);
-
-                if (profileContainer.getVisibility() == View.INVISIBLE) {
-                    dropdownToggle.animate()
-                            .rotation(180)
-                            .setDuration(200)
-                            .start();
-                    profileContainer.setVisibility(View.VISIBLE);
-                    profileContainer.setAlpha(0);
-                    profileContainer.animate()
-                            .alpha(1)
-                            .setListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animator) {
-                                    profileContainer.setAlpha(1);
-                                    if (profilesAdapter != null)
-                                        profilesAdapter.startProfilesTest();
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animator) {
-                                }
-                            })
-                            .setDuration(200)
-                            .start();
-
-                    menuContainer.animate()
-                            .alpha(0)
-                            .setDuration(200)
-                            .setListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animator) {
-                                    menuContainer.setVisibility(View.INVISIBLE);
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animator) {
-                                }
-                            })
-                            .start();
-                } else {
-                    dropdownToggle.animate()
-                            .rotation(0)
-                            .setDuration(200)
-                            .start();
-
-                    menuContainer.setVisibility(View.VISIBLE);
-                    menuContainer.setAlpha(0);
-                    menuContainer.animate()
-                            .alpha(1)
-                            .setListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animator) {
-                                    menuContainer.setAlpha(1);
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animator) {
-                                }
-                            })
-                            .setDuration(200)
-                            .start();
-
-                    profileContainer.animate()
-                            .alpha(0)
-                            .setDuration(200)
-                            .setListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animator) {
-                                    profileContainer.setVisibility(View.INVISIBLE);
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animator) {
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animator animator) {
-                                }
-                            })
-                            .start();
-                }
+                toggleProfileList();
             }
         });
-    }
-
-    private void setupMenuItems() {
-        RecyclerView menuList = drawerLayout.findViewById(R.id.drawer_menuList);
-        menuList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        menuItemsAdapter = new MenuItemsAdapter(context, config.menuItems, R.drawable.drawer_badge, colorPrimaryShadow, new MenuItemsAdapter.IAdapter() {
-            @Override
-            public void onMenuItemSelected(BaseDrawerItem which) {
-                if (listener != null) setDrawerState(false, listener.onMenuItemSelected(which));
-            }
-        });
-        menuList.setAdapter(menuItemsAdapter);
-    }
-
-    public void performUnlock() {
-        if (isProfilesLockedUntilSelected) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            drawerLayout.findViewById(R.id.drawerHeader_action).setEnabled(true);
-
-            isProfilesLockedUntilSelected = false;
-        }
-    }
-
-    public void setDrawerListener(final IDrawerListener<P> listener) {
-        this.listener = listener;
-
-        if (menuItemsAdapter != null)
-            menuItemsAdapter.setDrawerListener(new MenuItemsAdapter.IAdapter() {
-                @Override
-                public void onMenuItemSelected(BaseDrawerItem which) {
-                    if (listener != null) setDrawerState(false, listener.onMenuItemSelected(which));
-                }
-            });
-        if (profilesAdapter != null)
-            profilesAdapter.setDrawerListener(new ProfilesAdapter.IAdapter<P>() {
-                @Override
-                public void onProfileSelected(P profile) {
-                    if (listener != null) listener.onProfileSelected(profile);
-                    performUnlock();
-                }
-            });
     }
 
     public void updateBadge(int which, int badgeNumber) {
         if (menuItemsAdapter != null) menuItemsAdapter.updateBadge(which, badgeNumber);
     }
 
+    public void setActiveItem(int which) {
+        if (menuItemsAdapter != null) menuItemsAdapter.setActiveItem(which);
+    }
+
     public void setDrawerState(boolean open, boolean animate) {
-        if (open) drawerLayout.openDrawer(GravityCompat.START, animate);
-        else drawerLayout.closeDrawer(GravityCompat.START, animate);
+        if (open) mDrawerLayout.openDrawer(GravityCompat.START, animate);
+        else mDrawerLayout.closeDrawer(GravityCompat.START, animate);
     }
 
     public void syncTogglerState() {
-        drawerToggle.syncState();
+        mDrawerToggle.syncState();
     }
 
     public void onTogglerConfigurationChanged(@NonNull Configuration conf) {
-        drawerToggle.onConfigurationChanged(conf);
+        mDrawerToggle.onConfigurationChanged(conf);
     }
 
     public boolean hasProfiles() {
         return !config.profiles.isEmpty();
     }
 
-    private void setProfilesDrawerOpen() {
-        if (drawerLayout.findViewById(R.id.drawer_profileContainer).getVisibility() == View.INVISIBLE) {
-            drawerLayout.findViewById(R.id.drawerHeader_action).callOnClick();
-        }
-    }
-
-    public void openProfiles(boolean lockUntilSelected) {
-        setDrawerState(true, true);
-        setProfilesDrawerOpen();
-
-        isProfilesLockedUntilSelected = lockUntilSelected;
-        if (lockUntilSelected) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-            drawerLayout.findViewById(R.id.drawerHeader_action).setEnabled(false);
-        }
-    }
-
-    public DrawerManager<P> setCurrentProfile(@NonNull P profile) {
-        TextView profileName = drawerLayout.findViewById(R.id.drawerHeader_profileName);
+    public void setCurrentProfile(@NonNull P profile) {
+        TextView profileName = mDrawerLayout.findViewById(R.id.drawerHeader_profileName);
         profileName.setText(profile.getProfileName(context));
-        TextView secondaryText = drawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
+        TextView secondaryText = mDrawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
         secondaryText.setText(profile.getSecondaryText(context));
-        LettersImageView currAccount = drawerLayout.findViewById(R.id.drawerHeader_currentAccount);
+        LettersImageView currAccount = mDrawerLayout.findViewById(R.id.drawerHeader_currentAccount);
         currAccount.setLetters(profile.getInitials(context));
-        return this;
     }
 
     public boolean isOpen() {
-        return drawerLayout.isDrawerOpen(GravityCompat.START);
+        return mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
-    public interface IDrawerListener<P extends BaseDrawerProfile> {
-        boolean onMenuItemSelected(BaseDrawerItem which);
-
-        void onProfileSelected(P profile);
-
-        void addProfile();
-
-        void editProfile(List<P> items);
+    public interface MenuDrawerListener {
+        boolean onDrawerMenuItemSelected(@NonNull BaseDrawerItem item);
     }
 
-    public interface ILogout {
-        void logout();
+    public interface ProfilesDrawerListener<P extends BaseDrawerProfile> {
+        void onDrawerProfileSelected(@NonNull P profile);
+
+        boolean onDrawerProfileLongClick(@NonNull P profile);
+    }
+
+    public interface OnAction {
+        void drawerAction();
     }
 
     public static class Config<P extends BaseDrawerProfile> {
         private final List<BaseDrawerItem> menuItems = new ArrayList<>();
+        private final List<BaseDrawerItem> profilesMenuItems = new ArrayList<>();
+        private final List<Integer> menuSeparators = new ArrayList<>();
         private final List<P> profiles = new ArrayList<>();
+        private final MenuDrawerListener menuListener;
         private final int headerDrawable;
-        private final int colorAccentRes;
-        private final int colorPrimaryRes;
-        private DrawerManager.ILogout logoutHandler = null;
+        private OnAction actionListener = null;
         private P singleProfile = null;
+        private ProfilesDrawerListener<P> profilesListener;
         private AdapterProvider<P> adapterProvider;
 
-        public Config(@DrawableRes int headerDrawable) {
-            this.colorAccentRes = R.color.colorAccent;
-            this.colorPrimaryRes = R.color.colorPrimary;
+        public Config(@NonNull MenuDrawerListener menuListener, @DrawableRes int headerDrawable) {
+            this.menuListener = menuListener;
             this.headerDrawable = headerDrawable;
         }
 
-        public Config<P> singleProfile(P profile, @Nullable DrawerManager.ILogout handler) {
+        public Config<P> singleProfile(@NonNull P profile, @Nullable OnAction actionListener) {
             this.singleProfile = profile;
-            this.logoutHandler = handler;
+            this.actionListener = actionListener;
             this.profiles.clear();
             return this;
         }
 
         public Config<P> addMenuItemSeparator() {
-            menuItems.add(null);
+            menuSeparators.add(menuItems.size() - 1);
             return this;
         }
 
-        public Config<P> addMenuItem(BaseDrawerItem item) {
+        public Config<P> addMenuItem(@NonNull BaseDrawerItem item) {
             menuItems.add(item);
             return this;
         }
 
-        public Config<P> addProfiles(Collection<P> profiles, @NonNull AdapterProvider<P> adapterProvider) {
+        public Config<P> addProfilesMenuItem(@NonNull BaseDrawerItem item) {
+            profilesMenuItems.add(item);
+            return this;
+        }
+
+        public Config<P> addProfiles(@NonNull Collection<P> profiles, @NonNull ProfilesDrawerListener<P> profilesListener, @NonNull AdapterProvider<P> adapterProvider) {
+            this.profilesListener = profilesListener;
             this.adapterProvider = adapterProvider;
             this.profiles.addAll(profiles);
-            this.logoutHandler = null;
+            this.actionListener = null;
             this.singleProfile = null;
             return this;
         }
 
-        public DrawerManager<P> build(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
+        @NonNull
+        public DrawerManager<P> build(@NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
             return new DrawerManager<>(this, activity, drawerLayout, toolbar);
         }
 
         public interface AdapterProvider<P extends BaseDrawerProfile> {
-            ProfilesAdapter<P> provide(@NonNull Context context, @NonNull List<P> profiles, IDrawerListener<P> listener);
+            @NonNull
+            ProfilesAdapter<P, ?> provide(@NonNull Context context, @NonNull List<P> profiles, @NonNull ProfilesDrawerListener<P> listener);
         }
     }
 }
