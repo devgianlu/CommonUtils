@@ -130,6 +130,8 @@ public class BreadcrumbsView extends LinearLayout implements View.OnClickListene
     }
 
     private void removeFrom(int pos) {
+        if (getChildCount() == 0) return;
+
         for (int i = getChildCount() - 1; i >= (pos == 0 ? 0 : (pos - 1)); i--)
             removeViewAt(i);
     }
