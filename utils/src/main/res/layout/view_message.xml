@@ -7,7 +7,8 @@
         android:id="@+id/messageView_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:alpha="0.54" />
+        android:tint="@color/icon_inactive_light"
+        android:tintMode="src_in" />
 
     <com.gianlu.commonutils.SuperTextView
         android:id="@+id/messageView_text"

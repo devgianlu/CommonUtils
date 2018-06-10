@@ -1,138 +1,131 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
+import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.FontsManager;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
 
-class MenuItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int ITEM_NORMAL = 0;
-    private static final int ITEM_SEPARATOR = 1;
+public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.ViewHolder> {
     private final LayoutInflater inflater;
-    private final List<BaseDrawerItem> menuItems;
-    private final int badge;
-    private final int separator;
+    private final List<BaseDrawerItem> items;
+    private final Listener listener;
+    private final Typeface roboto;
+    private final Typeface robotoBold;
     private final Context context;
-    private IAdapter listener;
 
-    MenuItemsAdapter(Context context, List<BaseDrawerItem> menuItems, @DrawableRes int badge, @ColorInt int separator, IAdapter listener) {
-        this.context = context;
+    MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem> items, Listener listener) {
         this.inflater = LayoutInflater.from(context);
-        this.menuItems = menuItems;
-        this.badge = badge;
-        this.separator = separator;
+        this.items = items;
+        this.context = context;
         this.listener = listener;
+        this.roboto = FontsManager.get().get(context, FontsManager.ROBOTO_REGULAR);
+        this.robotoBold = FontsManager.get().get(context, FontsManager.ROBOTO_BOLD);
     }
 
     @Override
     @NonNull
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == ITEM_SEPARATOR) return new SeparatorViewHolder(context, separator);
-        else return new ViewHolder(inflater, parent);
+    public MenuItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolder(parent);
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (menuItems.get(position) == null) return ITEM_SEPARATOR;
-        else return ITEM_NORMAL;
-    }
+    public void onBindViewHolder(@NonNull MenuItemsAdapter.ViewHolder holder, int position) {
+        final BaseDrawerItem item = items.get(position);
 
-    void setDrawerListener(IAdapter listener) {
-        this.listener = listener;
-    }
+        holder.icon.setImageResource(item.icon);
+        holder.name.setText(item.name);
 
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ViewHolder) {
-            ViewHolder castHolder = (ViewHolder) holder;
-            final BaseDrawerItem item = menuItems.get(position);
+        if (item.badgeNumber >= 0) {
+            holder.badge.setVisibility(View.VISIBLE);
+            holder.badge.setBackgroundResource(R.drawable.drawer_badge);
+            holder.badge.setText(String.valueOf(item.badgeNumber));
+        } else {
+            holder.badge.setVisibility(View.GONE);
+        }
 
-            castHolder.icon.setImageResource(item.icon);
-            castHolder.name.setText(item.name);
-
-            if (item.badgeNumber != -1) {
-                castHolder.badgeContainer.setVisibility(View.VISIBLE);
-                castHolder.badgeContainer.setBackgroundResource(badge);
-                castHolder.badge.setText(String.valueOf(item.badgeNumber));
-            } else {
-                castHolder.badgeContainer.setVisibility(View.GONE);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) listener.onMenuItemSelected(item);
             }
+        });
 
-            castHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) listener.onMenuItemSelected(item);
-                }
-            });
+        if (item.active) {
+            int accent = ContextCompat.getColor(context, R.color.colorAccent);
+            holder.name.setTextColor(accent);
+            holder.name.setTypeface(robotoBold);
+            holder.icon.setImageTintList(ColorStateList.valueOf(accent));
+        } else {
+            holder.name.setTextColor(CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary));
+            holder.name.setTypeface(roboto);
+            holder.icon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.icon_inactive_light)));
         }
     }
 
     @Override
     public int getItemCount() {
-        return menuItems.size();
+        return items.size();
     }
 
     private int indexOf(int id) {
-        for (int i = 0; i < menuItems.size(); i++)
-            if (menuItems.get(i) != null && menuItems.get(i).id == id)
+        for (int i = 0; i < items.size(); i++)
+            if (items.get(i).id == id)
                 return i;
 
         return -1;
     }
 
-    void updateBadge(int which, int badgeNumber) {
+    public void updateBadge(int which, int badgeNumber) {
         int pos = indexOf(which);
-
-        if (pos != -1 && menuItems.get(pos).badgeNumber != badgeNumber) {
-            menuItems.get(pos).badgeNumber = badgeNumber;
-            notifyItemChanged(pos);
+        if (pos != -1) {
+            BaseDrawerItem item = items.get(pos);
+            if (item.badgeNumber != badgeNumber) {
+                item.badgeNumber = badgeNumber;
+                notifyItemChanged(pos);
+            }
         }
     }
 
-    interface IAdapter {
-        void onMenuItemSelected(BaseDrawerItem which);
-    }
-
-    static class SeparatorViewHolder extends RecyclerView.ViewHolder {
-        SeparatorViewHolder(Context context, @ColorInt int separator) {
-            super(getSeparator(context, separator));
-        }
-
-        static View getSeparator(Context context, @ColorInt int separator) {
-            View view = new View(context);
-            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, context.getResources().getDisplayMetrics())));
-            view.setBackgroundColor(separator);
-            return view;
+    public void setActiveItem(int which) {
+        int pos = indexOf(which);
+        for (int i = 0; i < getItemCount(); i++) {
+            BaseDrawerItem item = items.get(i);
+            boolean active = i == pos;
+            if (item.active != active) {
+                item.active = active;
+                notifyItemChanged(pos);
+            }
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface Listener {
+        void onMenuItemSelected(@NonNull BaseDrawerItem which);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         final ImageView icon;
         final TextView name;
-        final LinearLayout badgeContainer;
         final TextView badge;
 
-        public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
+        public ViewHolder(ViewGroup parent) {
             super(inflater.inflate(R.layout.drawer_item_primary, parent, false));
             itemView.setBackground(CommonUtils.resolveAttrAsDrawable(parent.getContext(), R.attr.selectableItemBackground));
 
             icon = itemView.findViewById(R.id.drawerItem_icon);
             name = itemView.findViewById(R.id.drawerItem_name);
-            badgeContainer = itemView.findViewById(R.id.drawerItem_badgeContainer);
             badge = itemView.findViewById(R.id.drawerItem_badge);
         }
     }

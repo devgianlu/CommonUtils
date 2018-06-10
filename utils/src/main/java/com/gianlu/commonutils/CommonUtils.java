@@ -243,14 +243,23 @@ public final class CommonUtils {
         v.setSingleLine(false);
     }
 
-    public static Drawable resolveAttrAsDrawable(Context context, @AttrRes int id) {
-        TypedArray ta = context.obtainStyledAttributes(new int[]{id});
-        Drawable drawableFromTheme = ta.getDrawable(0);
-        ta.recycle();
-        return drawableFromTheme;
+    @Nullable
+    public static Drawable resolveAttrAsDrawable(@NonNull Context context, @AttrRes int id) {
+        TypedArray a = context.obtainStyledAttributes(new int[]{id});
+        Drawable drawable = a.getDrawable(0);
+        a.recycle();
+        return drawable;
     }
 
-    public static void animateCollapsingArrowBellows(ImageButton view, boolean expanded) {
+    @ColorInt
+    public static int resolveAttrAsColor(@NonNull Context context, @AttrRes int id) {
+        TypedArray a = context.obtainStyledAttributes(new int[]{id});
+        int color = a.getColor(0, 0);
+        a.recycle();
+        return color;
+    }
+
+    public static void animateCollapsingArrowBellows(View view, boolean expanded) {
         if (expanded) view.animate().rotation(0).setDuration(200).start();
         else view.animate().rotation(180).setDuration(200).start();
     }
@@ -328,7 +337,7 @@ public final class CommonUtils {
 
         Logging.LogFile log = Logging.getLatestLogFile(context, Logging.Type.SECRET);
         if (log != null) {
-            Uri uri = FileProvider.getUriForFile(context, "com.gianlu.commonutils.logs", log);
+            Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", log);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
         }
@@ -546,6 +555,7 @@ public final class CommonUtils {
     }
 
     @SuppressWarnings("unchecked")
+    @Deprecated
     public static <T> T[] toTArray(JSONArray jsonArray, Class<T> tClass) throws JSONException {
         if (jsonArray == null) return null;
 

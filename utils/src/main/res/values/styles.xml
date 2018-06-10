@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Placeholder for AppTheme -->
     <style name="AppTheme" />
 
+    <!-- Fullscreen stuff -->
     <style name="FullscreenTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
     </style>
 
+    <color name="black_overlay">#66000000</color>
+
     <style name="FullscreenActionBarStyle">
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <color name="black_overlay">#66000000</color>
-
+    <!-- Drawer layout (see other variants) -->
     <style name="Drawer">
         <item name="android:layout_width">wrap_content</item>
     </style>
 
+    <!-- BreadcrumbsView styleable -->
     <declare-styleable name="BreadcrumbsView">
         <attr name="arrowRes" format="reference" />
     </declare-styleable>
 
+    <!-- MessageView styleable -->
     <declare-styleable name="MessageView">
         <attr name="errorRes" format="reference" />
         <attr name="infoRes" format="reference" />
     </declare-styleable>
+
+    <!-- Text on light background -->
+    <style name="TextOnLight">
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textColorPrimary">@color/text_primary_light</item>
+        <item name="android:textColorSecondary">@color/text_secondary_light</item>
+        <item name="android:textColorTertiary">@color/text_tertiary_light</item>
+    </style>
+
+    <!-- Text on dark background -->
+    <style name="TextOnDark">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
+        <item name="android:textColorTertiary">@color/text_tertiary_dark</item>
+    </style>
 </resources>
