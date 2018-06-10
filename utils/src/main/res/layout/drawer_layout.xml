@@ -7,8 +7,6 @@
     android:focusable="true"
     android:orientation="vertical">
 
-    <!-- TODO: Might use ConstraintLayout -->
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="180dp">
