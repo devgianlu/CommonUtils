@@ -116,6 +116,18 @@ public final class Prefs {
         return getSet(key, fallback);
     }
 
+    public static boolean setContains(Context context, PrefKey key, String item) {
+        init(context);
+        Set<String> set = prefs.getStringSet(key.getKey(), null);
+        return set != null && set.contains(item);
+    }
+
+    public static boolean setContains(SharedPreferences prefs, PrefKey key, String item) {
+        init(prefs);
+        Set<String> set = prefs.getStringSet(key.getKey(), null);
+        return set != null && set.contains(item);
+    }
+
     private static Set<String> getSet(PrefKey key, Set<String> fallback) {
         Set<String> set = prefs.getStringSet(key.getKey(), fallback);
         if (set == null) return null;
