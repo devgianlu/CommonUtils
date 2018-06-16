@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -24,12 +25,10 @@ import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
-    private BottomSheetBehavior behavior;
     private FrameLayout header;
     private FrameLayout body;
     private ProgressBar loading;
     private Toolbar toolbar;
-    private FloatingActionButton action;
     private boolean onlyToolbar = false;
     private Setup payload;
 
@@ -69,9 +68,17 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
         Window window = getDialog().getWindow();
         if (window != null) {
-            behavior = BottomSheetBehavior.from(window.findViewById(android.support.design.R.id.design_bottom_sheet));
-            behavior.setBottomSheetCallback(prepareCallback());
+            View bottomSheet = window.findViewById(android.support.design.R.id.design_bottom_sheet);
+            if (bottomSheet == null)
+                window.getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new AttachCallbackTreeObserver());
+            else
+                attachCustomCallback(bottomSheet);
         }
+    }
+
+    private void attachCustomCallback(@NonNull View bottomSheet) {
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setBottomSheetCallback(prepareCallback());
     }
 
     public final void update(@NonNull Update payload) {
@@ -98,7 +105,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         header = layout.findViewById(R.id.modalBottomSheet_header);
         body = layout.findViewById(R.id.modalBottomSheet_body);
         loading = layout.findViewById(R.id.modalBottomSheet_loading);
-        action = layout.findViewById(R.id.modalBottomSheet_action);
+        FloatingActionButton action = layout.findViewById(R.id.modalBottomSheet_action);
 
         onCustomizeToolbar(toolbar, payload);
         onlyToolbar = !onCreateHeader(inflater, header, payload);
@@ -164,6 +171,21 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         int parentHeight = ((View) bottomSheet.getParent()).getHeight();
         int sheetHeight = bottomSheet.getHeight();
         return parentHeight == sheetHeight;
+    }
+
+    private class AttachCallbackTreeObserver implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        @Override
+        public void onGlobalLayout() {
+            Window window = getDialog().getWindow();
+            if (window != null) {
+                View bottomSheet = window.findViewById(android.support.design.R.id.design_bottom_sheet);
+                if (bottomSheet != null) {
+                    attachCustomCallback(bottomSheet);
+                    window.getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        }
     }
 
     public class BottomSheetCallback extends BottomSheetBehavior.BottomSheetCallback {
