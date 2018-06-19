@@ -84,6 +84,7 @@ public final class Logging {
         return getFileDateFormatter().parse(date);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void clearLogs(@NonNull Context context) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
@@ -110,6 +111,7 @@ public final class Logging {
         return new SimpleDateFormat("d-MM-yyyy");
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void init(@NonNull Context context) {
         File logs = getLogsDirectory(context);
         if (!logs.exists()) logs.mkdir();
@@ -118,6 +120,7 @@ public final class Logging {
         secretLogFile = new File(logs, getFileDateFormatter().format(new Date()) + ".secret");
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static boolean shouldLog() {
         if (logFile != null && secretLogFile != null) {
             try {
