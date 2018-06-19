@@ -92,7 +92,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (payload == null) {
             Logging.log(new NullPointerException("Payload is null!"));
-            dismiss();
+            dismissAllowingStateLoss();
             return null;
         }
 
@@ -137,7 +137,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                dismissAllowingStateLoss();
             }
         });
     }
@@ -193,7 +193,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         @Override
         @CallSuper
         public void onStateChanged(@NonNull View bottomSheet, @BottomSheetBehavior.State int newState) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) dismiss();
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) dismissAllowingStateLoss();
 
             if (newState == BottomSheetBehavior.STATE_EXPANDED && isFullscreen(bottomSheet))
                 displayClose();
