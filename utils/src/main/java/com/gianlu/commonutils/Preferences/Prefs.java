@@ -186,6 +186,7 @@ public final class Prefs {
 
     public enum Keys implements PrefKey {
         TRACKING_DISABLE("trackingDisable"),
+        TUTORIAL_DISCOVERIES("tutorialDiscoveries"),
         LAST_USED_PROFILE("lastUsedProfile");
 
         private final String key;
