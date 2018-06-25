@@ -118,6 +118,8 @@ public final class Logging {
 
         logFile = new File(logs, getFileDateFormatter().format(new Date()) + ".log");
         secretLogFile = new File(logs, getFileDateFormatter().format(new Date()) + ".secret");
+
+        log("Logging initialized!", false);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
