@@ -3,6 +3,7 @@ package com.gianlu.commonutils.Analytics;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
@@ -59,6 +60,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
     protected abstract boolean isDebug();
 
     @Override
+    @CallSuper
     public void onCreate() {
         super.onCreate();
 
