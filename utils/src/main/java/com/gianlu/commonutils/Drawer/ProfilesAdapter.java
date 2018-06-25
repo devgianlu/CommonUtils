@@ -11,6 +11,7 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile, VH extends Re
     protected final Context context;
     protected final List<P> profiles;
     protected final DrawerManager.ProfilesDrawerListener<P> listener;
+    private RecyclerView list;
 
     public ProfilesAdapter(Context context, List<P> profiles, DrawerManager.ProfilesDrawerListener<P> listener) {
         this.context = context;
@@ -27,6 +28,20 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile, VH extends Re
     protected abstract P getItem(int pos);
 
     protected abstract void runTest(int pos);
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        list = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        list = null;
+    }
+
+    protected final void post(@NonNull Runnable action) {
+        if (list != null) list.post(action);
+    }
 
     public final void onBindViewHolder(@NonNull VH holder, int position) {
         final P profile = getItem(position);
