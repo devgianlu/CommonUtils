@@ -344,9 +344,13 @@ public final class CommonUtils {
 
         Logging.LogFile log = Logging.getLatestLogFile(context, Logging.Type.SECRET);
         if (log != null) {
-            Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", log);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            try {
+                Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", log);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+            } catch (IllegalArgumentException ex) {
+                Logging.log(ex);
+            }
         }
 
         try {
