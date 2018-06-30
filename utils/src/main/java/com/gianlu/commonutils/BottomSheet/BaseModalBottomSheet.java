@@ -25,12 +25,14 @@ import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
+    private FloatingActionButton action;
     private FrameLayout header;
     private FrameLayout body;
     private ProgressBar loading;
     private Toolbar toolbar;
     private boolean onlyToolbar = false;
     private Setup payload;
+    private int lastHeaderEndPadding = -1;
 
     @Nullable
     protected Setup getSetupPayload() {
@@ -82,7 +84,8 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     }
 
     public final void update(@NonNull Update payload) {
-        if (getDialog() != null && getDialog().isShowing()) onRequestedUpdate(payload);
+        if (getDialog() != null && getDialog().isShowing() && DialogUtils.isContextValid(getContext()))
+            onRequestedUpdate(payload);
     }
 
     protected void onRequestedUpdate(@NonNull Update payload) {
@@ -105,24 +108,31 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         header = layout.findViewById(R.id.modalBottomSheet_header);
         body = layout.findViewById(R.id.modalBottomSheet_body);
         loading = layout.findViewById(R.id.modalBottomSheet_loading);
-        FloatingActionButton action = layout.findViewById(R.id.modalBottomSheet_action);
+        action = layout.findViewById(R.id.modalBottomSheet_action);
 
         onCustomizeToolbar(toolbar, payload);
         onlyToolbar = !onCreateHeader(inflater, header, payload);
         onCreateBody(inflater, body, payload);
 
-        if (onCustomizeAction(action, payload)) {
-            action.setVisibility(View.VISIBLE);
-            int end = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
-            header.setPaddingRelative(header.getPaddingStart(), header.getPaddingTop(), end, header.getPaddingBottom());
-        } else {
-            action.setVisibility(View.GONE);
-        }
+        invalidateAction();
 
         if (onlyToolbar) showToolbar();
         else showHeader();
 
         return layout;
+    }
+
+    protected final void invalidateAction() {
+        if (onCustomizeAction(action, payload)) {
+            action.setVisibility(View.VISIBLE);
+            lastHeaderEndPadding = header.getPaddingEnd();
+            int end = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+            header.setPaddingRelative(header.getPaddingStart(), header.getPaddingTop(), end, header.getPaddingBottom());
+        } else {
+            action.setVisibility(View.GONE);
+            if (lastHeaderEndPadding != -1)
+                header.setPaddingRelative(header.getPaddingStart(), header.getPaddingTop(), lastHeaderEndPadding, header.getPaddingBottom());
+        }
     }
 
     public final void show(@Nullable FragmentActivity activity, @NonNull Setup payload) {
