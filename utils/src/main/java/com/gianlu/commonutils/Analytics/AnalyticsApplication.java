@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
@@ -15,12 +16,12 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {
     private FirebaseAnalytics tracker;
 
-    public static void sendAnalytics(Context context, String event, @Nullable Bundle bundle) {
+    public static void sendAnalytics(Context context, @NonNull String event, @Nullable Bundle bundle) {
         AnalyticsApplication app = get(context);
         if (app != null) app.sendAnalytics(event, bundle);
     }
 
-    public static void sendAnalytics(Context context, String event) {
+    public static void sendAnalytics(Context context, @NonNull String event) {
         sendAnalytics(context, event, null);
     }
 

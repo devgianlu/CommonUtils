@@ -20,21 +20,17 @@ public class RecyclerViewLayout extends FrameLayout {
     private boolean swipeRefreshEnabled = true;
 
     public RecyclerViewLayout(@NonNull Context context) {
-        this(LayoutInflater.from(context), null, 0);
+        this(context, null, 0);
     }
 
     public RecyclerViewLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(LayoutInflater.from(context), attrs, 0);
+        this(context, attrs, 0);
     }
 
     public RecyclerViewLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(LayoutInflater.from(context), attrs, defStyleAttr);
-    }
+        super(context, attrs, defStyleAttr);
 
-    public RecyclerViewLayout(@NonNull LayoutInflater inflater, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(inflater.getContext(), attrs, defStyleAttr);
-
-        inflater.inflate(R.layout.recycler_view_layout, this, true);
+        LayoutInflater.from(context).inflate(R.layout.recycler_view_layout, this, true);
 
         loading = findViewById(R.id.recyclerViewLayout_loading);
         list = findViewById(R.id.recyclerViewLayout_list);
@@ -42,10 +38,6 @@ public class RecyclerViewLayout extends FrameLayout {
         message = findViewById(R.id.recyclerViewLayout_message);
 
         disableSwipeRefresh();
-    }
-
-    public RecyclerViewLayout(@NonNull LayoutInflater inflater) {
-        this(inflater.getContext(), null, 0);
     }
 
     public void enableSwipeRefresh(SwipeRefreshLayout.OnRefreshListener listener, @ColorRes int... colors) {
