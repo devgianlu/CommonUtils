@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -48,7 +49,8 @@ public final class TutorialManager implements BaseTutorial.Listener {
         Prefs.addToSet(preferences, Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
     }
 
-    public void tryShowingTutorials(Activity activity) {
+    @UiThread
+    public void tryShowingTutorials(final Activity activity) {
         if (isShowingTutorial || !DialogUtils.isContextValid(activity)) return;
 
         for (BaseTutorial tutorial : tutorials) {
@@ -59,11 +61,17 @@ public final class TutorialManager implements BaseTutorial.Listener {
         }
     }
 
-    private void show(@NonNull Activity activity, @NonNull BaseTutorial tutorial) {
+    @UiThread
+    private void show(@NonNull Activity activity, @NonNull final BaseTutorial tutorial) {
         TapTargetSequence seq = tutorial.newSequence(activity);
         if (listener.buildSequence(tutorial, seq)) {
             isShowingTutorial = true;
-            tutorial.show(this);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tutorial.show(TutorialManager.this);
+                }
+            });
         }
     }
 
@@ -89,6 +97,7 @@ public final class TutorialManager implements BaseTutorial.Listener {
         String name();
     }
 
+    @UiThread
     public interface Listener {
         boolean canShow(@NonNull BaseTutorial tutorial);
 
