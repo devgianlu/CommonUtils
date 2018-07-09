@@ -29,6 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.gianlu.commonutils.Preferences.Prefs;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -331,7 +333,8 @@ public final class CommonUtils {
                 "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
                 "\nDevice: " + android.os.Build.DEVICE +
                 "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
-                "\nApplication version: " + version;
+                "\nApplication version: " + version +
+                "\nCrashlytics UID: " + Prefs.getString(context, Prefs.Keys.ANALYTICS_USER_ID, null);
 
         if (sendEx != null) {
             emailBody += "\n\n";
