@@ -69,9 +69,10 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
             holder.name.setTypeface(robotoBold);
             holder.icon.setImageTintList(ColorStateList.valueOf(accent));
         } else {
-            holder.name.setTextColor(CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary));
+            int primary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
+            holder.name.setTextColor(primary);
             holder.name.setTypeface(roboto);
-            holder.icon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.icon_inactive_light)));
+            holder.icon.setImageTintList(ColorStateList.valueOf(primary));
         }
     }
 

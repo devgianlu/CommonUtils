@@ -100,7 +100,7 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
     }
 
     private void setupSingleProfile() {
-        mAction.setImageResource(R.drawable.ic_exit_to_app_white_48dp);
+        mAction.setImageResource(R.drawable.outline_exit_to_app_24);
         mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,7 +249,7 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         profilesAdapter = config.adapterProvider.provide(context, config.profiles, config.profilesListener);
         mProfilesList.setAdapter(profilesAdapter);
 
-        mAction.setImageResource(R.drawable.ic_arrow_drop_down_white_48dp);
+        mAction.setImageResource(R.drawable.baseline_arrow_drop_down_24);
         mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

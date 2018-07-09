@@ -143,7 +143,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     }
 
     private void displayClose() {
-        toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.baseline_clear_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -10,8 +10,6 @@
     <ImageView
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:tint="@color/icon_inactive_light"
-        android:tintMode="src_in"
         android:src="@drawable/ic_sad" />
 
     <TextView

@@ -35,6 +35,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
+                android:background="?attr/colorBackgroundFloating"
                 android:layout_height="wrap_content">
 
                 <ProgressBar

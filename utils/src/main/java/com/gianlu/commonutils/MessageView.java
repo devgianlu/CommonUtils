@@ -39,8 +39,8 @@ public class MessageView extends LinearLayout {
 
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MessageView, defStyleAttr, 0);
         try {
-            errorRes = a.getResourceId(R.styleable.MessageView_errorRes, R.drawable.ic_error_outline_black_48dp);
-            infoRes = a.getResourceId(R.styleable.MessageView_infoRes, R.drawable.ic_info_outline_black_48dp);
+            errorRes = a.getResourceId(R.styleable.MessageView_errorRes, R.drawable.baseline_error_outline_24);
+            infoRes = a.getResourceId(R.styleable.MessageView_infoRes, R.drawable.outline_info_24);
         } finally {
             a.recycle();
         }

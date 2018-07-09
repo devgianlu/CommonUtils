@@ -1,4 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:tint="?attr/colorControlNormal"
     android:shape="rectangle">
     <gradient
         android:angle="90"
