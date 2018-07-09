@@ -187,7 +187,8 @@ public final class Prefs {
     public enum Keys implements PrefKey {
         TRACKING_DISABLE("trackingDisable"),
         TUTORIAL_DISCOVERIES("tutorialDiscoveries"),
-        LAST_USED_PROFILE("lastUsedProfile");
+        NIGHT_MODE("nightModeEnabled"),
+        ANALYTICS_USER_ID("analyticsUserId");
 
         private final String key;
 
