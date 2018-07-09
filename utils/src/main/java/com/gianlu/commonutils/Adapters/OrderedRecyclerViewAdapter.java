@@ -3,6 +3,7 @@ package com.gianlu.commonutils.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
@@ -13,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+@UiThread
 public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, E extends Filterable<F>, S, F> extends RecyclerView.Adapter<VH> {
     protected final SortingArrayList objs;
     protected final List<F> filters;

@@ -13,6 +13,8 @@ import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.UUID;
+
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {
     private FirebaseAnalytics tracker;
 
@@ -65,11 +67,18 @@ public abstract class AnalyticsApplication extends Application implements Thread
     public void onCreate() {
         super.onCreate();
 
+        String uuid = Prefs.getString(this, Prefs.Keys.ANALYTICS_USER_ID, null);
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString();
+            Prefs.putString(this, Prefs.Keys.ANALYTICS_USER_ID, uuid);
+        }
+
         CommonUtils.setDebug(isDebug());
         Logging.init(this);
         Logging.clearLogs(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
 
+        Crashlytics.setUserIdentifier(uuid);
         tracker = FirebaseAnalytics.getInstance(this);
         tracker.setAnalyticsCollectionEnabled(!isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false));
     }

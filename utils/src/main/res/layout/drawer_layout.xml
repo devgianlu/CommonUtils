@@ -53,7 +53,7 @@
                         android:layout_marginStart="16dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
-                        android:textColor="@color/text_primary_dark"
+                        android:textColor="@color/bright_foreground_dark"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                         android:layout_marginStart="16dp"
                         android:ellipsize="marquee"
                         android:singleLine="true"
-                        android:textColor="@color/text_primary_dark"
+                        android:textColor="@color/bright_foreground_dark"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -75,8 +75,7 @@
                     android:layout_marginEnd="16dp"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:scaleType="fitCenter"
-                    android:tint="@color/text_primary_dark"
-                    android:tintMode="src_in" />
+                    android:tint="@color/bright_foreground_dark" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
@@ -84,7 +83,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?android:attr/colorBackground">
 
         <View
             android:layout_width="match_parent"

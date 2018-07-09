@@ -6,11 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 
+import com.gianlu.commonutils.NightlyActivity;
 import com.gianlu.commonutils.Toaster;
 
-public abstract class ActivityWithDialog extends AppCompatActivity {
+public abstract class ActivityWithDialog extends NightlyActivity {
     private Dialog mDialog;
 
     public final void showDialog(@NonNull Dialog dialog) {

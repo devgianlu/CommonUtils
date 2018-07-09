@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,17 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     public static boolean isXLargeTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
+
+    @Override
+    @CallSuper
+    protected void onResume() {
+        super.onResume();
+        applyNight();
+    }
+
+    public final void applyNight() {
+        mDelegate.setLocalNightMode(Prefs.getBoolean(this, Prefs.Keys.NIGHT_MODE, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_AUTO);
     }
 
     public void showDialog(@NonNull Dialog dialog) {
@@ -84,6 +96,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
+        applyNight();
         setTitle(R.string.preferences);
 
         ActionBar actionBar = getSupportActionBar();
@@ -165,7 +178,8 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().invalidateOptionsMenu();
     }
 
-    private AppCompatDelegate getDelegate() {
+    @NonNull
+    public AppCompatDelegate getDelegate() {
         if (mDelegate == null) mDelegate = AppCompatDelegate.create(this, null);
         return mDelegate;
     }

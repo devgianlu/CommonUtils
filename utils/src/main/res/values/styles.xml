@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Placeholder for AppTheme -->
+    <!-- Placeholders -->
     <style name="AppTheme" />
+
+    <attr name="colorControlNormal" format="reference|color" />
+    <attr name="colorBackgroundFloating" format="reference|color" />
 
     <!-- Fullscreen stuff -->
     <style name="FullscreenTheme" parent="Theme.AppCompat.Light">
@@ -32,20 +35,4 @@
         <attr name="errorRes" format="reference" />
         <attr name="infoRes" format="reference" />
     </declare-styleable>
-
-    <!-- Text on light background -->
-    <style name="TextOnLight">
-        <item name="android:textColor">?android:textColorSecondary</item>
-        <item name="android:textColorPrimary">@color/text_primary_light</item>
-        <item name="android:textColorSecondary">@color/text_secondary_light</item>
-        <item name="android:textColorTertiary">@color/text_tertiary_light</item>
-    </style>
-
-    <!-- Text on dark background -->
-    <style name="TextOnDark">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textColorPrimary">@color/text_primary_dark</item>
-        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
-        <item name="android:textColorTertiary">@color/text_tertiary_dark</item>
-    </style>
 </resources>

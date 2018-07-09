@@ -9,13 +9,13 @@ public final class MaterialColors {
     private static final int[] COLORS = new int[]{R.color.red, R.color.pink, R.color.purple, R.color.deepPurple, R.color.indigo, R.color.blue, R.color.lightBlue, R.color.cyan, R.color.teal, R.color.green, R.color.lightGreen, R.color.lime, R.color.yellow, R.color.amber, R.color.orange, R.color.deepOrange, R.color.brown};
     private final int[] colors;
 
-    private MaterialColors(int[] colors) {
-        this.colors = Arrays.copyOf(colors, colors.length);
+    private MaterialColors() {
+        this.colors = Arrays.copyOf(COLORS, COLORS.length);
     }
 
     @NonNull
     public static MaterialColors getInstance() {
-        return new MaterialColors(COLORS);
+        return new MaterialColors();
     }
 
     @NonNull
