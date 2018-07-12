@@ -20,8 +20,8 @@ public abstract class NightlyActivity extends AppCompatActivity {
     @Override
     @CallSuper
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         applyNight();
+        super.onCreate(savedInstanceState);
     }
 
     public final void applyNight() {
