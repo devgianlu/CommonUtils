@@ -4,8 +4,10 @@
     <!-- Placeholders -->
     <style name="AppTheme" />
 
+    <!--
     <attr name="colorControlNormal" format="reference|color" />
     <attr name="colorBackgroundFloating" format="reference|color" />
+    -->
 
     <!-- Fullscreen stuff -->
     <style name="FullscreenTheme" parent="Theme.AppCompat.Light">

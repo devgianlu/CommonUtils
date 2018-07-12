@@ -190,7 +190,8 @@ public class InfiniteRecyclerView extends RecyclerView {
 
         protected abstract void userBindViewHolder(@NonNull VH holder, @NonNull ItemEnclosure<E> item, int position);
 
-        protected abstract ViewHolder createViewHolder(ViewGroup parent);
+        @NonNull
+        protected abstract ViewHolder createViewHolder(@NonNull ViewGroup parent);
 
         private int findLastSeparator() {
             for (int i = items.size() - 1; i >= 0; i--) {
