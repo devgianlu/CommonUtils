@@ -1,6 +1,7 @@
 package com.gianlu.commonutils.Adapters;
 
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -21,6 +22,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     protected final List<E> originalObjs;
     private final S defaultSorting;
     private String query;
+    private RecyclerView list;
 
     public OrderedRecyclerViewAdapter(List<E> objs, S defaultSorting) {
         this.originalObjs = objs;
@@ -32,13 +34,27 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         shouldUpdateItemCount(objs.size());
     }
 
+    @Nullable
+    protected final RecyclerView getList() {
+        return list;
+    }
+
+    @Override
+    @CallSuper
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        list = recyclerView;
+    }
+
+    @Override
+    @CallSuper
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        list = recyclerView;
+    }
+
     @SafeVarargs
     public final void setFilters(@NonNull F... filters) {
         setFilters(Arrays.asList(filters));
     }
-
-    @Nullable
-    protected abstract RecyclerView getRecyclerView();
 
     private void processQueryAndFilters() {
         objs.clear();
@@ -57,7 +73,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     protected abstract boolean matchQuery(@NonNull E item, @Nullable String query);
 
     private void scrollToTop() {
-        RecyclerView recyclerView = getRecyclerView();
+        RecyclerView recyclerView = getList();
         if (recyclerView != null) recyclerView.scrollToPosition(0);
     }
 
@@ -74,13 +90,14 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         if (payloads.isEmpty()) {
             onSetupViewHolder(holder, position, objs.get(position));
         } else {
-            Object payload = payloads.get(0);
-            if (payload instanceof WeakReference) {
-                WeakReference<E> castPayload = (WeakReference<E>) payload;
-                if (castPayload.get() != null)
-                    onUpdateViewHolder(holder, position, castPayload.get());
-            } else {
-                onUpdateViewHolder(holder, position, payload);
+            for (Object payload : payloads) {
+                if (payload instanceof WeakReference) {
+                    WeakReference<E> castPayload = (WeakReference<E>) payload;
+                    if (castPayload.get() != null)
+                        onUpdateViewHolder(holder, position, castPayload.get());
+                } else {
+                    onUpdateViewHolder(holder, position, payload);
+                }
             }
         }
     }
