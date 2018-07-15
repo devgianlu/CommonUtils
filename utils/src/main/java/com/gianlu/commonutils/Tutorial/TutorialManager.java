@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
 import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.Preferences.Prefs;
 
@@ -63,8 +62,8 @@ public final class TutorialManager implements BaseTutorial.Listener {
 
     @UiThread
     private void show(@NonNull Activity activity, @NonNull final BaseTutorial tutorial) {
-        TapTargetSequence seq = tutorial.newSequence(activity);
-        if (listener.buildSequence(tutorial, seq)) {
+        tutorial.newSequence(activity);
+        if (listener.buildSequence(tutorial)) {
             isShowingTutorial = true;
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -104,6 +103,6 @@ public final class TutorialManager implements BaseTutorial.Listener {
         /**
          * @return Whether the action was successful
          */
-        boolean buildSequence(@NonNull BaseTutorial tutorial, @NonNull TapTargetSequence sequence);
+        boolean buildSequence(@NonNull BaseTutorial tutorial);
     }
 }

@@ -1,7 +1,15 @@
 package com.gianlu.commonutils.Tutorial;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -9,15 +17,15 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 public abstract class BaseTutorial {
     public final TutorialManager.Discovery discovery;
     private TapTargetSequence sequence;
+    private Context context;
 
     public BaseTutorial(@NonNull TutorialManager.Discovery discovery) {
         this.discovery = discovery;
     }
 
-    @NonNull
-    public final TapTargetSequence newSequence(@NonNull Activity activity) {
+    public final void newSequence(@NonNull Activity activity) {
         sequence = new TapTargetSequence(activity);
-        return sequence;
+        context = activity;
     }
 
     public final void show(@NonNull Listener listener) {
@@ -25,6 +33,40 @@ public abstract class BaseTutorial {
             sequence.continueOnCancel(true)
                     .listener(new ListenerWrapper(listener))
                     .start();
+    }
+
+    @NonNull
+    protected final TapTarget forToolbarMenuItem(@NonNull Toolbar toolbar, @IdRes int menuItemId, @StringRes int title, @StringRes int description) {
+        return prepareAndAdd(TapTarget.forToolbarMenuItem(toolbar, menuItemId, context.getString(title), context.getString(description)));
+    }
+
+    @NonNull
+    protected final TapTarget forBounds(@NonNull Rect rect, @StringRes int title, @StringRes int description) {
+        return prepareAndAdd(TapTarget.forBounds(rect, context.getString(title), context.getString(description)));
+    }
+
+    @NonNull
+    protected TapTarget forView(@NonNull View view, @StringRes int title, @StringRes int description) {
+        return prepareAndAdd(TapTarget.forView(view, context.getString(title), context.getString(description)));
+    }
+
+    @NonNull
+    private TapTarget prepareAndAdd(@NonNull TapTarget target) {
+        sequence.target(target);
+
+        if (context != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary, android.R.attr.textColorSecondary, android.R.attr.colorBackground});
+            try {
+                target.titleTextColorInt(a.getColor(0, Color.WHITE));
+                target.targetCircleColorInt(a.getColor(0, Color.WHITE));
+                target.descriptionTextColorInt(a.getColor(1, Color.WHITE));
+                target.outerCircleColorInt(a.getColor(2, Color.BLACK));
+            } finally {
+                a.recycle();
+            }
+        }
+
+        return target;
     }
 
     public interface Listener {
