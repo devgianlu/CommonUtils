@@ -36,17 +36,17 @@ public abstract class BaseTutorial {
     }
 
     @NonNull
-    protected final TapTarget forToolbarMenuItem(@NonNull Toolbar toolbar, @IdRes int menuItemId, @StringRes int title, @StringRes int description) {
+    public final TapTarget forToolbarMenuItem(@NonNull Toolbar toolbar, @IdRes int menuItemId, @StringRes int title, @StringRes int description) {
         return prepareAndAdd(TapTarget.forToolbarMenuItem(toolbar, menuItemId, context.getString(title), context.getString(description)));
     }
 
     @NonNull
-    protected final TapTarget forBounds(@NonNull Rect rect, @StringRes int title, @StringRes int description) {
+    public final TapTarget forBounds(@NonNull Rect rect, @StringRes int title, @StringRes int description) {
         return prepareAndAdd(TapTarget.forBounds(rect, context.getString(title), context.getString(description)));
     }
 
     @NonNull
-    protected TapTarget forView(@NonNull View view, @StringRes int title, @StringRes int description) {
+    public TapTarget forView(@NonNull View view, @StringRes int title, @StringRes int description) {
         return prepareAndAdd(TapTarget.forView(view, context.getString(title), context.getString(description)));
     }
 
