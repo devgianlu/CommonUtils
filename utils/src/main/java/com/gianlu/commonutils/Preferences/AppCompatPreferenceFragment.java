@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.gianlu.commonutils.Dialogs.DialogUtils;
+import com.gianlu.commonutils.Toaster;
 
 public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
     private Dialog mDialog;
@@ -46,6 +47,10 @@ public abstract class AppCompatPreferenceFragment extends PreferenceFragment {
                 mDialog = dialog;
             }
         });
+    }
+
+    public void showToast(@NonNull Toaster toaster) {
+        DialogUtils.showToast(getActivity(), toaster);
     }
 
     public void dismissDialog() {
