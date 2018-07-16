@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
@@ -95,8 +96,9 @@ public class AskPermission {
             }
 
             if (getActivity() != null) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                manager.executePendingTransactions();
+                manager.beginTransaction()
                         .remove(this)
                         .commitNowAllowingStateLoss();
             }
