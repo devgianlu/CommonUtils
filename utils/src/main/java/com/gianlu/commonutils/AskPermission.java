@@ -95,12 +95,16 @@ public class AskPermission {
                 }
             }
 
-            if (getActivity() != null) {
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.executePendingTransactions();
-                manager.beginTransaction()
-                        .remove(this)
-                        .commitNowAllowingStateLoss();
+            try {
+                if (getActivity() != null) {
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    manager.executePendingTransactions();
+                    manager.beginTransaction()
+                            .remove(this)
+                            .commitAllowingStateLoss();
+                }
+            } catch (IllegalStateException ex) {
+                Logging.log(ex);
             }
         }
     }
