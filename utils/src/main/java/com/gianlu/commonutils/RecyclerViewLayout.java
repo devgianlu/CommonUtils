@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 public class RecyclerViewLayout extends FrameLayout {
     private final ProgressBar loading;
-    private final RecyclerView list;
+    private final InfiniteRecyclerView list;
     private final MessageView message;
     private final SwipeRefreshLayout swipeRefresh;
     private boolean swipeRefreshEnabled = true;
@@ -125,7 +125,7 @@ public class RecyclerViewLayout extends FrameLayout {
         return loading;
     }
 
-    public RecyclerView getList() {
+    public InfiniteRecyclerView getList() {
         return list;
     }
 

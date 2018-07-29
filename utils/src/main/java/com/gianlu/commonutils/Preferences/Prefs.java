@@ -20,9 +20,19 @@ public final class Prefs {
         return new JSONArray(getBase64String(context, key, fallback.toString()));
     }
 
+    public static JSONArray getJSONArray(SharedPreferences prefs, PrefKey key, JSONArray fallback) throws JSONException {
+        init(prefs);
+        return new JSONArray(getBase64String(prefs, key, fallback.toString()));
+    }
+
     public static void putJSONArray(Context context, PrefKey key, JSONArray value) {
         init(context);
         putBase64String(context, key, value.toString());
+    }
+
+    public static void putJSONArray(SharedPreferences prefs, PrefKey key, JSONArray value) {
+        init(prefs);
+        putBase64String(prefs, key, value.toString());
     }
 
     public static String getBase64String(Context context, PrefKey key, String fallback) {
@@ -30,8 +40,18 @@ public final class Prefs {
         return new String(Base64.decode(prefs.getString(key.getKey(), Base64.encodeToString(fallback.getBytes(), Base64.NO_WRAP)).getBytes(), Base64.NO_WRAP));
     }
 
+    public static String getBase64String(SharedPreferences prefs, PrefKey key, String fallback) {
+        init(prefs);
+        return new String(Base64.decode(prefs.getString(key.getKey(), Base64.encodeToString(fallback.getBytes(), Base64.NO_WRAP)).getBytes(), Base64.NO_WRAP));
+    }
+
     public static void putBase64String(Context context, PrefKey key, String value) {
         init(context);
+        prefs.edit().putString(key.getKey(), Base64.encodeToString(value.getBytes(), Base64.NO_WRAP)).apply();
+    }
+
+    public static void putBase64String(SharedPreferences prefs, PrefKey key, String value) {
+        init(prefs);
         prefs.edit().putString(key.getKey(), Base64.encodeToString(value.getBytes(), Base64.NO_WRAP)).apply();
     }
 
@@ -174,13 +194,28 @@ public final class Prefs {
         return prefs.getLong(key.getKey(), fallback);
     }
 
+    public static long getLong(SharedPreferences prefs, PrefKey key, long fallback) {
+        init(prefs);
+        return prefs.getLong(key.getKey(), fallback);
+    }
+
     public static void putLong(Context context, PrefKey key, long value) {
         init(context);
         prefs.edit().putLong(key.getKey(), value).apply();
     }
 
+    public static void putLong(SharedPreferences prefs, PrefKey key, long value) {
+        init(prefs);
+        prefs.edit().putLong(key.getKey(), value).apply();
+    }
+
     public static boolean has(Context context, PrefKey key) {
         init(context);
+        return prefs.contains(key.getKey());
+    }
+
+    public static boolean has(SharedPreferences prefs, PrefKey key) {
+        init(prefs);
         return prefs.contains(key.getKey());
     }
 
