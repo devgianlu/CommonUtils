@@ -296,6 +296,10 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         return mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
+    public void reloadProfiles() {
+        setupProfiles();
+    }
+
     public interface MenuDrawerListener {
         boolean onDrawerMenuItemSelected(@NonNull BaseDrawerItem item);
     }
