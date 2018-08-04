@@ -219,6 +219,11 @@ public final class Prefs {
         return prefs.contains(key.getKey());
     }
 
+    public static boolean isSetEmpty(Context context, PrefKey key) {
+        Set<String> set = getSet(context, key, null);
+        return set == null || set.isEmpty();
+    }
+
     public enum Keys implements PrefKey {
         TRACKING_DISABLE("trackingDisable"),
         TUTORIAL_DISCOVERIES("tutorialDiscoveries"),
