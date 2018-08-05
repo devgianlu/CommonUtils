@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
 import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -44,7 +45,9 @@ public abstract class AnalyticsApplication extends Application implements Thread
         Logging.log(throwable);
 
         if (!CommonUtils.isDebug()) {
-            Crashlytics.logException(throwable);
+            if (FossUtils.hasCrashlytics())
+                Crashlytics.logException(throwable);
+
             if (uncaughtNotDebug(thread, throwable))
                 UncaughtExceptionActivity.startActivity(this, getAppNameRes(this), throwable);
         }
@@ -59,7 +62,6 @@ public abstract class AnalyticsApplication extends Application implements Thread
             tracker.logEvent(event, bundle);
     }
 
-    @SuppressWarnings("SameReturnValue")
     protected abstract boolean isDebug();
 
     @Override
@@ -67,19 +69,26 @@ public abstract class AnalyticsApplication extends Application implements Thread
     public void onCreate() {
         super.onCreate();
 
-        String uuid = Prefs.getString(this, Prefs.Keys.ANALYTICS_USER_ID, null);
-        if (uuid == null) {
-            uuid = UUID.randomUUID().toString();
-            Prefs.putString(this, Prefs.Keys.ANALYTICS_USER_ID, uuid);
-        }
-
         CommonUtils.setDebug(isDebug());
         Logging.init(this);
         Logging.clearLogs(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
 
-        Crashlytics.setUserIdentifier(uuid);
-        tracker = FirebaseAnalytics.getInstance(this);
-        tracker.setAnalyticsCollectionEnabled(!isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false));
+        if (FossUtils.hasCrashlytics()) {
+            String uuid = Prefs.getString(this, Prefs.Keys.ANALYTICS_USER_ID, null);
+            if (uuid == null) {
+                uuid = UUID.randomUUID().toString();
+                Prefs.putString(this, Prefs.Keys.ANALYTICS_USER_ID, uuid);
+            }
+
+            Crashlytics.setUserIdentifier(uuid);
+        }
+
+        if (FossUtils.hasFirebaseAnalytics()) {
+            tracker = FirebaseAnalytics.getInstance(this);
+            tracker.setAnalyticsCollectionEnabled(!isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false));
+        } else {
+            Prefs.putBoolean(this, Prefs.Keys.TRACKING_DISABLE, true);
+        }
     }
 }
