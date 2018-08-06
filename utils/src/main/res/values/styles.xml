@@ -9,6 +9,23 @@
     <attr name="colorBackgroundFloating" format="reference|color" />
     -->
 
+    <!-- Material About default -->
+    <style name="MaterialAbout.Default" parent="MaterialAbout.Light" />
+
+    <!-- Material About Light -->
+    <style name="MaterialAbout.Light" parent="Theme.Mal.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Material About Dark -->
+    <style name="MaterialAbout.Dark" parent="Theme.Mal.Dark">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <!-- Fullscreen stuff -->
     <style name="FullscreenTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
