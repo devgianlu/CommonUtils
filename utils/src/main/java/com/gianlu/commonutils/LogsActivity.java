@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -29,6 +30,9 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logs);
         setTitle(R.string.log_activity_title);
+
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) bar.setDisplayHomeAsUpEnabled(true);
 
         final Spinner spinner = findViewById(R.id.logs_spinner);
         final RecyclerViewLayout layout = findViewById(R.id.logs_recyclerViewLayout);
@@ -84,6 +88,9 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
                 for (File logFile : files) logFile.delete();
 
                 Toaster.with(this).message(R.string.logDeleted);
+                onBackPressed();
+                return true;
+            case android.R.id.home:
                 onBackPressed();
                 return true;
         }
