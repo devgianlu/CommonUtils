@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutItemOnClickAction;
-import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
@@ -128,7 +127,6 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             MaterialAboutCard developer = new MaterialAboutCard.Builder()
                     .title(R.string.about_app)
                     .addItem(new MaterialAboutVersionItem(context))
-                    .addItem(new MaterialAboutTitleItem(R.string.developer, R.string.email, R.drawable.outline_info_24))
                     .build();
 
             MaterialAboutCard.Builder preferencesBuilder = null;
@@ -167,6 +165,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
             // TODO: Donate
             // TODO: Third-part projects
+            // TODO: Tutorial stuff
 
             MaterialAboutList.Builder listBuilder = new MaterialAboutList.Builder();
             listBuilder.addCard(developer);

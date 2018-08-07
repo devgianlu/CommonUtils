@@ -1,1 +1,2 @@
-include ':utils'
+include ':utils', ':MaterialPreferences'
+project(':MaterialPreferences').projectDir = new File(settings.settingsDir, '../MaterialPreferences/library')
