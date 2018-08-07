@@ -10,7 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gianlu.commonutils.Preferences.Views.KeyedMaterialPreference;
+import com.yarolegovich.mp.AbsMaterialCheckablePreference;
+import com.yarolegovich.mp.AbsMaterialPreference;
 import com.yarolegovich.mp.MaterialPreferenceCategory;
 import com.yarolegovich.mp.MaterialPreferenceScreen;
 import com.yarolegovich.mp.io.MaterialPreferences;
@@ -30,10 +31,14 @@ public abstract class BasePreferenceFragment extends Fragment {
         lastCategory = category;
     }
 
-    protected final void addPreference(@NonNull KeyedMaterialPreference preference) {
+    protected final void addPreference(@NonNull AbsMaterialPreference preference) {
         preference.setStorageModule(storageModule);
-        if (lastCategory == null) screen.addView((View) preference);
-        else lastCategory.addView((View) preference);
+        if (lastCategory == null) screen.addView(preference);
+        else lastCategory.addView(preference);
+    }
+
+    protected final void addController(AbsMaterialCheckablePreference controller, boolean showWhenChecked, AbsMaterialPreference... dependent) {
+        screen.setVisibilityController(controller, dependent, showWhenChecked);
     }
 
     @Nullable
