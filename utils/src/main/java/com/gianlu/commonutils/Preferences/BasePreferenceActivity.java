@@ -2,8 +2,10 @@ package com.gianlu.commonutils.Preferences;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,17 +15,26 @@ import android.view.MenuItem;
 import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutItemOnClickAction;
+import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
+import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.FossUtils;
+import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.LogsActivity;
 import com.gianlu.commonutils.R;
+import com.gianlu.commonutils.Toaster;
 
+import java.util.Calendar;
 import java.util.List;
 
 public abstract class BasePreferenceActivity extends ActivityWithDialog implements MaterialAboutPreferenceItem.Listener, PreferencesBillingHelper.Listener {
     private PreferencesBillingHelper billingHelper;
+
+    private static void openLink(Context context, String uri) {
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+    }
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +111,9 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
     @NonNull
     protected abstract List<MaterialAboutPreferenceItem> getPreferencesItems();
 
+    @DrawableRes
+    protected abstract int getAppIconRes();
+
     public static class MainFragment extends MaterialAboutFragment {
         private BasePreferenceActivity parent;
         private MaterialAboutPreferenceItem.Listener listener;
@@ -126,8 +140,13 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         protected MaterialAboutList getMaterialAboutList(final Context context) {
             MaterialAboutCard developer = new MaterialAboutCard.Builder()
                     .title(R.string.about_app)
+                    .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
+                            .setDesc(getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
                     .build();
+
+            // TODO: Developer name and email
+            // TODO: Disable analytics
 
             MaterialAboutCard.Builder preferencesBuilder = null;
             List<MaterialAboutPreferenceItem> preferencesItems = parent.getPreferencesItems();
@@ -158,18 +177,56 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                             .setOnClickAction(new MaterialAboutItemOnClickAction() {
                                 @Override
                                 public void onClick() {
-                                    // TODO
+                                    Logging.deleteAllLogs(context);
+                                    DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.logDeleted));
                                 }
                             }).build())
                     .build();
 
-            // TODO: Donate
+            MaterialAboutCard.Builder donateBuilder = new MaterialAboutCard.Builder()
+                    .title(R.string.rateDonate);
+            if (FossUtils.hasGoogleBilling()) {
+                donateBuilder.addItem(new MaterialAboutActionItem.Builder()
+                        .text(R.string.rateApp)
+                        .subText(R.string.leaveReview)
+                        .setOnClickAction(new MaterialAboutItemOnClickAction() {
+                            @Override
+                            public void onClick() {
+                                try {
+                                    openLink(context, "market://details?id=" + context.getPackageName());
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    openLink(context, "https://play.google.com/store/apps/details?id=" + context.getPackageName());
+                                }
+                            }
+                        }).build())
+                        .addItem(new MaterialAboutActionItem.Builder()
+                                .text(R.string.donateGoogle)
+                                .subText(R.string.donateGoogleSummary)
+                                .setOnClickAction(new MaterialAboutItemOnClickAction() {
+                                    @Override
+                                    public void onClick() {
+                                        if (parent != null) parent.donate();
+                                    }
+                                }).build());
+            }
+            donateBuilder.addItem(new MaterialAboutActionItem.Builder()
+                    .text(R.string.donatePaypal)
+                    .subText(R.string.donatePaypalSummary)
+                    .setOnClickAction(new MaterialAboutItemOnClickAction() {
+                        @Override
+                        public void onClick() {
+                            openLink(context, "https://paypal.me/devgianlu");
+                        }
+                    }).build());
+
+
             // TODO: Third-part projects
             // TODO: Tutorial stuff
 
             MaterialAboutList.Builder listBuilder = new MaterialAboutList.Builder();
             listBuilder.addCard(developer);
             if (preferencesBuilder != null) listBuilder.addCard(preferencesBuilder.build());
+            listBuilder.addCard(donateBuilder.build());
             listBuilder.addCard(logs);
             return listBuilder.build();
         }

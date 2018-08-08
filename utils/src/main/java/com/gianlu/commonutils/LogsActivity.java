@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,14 +16,10 @@ import android.widget.Spinner;
 
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
 public class LogsActivity extends ActivityWithDialog implements Logging.LogLineAdapter.Listener {
-    private static final int DELETE_LOGS_ID = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,28 +63,8 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, DELETE_LOGS_ID, Menu.NONE, R.string.deleteAllLogs);
-        return true;
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case DELETE_LOGS_ID:
-                File files[] = getFilesDir().listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File file, String s) {
-                        return s.toLowerCase().endsWith(".log");
-                    }
-                });
-
-                for (File logFile : files) logFile.delete();
-
-                Toaster.with(this).message(R.string.logDeleted);
-                onBackPressed();
-                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
