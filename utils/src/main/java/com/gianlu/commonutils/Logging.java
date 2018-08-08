@@ -84,7 +84,6 @@ public final class Logging {
         return getFileDateFormatter().parse(date);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void clearLogs(@NonNull Context context) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
@@ -92,11 +91,21 @@ public final class Logging {
         for (File file : listLogFilesInternal(context, Type.ALL)) {
             try {
                 Date date = getDate(file);
-                if (date.before(cal.getTime())) file.delete();
+                if (date.before(cal.getTime()))
+                    if (!file.delete())
+                        log("Couldn't delete " + file, true);
             } catch (ParseException ex) {
                 if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
+    }
+
+    public static void deleteAllLogs(Context context) {
+        for (File file : listLogFilesInternal(context, Type.ALL)) {
+            if (!file.delete()) log("Couldn't delete " + file, true);
+        }
+
+        init(context);
     }
 
     @Nullable
@@ -160,12 +169,6 @@ public final class Logging {
         return logs;
     }
 
-    public enum Type {
-        ALL,
-        SECRET,
-        LOG
-    }
-
     @NonNull
     public static List<LogLine> getLogLines(@NonNull LogFile log) throws IOException {
         List<LogLine> logLines = new ArrayList<>();
@@ -217,15 +220,23 @@ public final class Logging {
             else System.out.println(message);
         }
 
-        if (!shouldLog()) return;
-
-        SimpleDateFormat sdf = getTimeFormatter();
-        try (FileOutputStream out = new FileOutputStream(logFile, true)) {
-            out.write(((isError ? "--ERROR--" : "--INFO--") + sdf.format(new Date()) + " >> " + message.replace("\n", " ") + "\n").getBytes());
-            out.flush();
-        } catch (IOException ex) {
-            if (DEBUG) ex.printStackTrace();
+        if (shouldLog()) {
+            SimpleDateFormat sdf = getTimeFormatter();
+            try (FileOutputStream out = new FileOutputStream(logFile, true)) {
+                out.write(((isError ? "--ERROR--" : "--INFO--") + sdf.format(new Date()) + " >> " + message.replace("\n", " ") + "\n").getBytes());
+                out.flush();
+            } catch (IOException ex) {
+                if (DEBUG) ex.printStackTrace();
+            }
+        } else {
+            System.err.println("Can't produce log!");
         }
+    }
+
+    public enum Type {
+        ALL,
+        SECRET,
+        LOG
     }
 
     public static class LogLine implements Serializable {
