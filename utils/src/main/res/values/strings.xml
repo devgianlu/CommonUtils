@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false" />
     <string name="log_activity_title">Logs</string>
     <string name="deleteAllLogs">Delete all logs</string>
@@ -40,7 +40,7 @@
     <string name="openSource_desc">This app is all open source!</string>
     <string name="version">Version</string>
     <string name="rateDonate">Rate/donate</string>
-    <string name="devgianluCopyright">© %d devgianlu</string>
+    <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="devgianlu">devgianlu</string>
     <string name="devgianluEmail">altomanigianluca@gmail.com</string>
     <string name="tutorial">Tutorial</string>
