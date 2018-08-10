@@ -343,10 +343,13 @@ public final class Prefs {
     }
 
     public enum Keys implements PrefKey {
+        @Deprecated
         TRACKING_DISABLE("trackingDisable"),
         TUTORIAL_DISCOVERIES("tutorialDiscoveries"),
         NIGHT_MODE("nightModeEnabled"),
-        ANALYTICS_USER_ID("analyticsUserId");
+        ANALYTICS_USER_ID("analyticsUserId"),
+        TRACKING_ENABLED("trackingEnabled"),
+        CRASH_REPORT_ENABLED("crashReportEnabled");
 
         private final String key;
 

@@ -19,6 +19,7 @@ import com.danielstone.materialaboutlibrary.items.MaterialAboutItemOnClickAction
 import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
+import com.gianlu.commonutils.Analytics.AnalyticsPreferenceDialog;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
@@ -190,7 +191,13 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 }));
             }
 
-            // TODO: Disable analytics
+            developerBuilder.addItem(new MaterialAboutActionItem(R.string.usageStatistics, R.string.usageStatisticsSummary, 0, new MaterialAboutItemOnClickAction() {
+                @Override
+                public void onClick() {
+                    AnalyticsPreferenceDialog.get()
+                            .show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG);
+                }
+            }));
 
             MaterialAboutCard.Builder preferencesBuilder = null;
             List<MaterialAboutPreferenceItem> preferencesItems = parent.getPreferencesItems();
