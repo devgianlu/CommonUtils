@@ -14,10 +14,12 @@ import android.view.MenuItem;
 
 import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
+import com.danielstone.materialaboutlibrary.items.MaterialAboutItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutItemOnClickAction;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.FossUtils;
@@ -25,7 +27,10 @@ import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.LogsActivity;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.Toaster;
+import com.gianlu.commonutils.Tutorial.TutorialManager;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -114,6 +119,13 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
     @DrawableRes
     protected abstract int getAppIconRes();
 
+    protected abstract boolean hasTutorial();
+
+    @NonNull
+    protected List<MaterialAboutItem> customizeTutorialCard() {
+        return new ArrayList<>();
+    }
+
     public static class MainFragment extends MaterialAboutFragment {
         private BasePreferenceActivity parent;
         private MaterialAboutPreferenceItem.Listener listener;
@@ -143,10 +155,31 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
                             .setDesc(getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
+                    .addItem(new MaterialAboutActionItem(R.string.developer, R.string.devgianlu, 0, new MaterialAboutItemOnClickAction() {
+                        @Override
+                        public void onClick() {
+                            openLink(context, "https://gianlu.xyz");
+                        }
+                    }))
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.email, 0, new MaterialAboutItemOnClickAction() {
+                        @Override
+                        public void onClick() {
+                            CommonUtils.sendEmail(context, null);
+                        }
+                    }))
+                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, 0, new MaterialAboutItemOnClickAction() {
+                        @Override
+                        public void onClick() {
+                            new LibsBuilder()
+                                    .withVersionShown(true)
+                                    .withActivityTitle(getString(R.string.third_part))
+                                    .start(context);
+                        }
+                    }))
                     .build();
 
-            // TODO: Developer name and email
             // TODO: Disable analytics
+            // TODO: Open source link
 
             MaterialAboutCard.Builder preferencesBuilder = null;
             List<MaterialAboutPreferenceItem> preferencesItems = parent.getPreferencesItems();
@@ -219,14 +252,30 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                         }
                     }).build());
 
+            MaterialAboutCard.Builder tutorialBuilder = null;
+            if (parent.hasTutorial()) {
+                tutorialBuilder = new MaterialAboutCard.Builder()
+                        .title(R.string.tutorial);
 
-            // TODO: Third-part projects
-            // TODO: Tutorial stuff
+                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.restartTutorial, 0, 0,
+                        new MaterialAboutItemOnClickAction() {
+                            @Override
+                            public void onClick() {
+                                TutorialManager.restartTutorial(context);
+                                parent.onBackPressed();
+                            }
+                        }));
+
+                List<MaterialAboutItem> items = parent.customizeTutorialCard();
+                for (MaterialAboutItem item : items)
+                    tutorialBuilder.addItem(item);
+            }
 
             MaterialAboutList.Builder listBuilder = new MaterialAboutList.Builder();
             listBuilder.addCard(developer);
             if (preferencesBuilder != null) listBuilder.addCard(preferencesBuilder.build());
             listBuilder.addCard(donateBuilder.build());
+            if (tutorialBuilder != null) listBuilder.addCard(tutorialBuilder.build());
             listBuilder.addCard(logs);
             return listBuilder.build();
         }
