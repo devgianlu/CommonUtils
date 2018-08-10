@@ -4,6 +4,8 @@
     <!-- Placeholders -->
     <style name="AppTheme" />
 
+    <style name="DialogFix" />
+
     <!--
     <attr name="colorControlNormal" format="reference|color" />
     <attr name="colorBackgroundFloating" format="reference|color" />

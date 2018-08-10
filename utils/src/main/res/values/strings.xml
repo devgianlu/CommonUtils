@@ -16,17 +16,12 @@
     <string name="preferences">Preferences</string>
     <string name="third_part">Third-part projects</string>
     <string name="closeDrawer">Close drawer</string>
-    <string name="addProfile">Add profile</string>
-    <string name="editProfile">Edit profile</string>
     <string name="donateGoogle">Donate via Google Play</string>
     <string name="donateGoogleSummary">Part of the money will be subtracted by Google</string>
     <string name="donatePaypal">Donate via PayPal</string>
     <string name="donatePaypalSummary">I will receive all the money</string>
     <string name="about_app">About this application</string>
     <string name="connectingBillingService">Connecting to the billing service. Please wait…</string>
-    <string name="tracking">Disable anonymous statistics</string>
-    <string name="trackingOn">No statistics will be sent to the developer.</string>
-    <string name="trackingOff">Statistics about the application behavior will be sent to the developer. (No personal data will be sent)</string>
     <string name="noMailClients">There are no email clients installed!</string>
     <string name="offline">You\'re offline!</string>
     <string name="copiedToClipboard">Copied to clipboard!</string>
@@ -51,4 +46,9 @@
     <string name="tutorial">Tutorial</string>
     <string name="restartTutorial">Restart tutorial</string>
     <string name="developer">Developer</string>
+    <string name="usageStatistics">Usage statistics</string>
+    <string name="usageStatisticsSummary">Toggle which information is sent to the developer</string>
+    <string name="usageStatisticsDialogLong">I (the developer) receive information about the usage of the app and the crashes. You can toggle them separately down below.</string>
+    <string name="usageTracking">Usage tracking</string>
+    <string name="crashesTracking">Crashes tracking</string>
 </resources>

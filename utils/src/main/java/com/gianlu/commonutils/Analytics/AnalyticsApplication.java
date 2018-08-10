@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.Logging;
@@ -15,6 +16,8 @@ import com.gianlu.commonutils.Preferences.Prefs;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.UUID;
+
+import io.fabric.sdk.android.Fabric;
 
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {
     private FirebaseAnalytics tracker;
@@ -54,11 +57,21 @@ public abstract class AnalyticsApplication extends Application implements Thread
     }
 
     public final void sendAnalytics(String event, @Nullable Bundle bundle) {
-        if (tracker != null && event != null && !isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false))
+        if (tracker != null && event != null && !isDebug() && Prefs.getBoolean(this, Prefs.Keys.TRACKING_ENABLED, true))
             tracker.logEvent(event, bundle);
     }
 
     protected abstract boolean isDebug();
+
+    @SuppressWarnings("deprecation")
+    private void deprecatedBackwardCompatibility() {
+        if (Prefs.has(this, Prefs.Keys.TRACKING_DISABLE)) {
+            boolean old = Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false);
+            Prefs.putBoolean(this, Prefs.Keys.TRACKING_ENABLED, !old);
+            Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, !old);
+            Prefs.remove(this, Prefs.Keys.TRACKING_DISABLE);
+        }
+    }
 
     @Override
     @CallSuper
@@ -70,6 +83,8 @@ public abstract class AnalyticsApplication extends Application implements Thread
         Logging.clearLogs(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
 
+        deprecatedBackwardCompatibility();
+
         if (FossUtils.hasCrashlytics()) {
             String uuid = Prefs.getString(this, Prefs.Keys.ANALYTICS_USER_ID, null);
             if (uuid == null) {
@@ -78,13 +93,21 @@ public abstract class AnalyticsApplication extends Application implements Thread
             }
 
             Crashlytics.setUserIdentifier(uuid);
+
+            Fabric.with(this, new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                            .disabled(isDebug() || !Prefs.getBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, true))
+                            .build())
+                    .build());
+        } else {
+            Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, false);
         }
 
         if (FossUtils.hasFirebaseAnalytics()) {
             tracker = FirebaseAnalytics.getInstance(this);
-            tracker.setAnalyticsCollectionEnabled(!isDebug() && !Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false));
+            tracker.setAnalyticsCollectionEnabled(!isDebug() && Prefs.getBoolean(this, Prefs.Keys.TRACKING_ENABLED, true));
         } else {
-            Prefs.putBoolean(this, Prefs.Keys.TRACKING_DISABLE, true);
+            Prefs.putBoolean(this, Prefs.Keys.TRACKING_ENABLED, false);
         }
     }
 }
