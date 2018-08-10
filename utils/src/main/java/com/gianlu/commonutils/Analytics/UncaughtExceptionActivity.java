@@ -3,7 +3,6 @@ package com.gianlu.commonutils.Analytics;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
@@ -13,10 +12,9 @@ import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.R;
 
 public class UncaughtExceptionActivity extends ActivityWithDialog {
-    public static void startActivity(Context context, @StringRes int appName, Throwable ex) {
-        if (context != null && appName != 0) {
+    public static void startActivity(Context context, Throwable ex) {
+        if (context != null) {
             context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
-                    .putExtra("appName", context.getString(appName))
                     .putExtra("exception", ex)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
@@ -41,7 +39,7 @@ public class UncaughtExceptionActivity extends ActivityWithDialog {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.sendEmail(UncaughtExceptionActivity.this, getIntent().getStringExtra("appName"), (Throwable) getIntent().getSerializableExtra("exception"));
+                CommonUtils.sendEmail(UncaughtExceptionActivity.this, (Throwable) getIntent().getSerializableExtra("exception"));
             }
         });
     }

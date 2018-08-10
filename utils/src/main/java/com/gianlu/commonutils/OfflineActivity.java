@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
@@ -13,10 +12,9 @@ import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 
 public class OfflineActivity extends ActivityWithDialog {
 
-    public static void startActivity(Context context, @StringRes int appName, Class<? extends Activity> retryClass) {
+    public static void startActivity(Context context, Class<? extends Activity> retryClass) {
         if (context != null) {
             context.startActivity(new Intent(context, OfflineActivity.class)
-                    .putExtra("appName", context.getString(appName))
                     .putExtra("retry", retryClass)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
@@ -41,7 +39,7 @@ public class OfflineActivity extends ActivityWithDialog {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.sendEmail(OfflineActivity.this, getIntent().getStringExtra("appName"), null);
+                CommonUtils.sendEmail(OfflineActivity.this, null);
             }
         });
 

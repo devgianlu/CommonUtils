@@ -28,10 +28,6 @@ public abstract class AnalyticsApplication extends Application implements Thread
         sendAnalytics(context, event, null);
     }
 
-    private static int getAppNameRes(Context context) {
-        return context.getResources().getIdentifier("app_name", "string", context.getPackageName());
-    }
-
     @Nullable
     public static AnalyticsApplication get(Context context) {
         if (context == null) return null;
@@ -49,7 +45,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
                 Crashlytics.logException(throwable);
 
             if (uncaughtNotDebug(thread, throwable))
-                UncaughtExceptionActivity.startActivity(this, getAppNameRes(this), throwable);
+                UncaughtExceptionActivity.startActivity(this, throwable);
         }
     }
 
