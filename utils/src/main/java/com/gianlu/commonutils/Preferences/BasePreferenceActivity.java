@@ -126,6 +126,9 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         return new ArrayList<>();
     }
 
+    @Nullable
+    protected abstract String getOpenSourceUrl();
+
     public static class MainFragment extends MaterialAboutFragment {
         private BasePreferenceActivity parent;
         private MaterialAboutPreferenceItem.Listener listener;
@@ -150,24 +153,24 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
         @Override
         protected MaterialAboutList getMaterialAboutList(final Context context) {
-            MaterialAboutCard developer = new MaterialAboutCard.Builder()
+            MaterialAboutCard.Builder developerBuilder = new MaterialAboutCard.Builder()
                     .title(R.string.about_app)
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
                             .setDesc(getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
-                    .addItem(new MaterialAboutActionItem(R.string.developer, R.string.devgianlu, 0, new MaterialAboutItemOnClickAction() {
+                    .addItem(new MaterialAboutActionItem(R.string.developer, R.string.devgianlu, R.drawable.baseline_person_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
                             openLink(context, "https://gianlu.xyz");
                         }
                     }))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.email, 0, new MaterialAboutItemOnClickAction() {
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.email, R.drawable.baseline_mail_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
                             CommonUtils.sendEmail(context, null);
                         }
                     }))
-                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, 0, new MaterialAboutItemOnClickAction() {
+                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
                             new LibsBuilder()
@@ -175,11 +178,19 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                                     .withActivityTitle(getString(R.string.third_part))
                                     .start(context);
                         }
-                    }))
-                    .build();
+                    }));
+
+            final String openSourceUrl = parent.getOpenSourceUrl();
+            if (openSourceUrl != null) {
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, 0, new MaterialAboutItemOnClickAction() {
+                    @Override
+                    public void onClick() {
+                        openLink(context, openSourceUrl);
+                    }
+                }));
+            }
 
             // TODO: Disable analytics
-            // TODO: Open source link
 
             MaterialAboutCard.Builder preferencesBuilder = null;
             List<MaterialAboutPreferenceItem> preferencesItems = parent.getPreferencesItems();
@@ -219,52 +230,42 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             MaterialAboutCard.Builder donateBuilder = new MaterialAboutCard.Builder()
                     .title(R.string.rateDonate);
             if (FossUtils.hasGoogleBilling()) {
-                donateBuilder.addItem(new MaterialAboutActionItem.Builder()
-                        .text(R.string.rateApp)
-                        .subText(R.string.leaveReview)
-                        .setOnClickAction(new MaterialAboutItemOnClickAction() {
-                            @Override
-                            public void onClick() {
-                                try {
-                                    openLink(context, "market://details?id=" + context.getPackageName());
-                                } catch (android.content.ActivityNotFoundException ex) {
-                                    openLink(context, "https://play.google.com/store/apps/details?id=" + context.getPackageName());
-                                }
-                            }
-                        }).build())
-                        .addItem(new MaterialAboutActionItem.Builder()
-                                .text(R.string.donateGoogle)
-                                .subText(R.string.donateGoogleSummary)
-                                .setOnClickAction(new MaterialAboutItemOnClickAction() {
-                                    @Override
-                                    public void onClick() {
-                                        if (parent != null) parent.donate();
-                                    }
-                                }).build());
-            }
-            donateBuilder.addItem(new MaterialAboutActionItem.Builder()
-                    .text(R.string.donatePaypal)
-                    .subText(R.string.donatePaypalSummary)
-                    .setOnClickAction(new MaterialAboutItemOnClickAction() {
-                        @Override
-                        public void onClick() {
-                            openLink(context, "https://paypal.me/devgianlu");
+                donateBuilder.addItem(new MaterialAboutActionItem(R.string.rateApp, R.string.leaveReview, R.drawable.baseline_rate_review_24, new MaterialAboutItemOnClickAction() {
+                    @Override
+                    public void onClick() {
+                        try {
+                            openLink(context, "market://details?id=" + context.getPackageName());
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            openLink(context, "https://play.google.com/store/apps/details?id=" + context.getPackageName());
                         }
-                    }).build());
+                    }
+                })).addItem(new MaterialAboutActionItem(R.string.donateGoogle, R.string.donateGoogleSummary, R.drawable.baseline_attach_money_24, new MaterialAboutItemOnClickAction() {
+                    @Override
+                    public void onClick() {
+                        if (parent != null) parent.donate();
+                    }
+                }));
+            }
+
+            donateBuilder.addItem(new MaterialAboutActionItem(R.string.donatePaypal, R.string.donatePaypalSummary, R.drawable.baseline_money_24, new MaterialAboutItemOnClickAction() {
+                @Override
+                public void onClick() {
+                    openLink(context, "https://paypal.me/devgianlu");
+                }
+            }));
 
             MaterialAboutCard.Builder tutorialBuilder = null;
             if (parent.hasTutorial()) {
                 tutorialBuilder = new MaterialAboutCard.Builder()
                         .title(R.string.tutorial);
 
-                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.restartTutorial, 0, 0,
-                        new MaterialAboutItemOnClickAction() {
-                            @Override
-                            public void onClick() {
-                                TutorialManager.restartTutorial(context);
-                                parent.onBackPressed();
-                            }
-                        }));
+                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.restartTutorial, 0, R.drawable.baseline_settings_backup_restore_24, new MaterialAboutItemOnClickAction() {
+                    @Override
+                    public void onClick() {
+                        TutorialManager.restartTutorial(context);
+                        parent.onBackPressed();
+                    }
+                }));
 
                 List<MaterialAboutItem> items = parent.customizeTutorialCard();
                 for (MaterialAboutItem item : items)
@@ -272,7 +273,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             }
 
             MaterialAboutList.Builder listBuilder = new MaterialAboutList.Builder();
-            listBuilder.addCard(developer);
+            listBuilder.addCard(developerBuilder.build());
             if (preferencesBuilder != null) listBuilder.addCard(preferencesBuilder.build());
             listBuilder.addCard(donateBuilder.build());
             if (tutorialBuilder != null) listBuilder.addCard(tutorialBuilder.build());
