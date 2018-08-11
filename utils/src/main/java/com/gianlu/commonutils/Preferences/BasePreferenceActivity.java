@@ -174,9 +174,20 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
-                            new LibsBuilder()
+                            LibsBuilder libsBuilder = new LibsBuilder()
                                     .withVersionShown(true)
-                                    .withActivityTitle(getString(R.string.third_part))
+                                    .withActivityTitle(getString(R.string.third_part));
+
+                            List<String> toExclude = new ArrayList<>();
+
+                            if (!FossUtils.hasCrashlytics())
+                                toExclude.add("Crashlytics");
+
+                            if (!FossUtils.hasFirebaseAnalytics() && !FossUtils.hasGoogleBilling())
+                                toExclude.add("GooglePlayServices");
+
+                            libsBuilder
+                                    .withExcludedLibraries(toExclude.toArray(new String[0]))
                                     .start(context);
                         }
                     }));
@@ -191,13 +202,15 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 }));
             }
 
-            developerBuilder.addItem(new MaterialAboutActionItem(R.string.usageStatistics, R.string.usageStatisticsSummary, R.drawable.baseline_track_changes_24, new MaterialAboutItemOnClickAction() {
-                @Override
-                public void onClick() {
-                    AnalyticsPreferenceDialog.get()
-                            .show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG);
-                }
-            }));
+            if (FossUtils.hasCrashlytics() || FossUtils.hasFirebaseAnalytics()) {
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.usageStatistics, R.string.usageStatisticsSummary, R.drawable.baseline_track_changes_24, new MaterialAboutItemOnClickAction() {
+                    @Override
+                    public void onClick() {
+                        AnalyticsPreferenceDialog.get()
+                                .show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG);
+                    }
+                }));
+            }
 
             MaterialAboutCard.Builder preferencesBuilder = null;
             List<MaterialAboutPreferenceItem> preferencesItems = parent.getPreferencesItems();
