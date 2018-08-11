@@ -35,7 +35,9 @@ public class AnalyticsPreferenceDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.DialogFix); // FIXME: This might not work on some apps
+
+        int styleId = getResources().getIdentifier("DialogFix", "style", requireContext().getPackageName());
+        if (styleId != 0) setStyle(STYLE_NORMAL, styleId);
     }
 
     @Nullable
