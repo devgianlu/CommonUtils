@@ -27,5 +27,7 @@ dependencies {
     api 'com.crashlytics.sdk.android:crashlytics:2.9.4'
     api 'com.github.daniel-stoneuk:material-about-library:2.3.0'
     api project(':MaterialPreferences')
-    api 'com.mikepenz:aboutlibraries:6.1.1'
+    api ('com.mikepenz:aboutlibraries:6.1.1') {
+        exclude group: 'com.mikepenz', module: 'iconics-core'
+    }
 }
