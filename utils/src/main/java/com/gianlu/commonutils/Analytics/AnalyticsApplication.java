@@ -86,6 +86,12 @@ public abstract class AnalyticsApplication extends Application implements Thread
         deprecatedBackwardCompatibility();
 
         if (FossUtils.hasCrashlytics()) {
+            Fabric.with(this, new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                            .disabled(isDebug() || !Prefs.getBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, true))
+                            .build())
+                    .build());
+
             String uuid = Prefs.getString(this, Prefs.Keys.ANALYTICS_USER_ID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
@@ -93,12 +99,6 @@ public abstract class AnalyticsApplication extends Application implements Thread
             }
 
             Crashlytics.setUserIdentifier(uuid);
-
-            Fabric.with(this, new Crashlytics.Builder()
-                    .core(new CrashlyticsCore.Builder()
-                            .disabled(isDebug() || !Prefs.getBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, true))
-                            .build())
-                    .build());
         } else {
             Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, false);
         }
