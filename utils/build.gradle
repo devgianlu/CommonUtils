@@ -27,7 +27,12 @@ dependencies {
     api 'com.crashlytics.sdk.android:crashlytics:2.9.4'
     api 'com.github.daniel-stoneuk:material-about-library:2.3.0'
     api project(':MaterialPreferences')
+    api 'com.mikepenz:fastadapter:3.2.8'
     api ('com.mikepenz:aboutlibraries:6.1.1') {
         exclude group: 'com.mikepenz', module: 'iconics-core'
+        exclude group: 'com.mikepenz', module: 'fastadapter'
+        exclude group: 'androidx.appcompat'
+        exclude group: 'androidx.cardview'
+        exclude group: 'androidx.recyclerview'
     }
 }
