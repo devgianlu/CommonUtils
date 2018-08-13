@@ -107,9 +107,9 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     }
 
     public final void itemChangedOrAdded(@NonNull E payload) {
-        int pos = originalObjs.indexOf(payload);
-        if (pos == -1) originalObjs.add(payload);
-        else originalObjs.set(pos, payload);
+        int posIntoOriginal = originalObjs.indexOf(payload);
+        if (posIntoOriginal == -1) originalObjs.add(payload);
+        else originalObjs.set(posIntoOriginal, payload);
 
         if (!filters.contains(payload.getFilterable()) && matchQuery(payload, query)) {
             Pair<Integer, Integer> res = objs.addAndSort(payload);
@@ -119,6 +119,12 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
                 super.notifyItemChanged(res.first, new WeakReference<>(payload));
             else
                 super.notifyItemMoved(res.first, res.second);
+        } else {
+            int posIntoObjs = objs.indexOf(payload);
+            if (posIntoObjs != -1) {
+                objs.remove(posIntoObjs);
+                super.notifyItemRemoved(posIntoObjs);
+            }
         }
     }
 
