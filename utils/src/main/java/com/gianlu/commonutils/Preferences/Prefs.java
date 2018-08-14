@@ -12,143 +12,85 @@ import org.json.JSONException;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public final class Prefs {
     private static SharedPreferences prefs;
 
     // init
 
-    private static void init(Context context) {
+    public static void init(Context context) {
         if (prefs != null) return;
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    private static void init(SharedPreferences prefs) {
+    public static void init(SharedPreferences prefs) {
         if (Prefs.prefs != null) return;
         Prefs.prefs = prefs;
     }
 
     // putBoolean
 
-    public static void putBoolean(Context context, PrefKey key, boolean value) {
-        putBoolean(context, key.getKey(), value);
-
+    public static void putBoolean(PrefKey key, boolean value) {
+        putBoolean(key.getKey(), value);
     }
 
-    public static void putBoolean(Context context, String key, boolean value) {
-        init(context);
-        prefs.edit().putBoolean(key, value).apply();
-    }
-
-    public static void putBoolean(SharedPreferences prefs, String key, boolean value) {
-        init(prefs);
+    public static void putBoolean(String key, boolean value) {
         prefs.edit().putBoolean(key, value).apply();
     }
 
     // putString
 
-    public static void putString(SharedPreferences prefs, String key, String value) {
-        init(prefs);
+    public static void putString(PrefKey key, String value) {
+        putString(key.getKey(), value);
+    }
+
+    public static void putString(String key, String value) {
         prefs.edit().putString(key, value).apply();
-    }
-
-    public static void putString(Context context, String key, String value) {
-        init(context);
-        prefs.edit().putString(key, value).apply();
-    }
-
-    public static void putString(Context context, PrefKey key, String value) {
-        putString(context, key.getKey(), value);
-    }
-
-    public static void putString(SharedPreferences prefs, PrefKey key, String value) {
-        putString(prefs, key.getKey(), value);
     }
 
     // putInt
 
-    public static void putInt(SharedPreferences prefs, String key, int value) {
-        init(prefs);
+    public static void putInt(String key, int value) {
         prefs.edit().putInt(key, value).apply();
     }
 
-    public static void putInt(Context context, String key, int value) {
-        init(context);
-        prefs.edit().putInt(key, value).apply();
-    }
-
-    public static void putInt(Context context, PrefKey key, int value) {
-        putInt(context, key.getKey(), value);
-    }
-
-    public static void putInt(SharedPreferences prefs, PrefKey key, int value) {
-        putInt(prefs, key.getKey(), value);
+    public static void putInt(PrefKey key, int value) {
+        putInt(key.getKey(), value);
     }
 
     // putSet
 
     public static void putSet(Context context, PrefKey key, Set<String> set) {
-        putSet(context, key.getKey(), set);
+        putSet(key.getKey(), set);
     }
 
-    public static void putSet(SharedPreferences prefs, PrefKey key, Set<String> set) {
-        putSet(prefs, key.getKey(), set);
-    }
-
-    public static void putSet(SharedPreferences prefs, String key, Set<String> value) {
-        init(prefs);
-        prefs.edit().putStringSet(key, value).apply();
-    }
-
-    public static void putSet(Context context, String key, Set<String> value) {
-        init(context);
+    public static void putSet(String key, Set<String> value) {
         prefs.edit().putStringSet(key, value).apply();
     }
 
     // getBoolean
 
-    public static boolean getBoolean(Context context, String key, boolean fallback) {
-        init(context);
+    public static boolean getBoolean(String key, boolean fallback) {
         return prefs.getBoolean(key, fallback);
     }
 
-    public static boolean getBoolean(SharedPreferences prefs, String key, boolean fallback) {
-        init(prefs);
-        return prefs.getBoolean(key, fallback);
-    }
-
-    public static boolean getBoolean(Context context, PrefKey key, boolean fallback) {
-        return getBoolean(context, key.getKey(), fallback);
-    }
-
-    public static boolean getBoolean(SharedPreferences prefs, PrefKey key, boolean fallback) {
-        return getBoolean(prefs, key.getKey(), fallback);
+    public static boolean getBoolean(PrefKey key, boolean fallback) {
+        return getBoolean(key.getKey(), fallback);
     }
 
     // getString
 
-    public static String getString(Context context, String key, String fallback) {
-        init(context);
+    public static String getString(String key, String fallback) {
         return prefs.getString(key, fallback);
     }
 
-    public static String getString(SharedPreferences prefs, String key, String fallback) {
-        init(prefs);
-        return prefs.getString(key, fallback);
-    }
-
-    public static String getString(Context context, PrefKey key, String fallback) {
-        return getString(context, key.getKey(), fallback);
-    }
-
-    public static String getString(SharedPreferences prefs, PrefKey key, String fallback) {
-        return getString(prefs, key.getKey(), fallback);
+    public static String getString(PrefKey key, String fallback) {
+        return getString(key.getKey(), fallback);
     }
 
     // getInt
 
-    public static int getInt(SharedPreferences prefs, String key, int fallback) {
-        init(prefs);
-
+    public static int getInt(String key, int fallback) {
         try {
             return prefs.getInt(key, fallback);
         } catch (ClassCastException ex) {
@@ -160,186 +102,140 @@ public final class Prefs {
         }
     }
 
-    public static int getInt(Context context, String key, int fallback) {
-        init(context);
-
-        try {
-            return prefs.getInt(key, fallback);
-        } catch (ClassCastException ex) {
-            try {
-                return Integer.parseInt(prefs.getString(key, Integer.toString(fallback)));
-            } catch (NumberFormatException exx) {
-                return fallback;
-            }
-        }
-    }
-
-    public static int getInt(Context context, PrefKey key, int fallback) {
-        return getInt(context, key.getKey(), fallback);
-    }
-
-    public static int getInt(SharedPreferences prefs, PrefKey key, int fallback) {
-        return getInt(prefs, key.getKey(), fallback);
+    public static int getInt(PrefKey key, int fallback) {
+        return getInt(key.getKey(), fallback);
     }
 
     // getSet
 
-    public static Set<String> getSet(SharedPreferences prefs, String key, Set<String> fallback) {
-        init(prefs);
+    public static Set<String> getSet(String key, Set<String> fallback) {
         Set<String> set = prefs.getStringSet(key, fallback);
         if (set == null) return null;
         return new HashSet<>(set);
     }
 
-    public static Set<String> getSet(Context context, String key, Set<String> fallback) {
-        init(context);
-        Set<String> set = prefs.getStringSet(key, fallback);
-        if (set == null) return null;
-        return new HashSet<>(set);
-    }
-
-    public static Set<String> getSet(Context context, PrefKey key, Set<String> fallback) {
-        return getSet(context, key.getKey(), fallback);
-    }
-
-    public static Set<String> getSet(SharedPreferences prefs, PrefKey key, Set<String> fallback) {
-        return getSet(prefs, key.getKey(), fallback);
+    public static Set<String> getSet(PrefKey key, Set<String> fallback) {
+        return getSet(key.getKey(), fallback);
     }
 
     // getJSONArray
 
-    public static JSONArray getJSONArray(Context context, PrefKey key, JSONArray fallback) throws JSONException {
-        init(context);
-        return new JSONArray(getBase64String(context, key, fallback.toString()));
+    public static JSONArray getJSONArray(String key, JSONArray fallback) throws JSONException {
+        return new JSONArray(getBase64String(key, fallback.toString()));
     }
 
-    public static JSONArray getJSONArray(SharedPreferences prefs, PrefKey key, JSONArray fallback) throws JSONException {
-        init(prefs);
-        return new JSONArray(getBase64String(prefs, key, fallback.toString()));
+    public static JSONArray getJSONArray(PrefKey key, JSONArray fallback) throws JSONException {
+        return getJSONArray(key.getKey(), fallback);
     }
 
     // putJSONArray
 
-    public static void putJSONArray(Context context, PrefKey key, JSONArray value) {
-        init(context);
-        putBase64String(context, key, value.toString());
+    public static void putJSONArray(PrefKey key, JSONArray value) {
+        putJSONArray(key.getKey(), value);
     }
 
-    public static void putJSONArray(SharedPreferences prefs, PrefKey key, JSONArray value) {
-        init(prefs);
-        putBase64String(prefs, key, value.toString());
+    public static void putJSONArray(String key, JSONArray value) {
+        putBase64String(key, value.toString());
     }
 
     // getBase64String
 
-    public static String getBase64String(Context context, PrefKey key, String fallback) {
-        init(context);
-        return new String(Base64.decode(prefs.getString(key.getKey(), Base64.encodeToString(fallback.getBytes(), Base64.NO_WRAP)).getBytes(), Base64.NO_WRAP));
+    public static String getBase64String(PrefKey key, String fallback) {
+        return getBase64String(key.getKey(), fallback);
     }
 
-    public static String getBase64String(SharedPreferences prefs, PrefKey key, String fallback) {
-        init(prefs);
-        return new String(Base64.decode(prefs.getString(key.getKey(), Base64.encodeToString(fallback.getBytes(), Base64.NO_WRAP)).getBytes(), Base64.NO_WRAP));
+    public static String getBase64String(String key, String fallback) {
+        return new String(Base64.decode(prefs.getString(key, Base64.encodeToString(fallback.getBytes(), Base64.NO_WRAP)).getBytes(), Base64.NO_WRAP));
     }
 
     // putBase64String
 
-    public static void putBase64String(Context context, PrefKey key, String value) {
-        init(context);
-        prefs.edit().putString(key.getKey(), Base64.encodeToString(value.getBytes(), Base64.NO_WRAP)).apply();
+    public static void putBase64String(PrefKey key, String value) {
+        putBase64String(key.getKey(), value);
     }
 
-    public static void putBase64String(SharedPreferences prefs, PrefKey key, String value) {
-        init(prefs);
-        prefs.edit().putString(key.getKey(), Base64.encodeToString(value.getBytes(), Base64.NO_WRAP)).apply();
+    public static void putBase64String(String key, String value) {
+        prefs.edit().putString(key, Base64.encodeToString(value.getBytes(), Base64.NO_WRAP)).apply();
     }
 
     // set operations
 
-    public static boolean isSetEmpty(Context context, PrefKey key) {
-        Set<String> set = getSet(context, key, null);
+    public static boolean isSetEmpty(PrefKey key) {
+        return isSetEmpty(key.getKey());
+    }
+
+    public static boolean isSetEmpty(String key) {
+        Set<String> set = getSet(key, null);
         return set == null || set.isEmpty();
     }
 
-    public static void removeFromSet(Context context, PrefKey key, String value) {
-        init(context);
-        Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));
+    public static void removeFromSet(String key, String value) {
+        Set<String> set = getSet(key, new HashSet<String>());
         set.remove(value);
-        prefs.edit().putStringSet(key.getKey(), set).apply();
+        prefs.edit().putStringSet(key, set).apply();
     }
 
-    public static void addToSet(Context context, PrefKey key, String value) {
-        init(context);
-        Set<String> set = new HashSet<>(getSet(context, key, new HashSet<String>()));
+    public static void removeFromSet(PrefKey key, String value) {
+        removeFromSet(key.getKey(), value);
+    }
+
+    public static void addToSet(String key, String value) {
+        Set<String> set = getSet(key, new HashSet<String>());
         if (!set.contains(value)) set.add(value);
-        prefs.edit().putStringSet(key.getKey(), set).apply();
+        prefs.edit().putStringSet(key, set).apply();
     }
 
-    public static void addToSet(SharedPreferences prefs, PrefKey key, String value) {
-        init(prefs);
-        Set<String> set = new HashSet<>(getSet(prefs, key, new HashSet<String>()));
-        if (!set.contains(value)) set.add(value);
-        prefs.edit().putStringSet(key.getKey(), set).apply();
+    public static void addToSet(PrefKey key, String value) {
+        addToSet(key.getKey(), value);
     }
 
-    public static boolean setContains(Context context, PrefKey key, String item) {
-        init(context);
-        Set<String> set = prefs.getStringSet(key.getKey(), null);
-        return set != null && set.contains(item);
+    public static boolean setContains(String key, String value) {
+        Set<String> set = prefs.getStringSet(key, null);
+        return set != null && set.contains(value);
     }
 
-    public static boolean setContains(SharedPreferences prefs, PrefKey key, String item) {
-        init(prefs);
-        Set<String> set = prefs.getStringSet(key.getKey(), null);
-        return set != null && set.contains(item);
+    public static boolean setContains(PrefKey key, String value) {
+        return setContains(key.getKey(), value);
     }
 
     // remove
 
-    public static void remove(SharedPreferences prefs, PrefKey key) {
-        init(prefs);
-        prefs.edit().remove(key.getKey()).apply();
+    public static void remove(String key) {
+        prefs.edit().remove(key).apply();
     }
 
-    public static void remove(Context context, PrefKey key) {
-        init(context);
-        prefs.edit().remove(key.getKey()).apply();
+    public static void remove(PrefKey key) {
+        remove(key.getKey());
     }
 
     // getLong
 
-    public static long getLong(Context context, PrefKey key, long fallback) {
-        init(context);
-        return prefs.getLong(key.getKey(), fallback);
+    public static long getLong(String key, long fallback) {
+        return prefs.getLong(key, fallback);
     }
 
-    public static long getLong(SharedPreferences prefs, PrefKey key, long fallback) {
-        init(prefs);
-        return prefs.getLong(key.getKey(), fallback);
+    public static long getLong(PrefKey key, long fallback) {
+        return getLong(key.getKey(), fallback);
     }
 
     // putLong
 
-    public static void putLong(Context context, PrefKey key, long value) {
-        init(context);
-        prefs.edit().putLong(key.getKey(), value).apply();
+    public static void putLong(String key, long value) {
+        prefs.edit().putLong(key, value).apply();
     }
 
-    public static void putLong(SharedPreferences prefs, PrefKey key, long value) {
-        init(prefs);
-        prefs.edit().putLong(key.getKey(), value).apply();
+    public static void putLong(PrefKey key, long value) {
+        putLong(key.getKey(), value);
     }
 
     // has
 
-    public static boolean has(Context context, PrefKey key) {
-        init(context);
-        return prefs.contains(key.getKey());
+    public static boolean has(String key) {
+        return prefs.contains(key);
     }
 
-    public static boolean has(SharedPreferences prefs, PrefKey key) {
-        init(prefs);
-        return prefs.contains(key.getKey());
+    public static boolean has(PrefKey key) {
+        return has(key.getKey());
     }
 
     public enum Keys implements PrefKey {

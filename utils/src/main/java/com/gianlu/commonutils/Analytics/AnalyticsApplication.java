@@ -13,7 +13,9 @@ import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
+import com.gianlu.commonutils.Preferences.PrefsStorageModule;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.yarolegovich.mp.io.MaterialPreferences;
 
 import java.util.UUID;
 
@@ -57,7 +59,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
     }
 
     public final void sendAnalytics(String event, @Nullable Bundle bundle) {
-        if (tracker != null && event != null && !isDebug() && Prefs.getBoolean(this, Prefs.Keys.TRACKING_ENABLED, true))
+        if (tracker != null && event != null && !isDebug() && Prefs.getBoolean(Prefs.Keys.TRACKING_ENABLED, true))
             tracker.logEvent(event, bundle);
     }
 
@@ -65,11 +67,11 @@ public abstract class AnalyticsApplication extends Application implements Thread
 
     @SuppressWarnings("deprecation")
     private void deprecatedBackwardCompatibility() {
-        if (Prefs.has(this, Prefs.Keys.TRACKING_DISABLE)) {
-            boolean old = Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false);
-            Prefs.putBoolean(this, Prefs.Keys.TRACKING_ENABLED, !old);
-            Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, !old);
-            Prefs.remove(this, Prefs.Keys.TRACKING_DISABLE);
+        if (Prefs.has(Prefs.Keys.TRACKING_DISABLE)) {
+            boolean old = Prefs.getBoolean(Prefs.Keys.TRACKING_DISABLE, false);
+            Prefs.putBoolean(Prefs.Keys.TRACKING_ENABLED, !old);
+            Prefs.putBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, !old);
+            Prefs.remove(Prefs.Keys.TRACKING_DISABLE);
         }
     }
 
@@ -77,6 +79,8 @@ public abstract class AnalyticsApplication extends Application implements Thread
     @CallSuper
     public void onCreate() {
         super.onCreate();
+
+        Prefs.init(this);
 
         CommonUtils.setDebug(isDebug());
         Logging.init(this);
@@ -88,26 +92,28 @@ public abstract class AnalyticsApplication extends Application implements Thread
         if (FossUtils.hasCrashlytics()) {
             Fabric.with(this, new Crashlytics.Builder()
                     .core(new CrashlyticsCore.Builder()
-                            .disabled(isDebug() || !Prefs.getBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, true))
+                            .disabled(isDebug() || !Prefs.getBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, true))
                             .build())
                     .build());
 
-            String uuid = Prefs.getString(this, Prefs.Keys.ANALYTICS_USER_ID, null);
+            String uuid = Prefs.getString(Prefs.Keys.ANALYTICS_USER_ID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
-                Prefs.putString(this, Prefs.Keys.ANALYTICS_USER_ID, uuid);
+                Prefs.putString(Prefs.Keys.ANALYTICS_USER_ID, uuid);
             }
 
             Crashlytics.setUserIdentifier(uuid);
         } else {
-            Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, false);
+            Prefs.putBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, false);
         }
 
         if (FossUtils.hasFirebaseAnalytics()) {
             tracker = FirebaseAnalytics.getInstance(this);
-            tracker.setAnalyticsCollectionEnabled(!isDebug() && Prefs.getBoolean(this, Prefs.Keys.TRACKING_ENABLED, true));
+            tracker.setAnalyticsCollectionEnabled(!isDebug() && Prefs.getBoolean(Prefs.Keys.TRACKING_ENABLED, true));
         } else {
-            Prefs.putBoolean(this, Prefs.Keys.TRACKING_ENABLED, false);
+            Prefs.putBoolean(Prefs.Keys.TRACKING_ENABLED, false);
         }
+
+        MaterialPreferences.instance().setStorageModule(new PrefsStorageModule.Factory());
     }
 }

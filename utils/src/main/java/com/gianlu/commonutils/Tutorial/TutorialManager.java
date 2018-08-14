@@ -1,9 +1,6 @@
 package com.gianlu.commonutils.Tutorial;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
@@ -17,12 +14,10 @@ import java.util.List;
 public final class TutorialManager implements BaseTutorial.Listener {
     private final Listener listener;
     private final List<BaseTutorial> tutorials;
-    private final SharedPreferences preferences;
     private boolean isShowingTutorial = false;
 
-    public TutorialManager(Context context, Listener listener, Discovery... discoveries) {
+    public TutorialManager(Listener listener, Discovery... discoveries) {
         this.listener = listener;
-        this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (discoveries.length == 0)
             throw new IllegalStateException("Then why are you initializing this...");
@@ -36,16 +31,16 @@ public final class TutorialManager implements BaseTutorial.Listener {
         }
     }
 
-    public static void restartTutorial(@NonNull Context context) {
-        Prefs.remove(context, Prefs.Keys.TUTORIAL_DISCOVERIES);
+    public static void restartTutorial() {
+        Prefs.remove(Prefs.Keys.TUTORIAL_DISCOVERIES);
     }
 
     private boolean shouldShowFor(@NonNull BaseTutorial tutorial) {
-        return !Prefs.setContains(preferences, Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
+        return !Prefs.setContains(Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
     }
 
     private void setShown(@NonNull BaseTutorial tutorial) {
-        Prefs.addToSet(preferences, Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
+        Prefs.addToSet(Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
     }
 
     @UiThread

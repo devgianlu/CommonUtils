@@ -25,6 +25,6 @@ public abstract class NightlyActivity extends AppCompatActivity {
     }
 
     public final void applyNight() {
-        getDelegate().setLocalNightMode(Prefs.getBoolean(this, Prefs.Keys.NIGHT_MODE, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_AUTO);
+        getDelegate().setLocalNightMode(Prefs.getBoolean(Prefs.Keys.NIGHT_MODE, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_AUTO);
     }
 }

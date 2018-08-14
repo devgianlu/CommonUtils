@@ -46,20 +46,20 @@ public class AnalyticsPreferenceDialog extends DialogFragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_analytics_preference, container, false);
 
         CheckBox tracking = layout.findViewById(R.id.analyticsPrefsDialog_tracking);
-        tracking.setChecked(Prefs.getBoolean(requireContext(), Prefs.Keys.TRACKING_ENABLED, true));
+        tracking.setChecked(Prefs.getBoolean(Prefs.Keys.TRACKING_ENABLED, true));
         tracking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.putBoolean(requireContext(), Prefs.Keys.TRACKING_ENABLED, isChecked);
+                Prefs.putBoolean(Prefs.Keys.TRACKING_ENABLED, isChecked);
             }
         });
 
         CheckBox crashReport = layout.findViewById(R.id.analyticsPrefsDialog_crashReport);
-        crashReport.setChecked(Prefs.getBoolean(requireContext(), Prefs.Keys.CRASH_REPORT_ENABLED, true));
+        crashReport.setChecked(Prefs.getBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, true));
         crashReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.putBoolean(requireContext(), Prefs.Keys.CRASH_REPORT_ENABLED, isChecked);
+                Prefs.putBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, isChecked);
             }
         });
 

@@ -282,7 +282,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.restartTutorial, 0, R.drawable.baseline_settings_backup_restore_24, new MaterialAboutItemOnClickAction() {
                     @Override
                     public void onClick() {
-                        TutorialManager.restartTutorial(context);
+                        TutorialManager.restartTutorial();
                         parent.onBackPressed();
                     }
                 }));
