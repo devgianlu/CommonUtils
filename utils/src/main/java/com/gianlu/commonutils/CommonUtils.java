@@ -334,7 +334,7 @@ public final class CommonUtils {
                 "\nDevice: " + android.os.Build.DEVICE +
                 "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
                 "\nApplication version: " + version +
-                "\nCrashlytics UID: " + Prefs.getString(Prefs.Keys.ANALYTICS_USER_ID, null);
+                "\nCrashlytics UID: " + Prefs.getString(CommonPK.ANALYTICS_USER_ID, null);
 
         if (sendEx != null) {
             emailBody += "\n\n";

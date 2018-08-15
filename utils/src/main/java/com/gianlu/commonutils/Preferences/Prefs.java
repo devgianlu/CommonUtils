@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import org.json.JSONArray;
@@ -30,8 +31,8 @@ public final class Prefs {
 
     // putBoolean
 
-    public static void putBoolean(PrefKey key, boolean value) {
-        putBoolean(key.getKey(), value);
+    public static void putBoolean(Key key, boolean value) {
+        putBoolean(key.key(), value);
     }
 
     public static void putBoolean(String key, boolean value) {
@@ -40,8 +41,8 @@ public final class Prefs {
 
     // putString
 
-    public static void putString(PrefKey key, String value) {
-        putString(key.getKey(), value);
+    public static void putString(Key key, String value) {
+        putString(key.key(), value);
     }
 
     public static void putString(String key, String value) {
@@ -54,14 +55,14 @@ public final class Prefs {
         prefs.edit().putInt(key, value).apply();
     }
 
-    public static void putInt(PrefKey key, int value) {
-        putInt(key.getKey(), value);
+    public static void putInt(Key key, int value) {
+        putInt(key.key(), value);
     }
 
     // putSet
 
-    public static void putSet(Context context, PrefKey key, Set<String> set) {
-        putSet(key.getKey(), set);
+    public static void putSet(Context context, Key key, Set<String> set) {
+        putSet(key.key(), set);
     }
 
     public static void putSet(String key, Set<String> value) {
@@ -74,8 +75,12 @@ public final class Prefs {
         return prefs.getBoolean(key, fallback);
     }
 
-    public static boolean getBoolean(PrefKey key, boolean fallback) {
-        return getBoolean(key.getKey(), fallback);
+    public static boolean getBoolean(Key key, boolean fallback) {
+        return getBoolean(key.key(), fallback);
+    }
+
+    public static boolean getBoolean(KeyWithDefault<Boolean> key) {
+        return getBoolean(key.key(), key.fallback());
     }
 
     // getString
@@ -84,8 +89,12 @@ public final class Prefs {
         return prefs.getString(key, fallback);
     }
 
-    public static String getString(PrefKey key, String fallback) {
-        return getString(key.getKey(), fallback);
+    public static String getString(Key key, String fallback) {
+        return getString(key.key(), fallback);
+    }
+
+    public static String getString(KeyWithDefault<String> key) {
+        return getString(key.key(), key.fallback());
     }
 
     // getInt
@@ -102,8 +111,12 @@ public final class Prefs {
         }
     }
 
-    public static int getInt(PrefKey key, int fallback) {
-        return getInt(key.getKey(), fallback);
+    public static int getInt(Key key, int fallback) {
+        return getInt(key.key(), fallback);
+    }
+
+    public static int getInt(KeyWithDefault<Integer> key) {
+        return getInt(key.key(), key.fallback());
     }
 
     // getSet
@@ -114,8 +127,12 @@ public final class Prefs {
         return new HashSet<>(set);
     }
 
-    public static Set<String> getSet(PrefKey key, Set<String> fallback) {
-        return getSet(key.getKey(), fallback);
+    public static Set<String> getSet(Key key, Set<String> fallback) {
+        return getSet(key.key(), fallback);
+    }
+
+    public static Set<String> getSet(KeyWithDefault<Set<String>> key) {
+        return getSet(key.key(), key.fallback());
     }
 
     // getJSONArray
@@ -124,14 +141,18 @@ public final class Prefs {
         return new JSONArray(getBase64String(key, fallback.toString()));
     }
 
-    public static JSONArray getJSONArray(PrefKey key, JSONArray fallback) throws JSONException {
-        return getJSONArray(key.getKey(), fallback);
+    public static JSONArray getJSONArray(Key key, JSONArray fallback) throws JSONException {
+        return getJSONArray(key.key(), fallback);
+    }
+
+    public static JSONArray getJSONArray(KeyWithDefault<JSONArray> key) throws JSONException {
+        return getJSONArray(key.key(), key.fallback());
     }
 
     // putJSONArray
 
-    public static void putJSONArray(PrefKey key, JSONArray value) {
-        putJSONArray(key.getKey(), value);
+    public static void putJSONArray(Key key, JSONArray value) {
+        putJSONArray(key.key(), value);
     }
 
     public static void putJSONArray(String key, JSONArray value) {
@@ -140,8 +161,12 @@ public final class Prefs {
 
     // getBase64String
 
-    public static String getBase64String(PrefKey key, String fallback) {
-        return getBase64String(key.getKey(), fallback);
+    public static String getBase64String(Key key, String fallback) {
+        return getBase64String(key.key(), fallback);
+    }
+
+    public static String getBase64String(KeyWithDefault<String> key) {
+        return getBase64String(key.key(), key.fallback());
     }
 
     public static String getBase64String(String key, String fallback) {
@@ -150,8 +175,8 @@ public final class Prefs {
 
     // putBase64String
 
-    public static void putBase64String(PrefKey key, String value) {
-        putBase64String(key.getKey(), value);
+    public static void putBase64String(Key key, String value) {
+        putBase64String(key.key(), value);
     }
 
     public static void putBase64String(String key, String value) {
@@ -160,8 +185,8 @@ public final class Prefs {
 
     // set operations
 
-    public static boolean isSetEmpty(PrefKey key) {
-        return isSetEmpty(key.getKey());
+    public static boolean isSetEmpty(Key key) {
+        return isSetEmpty(key.key());
     }
 
     public static boolean isSetEmpty(String key) {
@@ -175,8 +200,8 @@ public final class Prefs {
         prefs.edit().putStringSet(key, set).apply();
     }
 
-    public static void removeFromSet(PrefKey key, String value) {
-        removeFromSet(key.getKey(), value);
+    public static void removeFromSet(Key key, String value) {
+        removeFromSet(key.key(), value);
     }
 
     public static void addToSet(String key, String value) {
@@ -185,8 +210,8 @@ public final class Prefs {
         prefs.edit().putStringSet(key, set).apply();
     }
 
-    public static void addToSet(PrefKey key, String value) {
-        addToSet(key.getKey(), value);
+    public static void addToSet(Key key, String value) {
+        addToSet(key.key(), value);
     }
 
     public static boolean setContains(String key, String value) {
@@ -194,8 +219,8 @@ public final class Prefs {
         return set != null && set.contains(value);
     }
 
-    public static boolean setContains(PrefKey key, String value) {
-        return setContains(key.getKey(), value);
+    public static boolean setContains(Key key, String value) {
+        return setContains(key.key(), value);
     }
 
     // remove
@@ -204,8 +229,8 @@ public final class Prefs {
         prefs.edit().remove(key).apply();
     }
 
-    public static void remove(PrefKey key) {
-        remove(key.getKey());
+    public static void remove(Key key) {
+        remove(key.key());
     }
 
     // getLong
@@ -214,8 +239,12 @@ public final class Prefs {
         return prefs.getLong(key, fallback);
     }
 
-    public static long getLong(PrefKey key, long fallback) {
-        return getLong(key.getKey(), fallback);
+    public static long getLong(Key key, long fallback) {
+        return getLong(key.key(), fallback);
+    }
+
+    public static long getLong(KeyWithDefault<Long> key) {
+        return getLong(key.key(), key.fallback());
     }
 
     // putLong
@@ -224,8 +253,8 @@ public final class Prefs {
         prefs.edit().putLong(key, value).apply();
     }
 
-    public static void putLong(PrefKey key, long value) {
-        putLong(key.getKey(), value);
+    public static void putLong(Key key, long value) {
+        putLong(key.key(), value);
     }
 
     // has
@@ -234,34 +263,54 @@ public final class Prefs {
         return prefs.contains(key);
     }
 
-    public static boolean has(PrefKey key) {
-        return has(key.getKey());
+    public static boolean has(Key key) {
+        return has(key.key());
     }
 
-    public enum Keys implements PrefKey {
-        @Deprecated
-        TRACKING_DISABLE("trackingDisable"),
-        TUTORIAL_DISCOVERIES("tutorialDiscoveries"),
-        NIGHT_MODE("nightModeEnabled"),
-        ANALYTICS_USER_ID("analyticsUserId"),
-        TRACKING_ENABLED("trackingEnabled"),
-        CRASH_REPORT_ENABLED("crashReportEnabled");
+    public interface DefaultValueProvider<D> {
 
+        @Nullable
+        D getDefault();
+    }
+
+    public static class Key {
         private final String key;
 
-        Keys(String key) {
+        public Key(@NonNull String key) {
             this.key = key;
         }
 
         @NonNull
-        @Override
-        public String getKey() {
+        public String key() {
             return key;
         }
     }
 
-    public interface PrefKey {
-        @NonNull
-        String getKey();
+    public static class KeyWithDefault<D> extends Key {
+        private final D fallback;
+        private final DefaultValueProvider<D> fallbackProvider;
+        private final boolean hasFallback;
+
+        public KeyWithDefault(@NonNull String key, D fallback) {
+            super(key);
+
+            this.hasFallback = true;
+            this.fallback = fallback;
+            this.fallbackProvider = null;
+        }
+
+        public KeyWithDefault(@NonNull String key, @NonNull DefaultValueProvider<D> fallback) {
+            super(key);
+
+            this.hasFallback = false;
+            this.fallback = null;
+            this.fallbackProvider = fallback;
+        }
+
+        public D fallback() {
+            if (hasFallback) return fallback;
+            else if (fallbackProvider != null) return fallbackProvider.getDefault();
+            else throw new IllegalArgumentException("What?!");
+        }
     }
 }

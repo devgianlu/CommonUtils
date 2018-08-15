@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
 import com.getkeepsafe.taptargetview.TapTarget;
+import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.Preferences.Prefs;
 
@@ -32,15 +33,15 @@ public final class TutorialManager implements BaseTutorial.Listener {
     }
 
     public static void restartTutorial() {
-        Prefs.remove(Prefs.Keys.TUTORIAL_DISCOVERIES);
+        Prefs.remove(CommonPK.TUTORIAL_DISCOVERIES);
     }
 
     private boolean shouldShowFor(@NonNull BaseTutorial tutorial) {
-        return !Prefs.setContains(Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
+        return !Prefs.setContains(CommonPK.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
     }
 
     private void setShown(@NonNull BaseTutorial tutorial) {
-        Prefs.addToSet(Prefs.Keys.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
+        Prefs.addToSet(CommonPK.TUTORIAL_DISCOVERIES, tutorial.discovery.name());
     }
 
     @UiThread

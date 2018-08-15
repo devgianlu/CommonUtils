@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
+import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.Preferences.Prefs;
 import com.gianlu.commonutils.R;
 
@@ -46,20 +47,20 @@ public class AnalyticsPreferenceDialog extends DialogFragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_analytics_preference, container, false);
 
         CheckBox tracking = layout.findViewById(R.id.analyticsPrefsDialog_tracking);
-        tracking.setChecked(Prefs.getBoolean(Prefs.Keys.TRACKING_ENABLED, true));
+        tracking.setChecked(Prefs.getBoolean(CommonPK.TRACKING_ENABLED, true));
         tracking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.putBoolean(Prefs.Keys.TRACKING_ENABLED, isChecked);
+                Prefs.putBoolean(CommonPK.TRACKING_ENABLED, isChecked);
             }
         });
 
         CheckBox crashReport = layout.findViewById(R.id.analyticsPrefsDialog_crashReport);
-        crashReport.setChecked(Prefs.getBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, true));
+        crashReport.setChecked(Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED, true));
         crashReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.putBoolean(Prefs.Keys.CRASH_REPORT_ENABLED, isChecked);
+                Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, isChecked);
             }
         });
 
