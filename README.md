@@ -1,14 +1,12 @@
 # CommonUtils
-This is a library which I use on many of my Android projects. It includes many useful classes to comply Material Desing standards, useful methods and more.
+This is a library I use inside many of my Android projects (almost all of them). It includes many useful classes to comply Material Desing standards, useful classes and more.
 
 ## Setup
-The project folder is usually placed at the same level of this one, like this:
+I suggest to include this library as a Git submodule (or just clone it) into your project and then add it as a Gradle module. Your `settings.gradle` file should look something like this:
 
 ```
-MyAwesomeProjects/
-├── CommonUtils/
-├── MyAwesomeProject/
-└── AnotherAwesomeProject/
+include ':app', ':CommonUtils'
+project(':CommonUtils').projectDir = new File('./CommonUtils/utils')
 ```
 
 ## Issues
