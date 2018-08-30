@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical">
 
     <FrameLayout
@@ -31,7 +32,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
-                android:elevation="2dp" />
+                android:elevation="2dp"
+                android:focusable="true" />
 
             <LinearLayout
                 android:layout_width="match_parent"
