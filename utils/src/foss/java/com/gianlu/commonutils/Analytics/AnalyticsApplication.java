@@ -7,10 +7,13 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
+import com.gianlu.commonutils.Preferences.PrefsStorageModule;
+import com.yarolegovich.mp.io.MaterialPreferences;
 
 import java.util.UUID;
 
@@ -55,11 +58,11 @@ public abstract class AnalyticsApplication extends Application implements Thread
 
     @SuppressWarnings("deprecation")
     private void deprecatedBackwardCompatibility() {
-        if (Prefs.has(this, Prefs.Keys.TRACKING_DISABLE)) {
-            boolean old = Prefs.getBoolean(this, Prefs.Keys.TRACKING_DISABLE, false);
-            Prefs.putBoolean(this, Prefs.Keys.TRACKING_ENABLED, !old);
-            Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, !old);
-            Prefs.remove(this, Prefs.Keys.TRACKING_DISABLE);
+        if (Prefs.has(CommonPK.TRACKING_DISABLE)) {
+            boolean old = Prefs.getBoolean(CommonPK.TRACKING_DISABLE, false);
+            Prefs.putBoolean(CommonPK.TRACKING_ENABLED, !old);
+            Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, !old);
+            Prefs.remove(CommonPK.TRACKING_DISABLE);
         }
     }
 
@@ -68,6 +71,8 @@ public abstract class AnalyticsApplication extends Application implements Thread
     public void onCreate() {
         super.onCreate();
 
+        Prefs.init(this);
+
         CommonUtils.setDebug(isDebug());
         Logging.init(this);
         Logging.clearLogs(this);
@@ -75,8 +80,10 @@ public abstract class AnalyticsApplication extends Application implements Thread
 
         deprecatedBackwardCompatibility();
 
-        Prefs.putBoolean(this, Prefs.Keys.CRASH_REPORT_ENABLED, false);
+        Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, false);
 
-        Prefs.putBoolean(this, Prefs.Keys.TRACKING_ENABLED, false);
+        Prefs.putBoolean(CommonPK.TRACKING_ENABLED, false);
+
+        MaterialPreferences.instance().setStorageModule(new PrefsStorageModule.Factory());
     }
 }
