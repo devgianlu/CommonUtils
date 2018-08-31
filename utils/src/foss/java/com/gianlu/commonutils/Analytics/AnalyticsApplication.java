@@ -9,13 +9,10 @@ import android.support.annotation.Nullable;
 
 import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.CommonUtils;
-import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
 import com.gianlu.commonutils.Preferences.PrefsStorageModule;
 import com.yarolegovich.mp.io.MaterialPreferences;
-
-import java.util.UUID;
 
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {
 
@@ -51,7 +48,7 @@ public abstract class AnalyticsApplication extends Application implements Thread
     }
 
     public final void sendAnalytics(String event, @Nullable Bundle bundle) {
-
+        Logging.log("Dropping event " + event + " because of foss version.", true);
     }
 
     protected abstract boolean isDebug();
