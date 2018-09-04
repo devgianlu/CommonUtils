@@ -157,7 +157,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             MaterialAboutCard.Builder developerBuilder = new MaterialAboutCard.Builder()
                     .title(R.string.about_app)
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
-                            .setDesc(getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
+                            .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
                     .addItem(new MaterialAboutActionItem(R.string.developer, R.string.devgianlu, R.drawable.baseline_person_24, new MaterialAboutItemOnClickAction() {
                         @Override
@@ -176,7 +176,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                         public void onClick() {
                             LibsBuilder libsBuilder = new LibsBuilder()
                                     .withVersionShown(true)
-                                    .withActivityTitle(getString(R.string.third_part));
+                                    .withActivityTitle(context.getString(R.string.third_part));
 
                             List<String> toExclude = new ArrayList<>();
 
