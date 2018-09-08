@@ -325,7 +325,7 @@ public final class CommonUtils {
 
         Intent intent = new Intent(Intent.ACTION_SEND)
                 .setType("message/rfc822")
-                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.email)})
+                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.devgianluEmail)})
                 .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
 
         String emailBody = "-------- DO NOT EDIT --------" +

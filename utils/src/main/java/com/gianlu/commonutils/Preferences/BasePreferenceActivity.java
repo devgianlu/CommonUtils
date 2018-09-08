@@ -167,7 +167,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                             openLink(context, "https://gianlu.xyz");
                         }
                     }))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.email, R.drawable.baseline_mail_24, new MaterialAboutItemOnClickAction() {
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
                             CommonUtils.sendEmail(context, null);
