@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class InfiniteRecyclerView extends RecyclerView {
-    private IFailedLoadingContent listener;
+public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
+    private FailedLoadingContentListener listener;
 
     public InfiniteRecyclerView(Context context) {
         super(context);
@@ -40,7 +40,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         addOnScrollListener(new CustomScrollListener());
     }
 
-    public void setFailedListener(IFailedLoadingContent listener) {
+    public void setFailedListener(FailedLoadingContentListener listener) {
         this.listener = listener;
 
         InfiniteAdapter adapter = (InfiniteAdapter) getAdapter();
@@ -55,8 +55,8 @@ public class InfiniteRecyclerView extends RecyclerView {
             adapter.attachListener(listener);
     }
 
-    public interface IFailedLoadingContent {
-        void onFailedLoadingContent(Exception ex);
+    public interface FailedLoadingContentListener {
+        void onFailedLoadingContent(@NonNull Exception ex);
     }
 
     public static abstract class InfiniteAdapter<VH extends ViewHolder, E> extends RecyclerView.Adapter<ViewHolder> {
@@ -71,7 +71,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         private final Config config;
         int page = 1;
         long currDay = -1;
-        private IFailedLoadingContent listener;
+        private FailedLoadingContentListener listener;
         private boolean loading = false;
 
         public InfiniteAdapter(Config<E> config) {
@@ -122,7 +122,7 @@ public class InfiniteRecyclerView extends RecyclerView {
         @Nullable
         protected abstract Date getDateFromItem(E item);
 
-        private void attachListener(IFailedLoadingContent listener) {
+        private void attachListener(FailedLoadingContentListener listener) {
             this.listener = listener;
         }
 

@@ -54,4 +54,9 @@
         <attr name="errorRes" format="reference" />
         <attr name="infoRes" format="reference" />
     </declare-styleable>
+
+    <!-- MaximumHeightRecyclerView styleable -->
+    <declare-styleable name="MaximumHeightRecyclerView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
 </resources>
