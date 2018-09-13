@@ -2,7 +2,6 @@ package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +21,6 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
     private final LayoutInflater inflater;
     private final List<BaseDrawerItem> items;
     private final Listener listener;
-    private final Typeface roboto;
-    private final Typeface robotoBold;
     private final Context context;
 
     MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem> items, Listener listener) {
@@ -31,8 +28,6 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         this.items = items;
         this.context = context;
         this.listener = listener;
-        this.roboto = FontsManager.get().get(context, FontsManager.ROBOTO_REGULAR);
-        this.robotoBold = FontsManager.get().get(context, FontsManager.ROBOTO_BOLD);
     }
 
     @Override
@@ -66,12 +61,12 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         if (item.active) {
             int accent = ContextCompat.getColor(context, R.color.colorAccent);
             holder.name.setTextColor(accent);
-            holder.name.setTypeface(robotoBold);
+            FontsManager.set(holder.name, FontsManager.ROBOTO_BOLD);
             holder.icon.setImageTintList(ColorStateList.valueOf(accent));
         } else {
             int primary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
             holder.name.setTextColor(primary);
-            holder.name.setTypeface(roboto);
+            FontsManager.set(holder.name, FontsManager.ROBOTO_REGULAR);
             holder.icon.setImageTintList(ColorStateList.valueOf(primary));
         }
     }

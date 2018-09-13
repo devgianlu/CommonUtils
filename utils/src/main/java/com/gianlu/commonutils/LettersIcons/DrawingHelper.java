@@ -24,7 +24,7 @@ public class DrawingHelper {
     public DrawingHelper(Context context) {
         lettersPaintWithCircle = new Paint();
         lettersPaintWithCircle.setAntiAlias(true);
-        lettersPaintWithCircle.setTypeface(FontsManager.get().get(context, FontsManager.ROBOTO_LIGHT));
+        FontsManager.set(context, lettersPaintWithCircle, FontsManager.ROBOTO_LIGHT);
         lettersPaintWithCircle.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20, context.getResources().getDisplayMetrics()));
 
         lettersPaintNoCircle = new Paint(lettersPaintWithCircle);
