@@ -196,7 +196,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {
-                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, 0, new MaterialAboutItemOnClickAction() {
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, R.drawable.baseline_bug_report_24, new MaterialAboutItemOnClickAction() {
                     @Override
                     public void onClick() {
                         openLink(context, openSourceUrl);
