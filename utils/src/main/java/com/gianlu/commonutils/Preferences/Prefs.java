@@ -62,7 +62,7 @@ public final class Prefs {
 
     // putSet
 
-    public static void putSet(Context context, Key key, Set<String> set) {
+    public static void putSet(Key key, Set<String> set) {
         putSet(key.key(), set);
     }
 
