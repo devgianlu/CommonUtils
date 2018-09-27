@@ -231,7 +231,7 @@ public final class Prefs {
 
     public static void addToSet(String key, String value) {
         Set<String> set = getSet(key, new HashSet<String>());
-        if (!set.contains(value)) set.add(value);
+        set.add(value);
         prefs.edit().putStringSet(key, set).apply();
     }
 
