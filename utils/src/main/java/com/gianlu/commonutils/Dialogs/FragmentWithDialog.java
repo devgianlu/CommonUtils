@@ -45,4 +45,8 @@ public abstract class FragmentWithDialog extends Fragment {
         if (getContext() == null) return;
         toaster.show(getContext());
     }
+
+    public final void onBackPressed() {
+        if (getActivity() != null) getActivity().onBackPressed();
+    }
 }

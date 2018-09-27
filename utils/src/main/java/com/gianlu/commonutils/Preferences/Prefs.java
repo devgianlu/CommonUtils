@@ -9,6 +9,7 @@ import android.util.Base64;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,7 +62,7 @@ public final class Prefs {
 
     // putSet
 
-    public static void putSet(Context context, Key key, Set<String> set) {
+    public static void putSet(Key key, Set<String> set) {
         putSet(key.key(), set);
     }
 
@@ -149,6 +150,20 @@ public final class Prefs {
         return getJSONArray(key.key(), key.fallback());
     }
 
+    // getJSONArray
+
+    public static JSONObject getJSONObject(String key, JSONObject fallback) throws JSONException {
+        return new JSONObject(getBase64String(key, fallback.toString()));
+    }
+
+    public static JSONObject getJSONObject(Key key, JSONObject fallback) throws JSONException {
+        return getJSONObject(key.key(), fallback);
+    }
+
+    public static JSONObject getJSONObject(KeyWithDefault<JSONObject> key) throws JSONException {
+        return getJSONObject(key.key(), key.fallback());
+    }
+
     // putJSONArray
 
     public static void putJSONArray(Key key, JSONArray value) {
@@ -156,6 +171,16 @@ public final class Prefs {
     }
 
     public static void putJSONArray(String key, JSONArray value) {
+        putBase64String(key, value.toString());
+    }
+
+    // putJSONArray
+
+    public static void putJSONObject(Key key, JSONObject value) {
+        putJSONObject(key.key(), value);
+    }
+
+    public static void putJSONObject(String key, JSONObject value) {
         putBase64String(key, value.toString());
     }
 

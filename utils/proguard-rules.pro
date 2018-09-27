@@ -6,3 +6,6 @@
 -keepclassmembers public class * extends com.gianlu.commonutils.Tutorial.BaseTutorial {
    public <init>(...);
 }
+
+-dontwarn com.gianlu.commonutils.Preferences.PreferencesBillingHelper
+-dontwarn com.gianlu.commonutils.Preferences.PreferencesBillingHelper$*

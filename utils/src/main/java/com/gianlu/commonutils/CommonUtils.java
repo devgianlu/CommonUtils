@@ -42,9 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -325,7 +322,7 @@ public final class CommonUtils {
 
         Intent intent = new Intent(Intent.ACTION_SEND)
                 .setType("message/rfc822")
-                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.email)})
+                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.devgianluEmail)})
                 .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
 
         String emailBody = "-------- DO NOT EDIT --------" +
@@ -522,42 +519,6 @@ public final class CommonUtils {
         return ints;
     }
 
-    @NonNull
-    @Deprecated
-    @SuppressWarnings("deprecation")
-    public static <T> ArrayList<T> toTList(JSONArray array, Class<T> tClass) throws JSONException {
-        return toTList(array, tClass, null);
-    }
-
-    @NonNull
-    @Deprecated
-    public static <T, P> ArrayList<T> toTList(JSONArray array, Class<T> tClass, P parent) throws JSONException {
-        ArrayList<T> items = new ArrayList<>();
-
-        try {
-            for (int i = 0; i < array.length(); i++) {
-                Constructor<T> constructor;
-                if (parent != null)
-                    constructor = tClass.getDeclaredConstructor(parent.getClass(), JSONObject.class);
-                else constructor = tClass.getConstructor(JSONObject.class);
-
-                T instance;
-                if (parent != null)
-                    instance = constructor.newInstance(parent, array.getJSONObject(i));
-                else instance = constructor.newInstance(array.getJSONObject(i));
-                items.add(instance);
-            }
-
-        } catch (InvocationTargetException ex) {
-            if (ex.getCause() instanceof JSONException) throw (JSONException) ex.getCause();
-            throw new RuntimeException(ex);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        return items;
-    }
-
     public static void handleCollapseClick(ImageButton button, View target) {
         handleCollapseClick(button, target, null);
     }
@@ -566,25 +527,6 @@ public final class CommonUtils {
         animateCollapsingArrowBellows(button, isExpanded(target));
         if (isExpanded(target)) collapse(target, listener);
         else expand(target, listener);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public static <T> T[] toTArray(JSONArray jsonArray, Class<T> tClass) throws JSONException {
-        if (jsonArray == null) return null;
-
-        T[] array = (T[]) Array.newInstance(tClass, jsonArray.length());
-        try {
-            for (int i = 0; i < jsonArray.length(); i++)
-                array[i] = tClass.getConstructor(JSONObject.class).newInstance(jsonArray.getJSONObject(i));
-        } catch (InvocationTargetException ex) {
-            if (ex.getCause() instanceof JSONException) throw (JSONException) ex.getCause();
-            throw new RuntimeException(ex);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        return array;
     }
 
     public static String[] toStringArray(JSONArray jsonArray) throws JSONException {

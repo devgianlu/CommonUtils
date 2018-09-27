@@ -289,6 +289,30 @@ public final class Logging {
             this.listener = listener;
         }
 
+        @NonNull
+        @SuppressLint("SetTextI18n")
+        public static View createLogLineView(LayoutInflater inflater, ViewGroup parent, LogLine line) {
+            ViewHolder holder = new ViewHolder(inflater, parent);
+
+            holder.msg.setText(line.message);
+            switch (line.type) {
+                case INFO:
+                    holder.level.setText("INFO: ");
+                    holder.level.setTextColor(Color.BLACK);
+                    break;
+                case WARNING:
+                    holder.level.setText("WARNING: ");
+                    holder.level.setTextColor(Color.YELLOW);
+                    break;
+                case ERROR:
+                    holder.level.setText("ERROR: ");
+                    holder.level.setTextColor(Color.RED);
+                    break;
+            }
+
+            return holder.itemView;
+        }
+
         public void clear() {
             logs.clear();
             notifyDataSetChanged();
@@ -302,7 +326,7 @@ public final class Logging {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(parent);
+            return new ViewHolder(inflater, parent);
         }
 
         @SuppressLint("SetTextI18n")
@@ -343,11 +367,11 @@ public final class Logging {
             void onLogLineSelected(@NonNull LogLine line);
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public static class ViewHolder extends RecyclerView.ViewHolder {
             final TextView msg;
             final TextView level;
 
-            public ViewHolder(ViewGroup parent) {
+            public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
                 super(inflater.inflate(R.layout.log_line_item, parent, false));
 
                 msg = itemView.findViewById(R.id.logLine_msg);
