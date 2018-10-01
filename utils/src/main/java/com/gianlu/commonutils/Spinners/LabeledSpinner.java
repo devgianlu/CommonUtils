@@ -7,6 +7,7 @@ import android.database.DataSetObserver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 
 import com.gianlu.commonutils.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LabeledSpinner extends LinearLayout {
@@ -37,13 +37,12 @@ public class LabeledSpinner extends LinearLayout {
 
     public LabeledSpinner(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        inflate(context, R.layout.view_labeled_spinner, this);
         setOrientation(VERTICAL);
 
-        this.label = new TextView(context);
-        addView(label);
-
-        this.spinner = new Spinner(context);
-        addView(spinner);
+        this.label = (TextView) getChildAt(0);
+        this.spinner = (Spinner) getChildAt(1);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LabeledSpinner, 0, 0);
         try {
@@ -66,16 +65,19 @@ public class LabeledSpinner extends LinearLayout {
         else return item.toString();
     }
 
-    public void setStringItems(List<String> items) {
+    public void setStringItems(List<String> items, @NonNull String selected) {
         this.spinner.setAdapter(new Adapter(getContext(), items));
+        this.spinner.setSelection(items.indexOf(selected), false);
     }
 
-    public void setNumberItems(List<? extends Number> items) {
+    public void setNumberItems(List<? extends Number> items, @NonNull Number selected) {
         this.spinner.setAdapter(new Adapter(getContext(), items));
+        this.spinner.setSelection(items.indexOf(selected), false);
     }
 
-    public void setItems(List<? extends GetText> items) {
+    public <A extends GetText> void setItems(List<A> items, @NonNull A selected) {
         this.spinner.setAdapter(new Adapter(getContext(), items));
+        this.spinner.setSelection(items.indexOf(selected), false);
     }
 
     @SuppressWarnings("unchecked")
@@ -97,6 +99,11 @@ public class LabeledSpinner extends LinearLayout {
         this.label.setText(str);
     }
 
+    @SuppressWarnings("unchecked")
+    public <A> A getSelectedItem() {
+        return (A) spinner.getSelectedItem();
+    }
+
     public interface GetText {
         @NonNull
         String getText(@NonNull Context context);
@@ -109,15 +116,15 @@ public class LabeledSpinner extends LinearLayout {
     private class Adapter implements SpinnerAdapter {
         private final List<?> items;
         private final LayoutInflater inflater;
-        private final List<ViewHolder> dropdownViewHolders;
-        private final List<ViewHolder> viewHolders;
+        private final SparseArray<ViewHolder> dropdownViewHolders;
+        private final SparseArray<ViewHolder> viewHolders;
         private final Context context;
 
         private Adapter(Context context, List<?> items) {
             this.items = items;
             this.context = context;
-            this.viewHolders = new ArrayList<>(items.size());
-            this.dropdownViewHolders = new ArrayList<>(items.size());
+            this.viewHolders = new SparseArray<>(items.size());
+            this.dropdownViewHolders = new SparseArray<>(items.size());
             this.inflater = LayoutInflater.from(context);
         }
 
@@ -155,12 +162,12 @@ public class LabeledSpinner extends LinearLayout {
         }
 
         private View getView(int position, ViewGroup parent, boolean dropdown) {
-            List<ViewHolder> list = dropdown ? dropdownViewHolders : viewHolders;
+            SparseArray<ViewHolder> list = dropdown ? dropdownViewHolders : viewHolders;
 
             ViewHolder holder = list.size() <= position ? null : list.get(position);
             if (holder == null) {
                 holder = new ViewHolder(parent, dropdown);
-                list.add(position, holder);
+                list.put(position, holder);
             }
 
             holder.text.setText(getText(context, getItem(position)));
