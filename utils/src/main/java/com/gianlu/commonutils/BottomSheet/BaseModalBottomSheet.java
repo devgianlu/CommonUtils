@@ -124,12 +124,12 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
     protected final void invalidateAction() {
         if (onCustomizeAction(action, payload)) {
-            action.setVisibility(View.VISIBLE);
+            action.show();
             lastHeaderEndPadding = header.getPaddingEnd();
             int end = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
             header.setPaddingRelative(header.getPaddingStart(), header.getPaddingTop(), end, header.getPaddingBottom());
         } else {
-            action.setVisibility(View.GONE);
+            action.hide();
             if (lastHeaderEndPadding != -1)
                 header.setPaddingRelative(header.getPaddingStart(), header.getPaddingTop(), lastHeaderEndPadding, header.getPaddingBottom());
         }
