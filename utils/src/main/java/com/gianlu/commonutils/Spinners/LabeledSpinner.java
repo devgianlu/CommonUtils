@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.gianlu.commonutils.GetText;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
@@ -148,11 +149,6 @@ public class LabeledSpinner extends LinearLayout {
     @SuppressWarnings("unchecked")
     public <A> A getSelectedItem() {
         return adapter == null ? null : (A) adapter.getSelectedItem();
-    }
-
-    public interface GetText {
-        @NonNull
-        String getText(@NonNull Context context);
     }
 
     public interface SelectListener<A> {
