@@ -3,18 +3,20 @@ package com.gianlu.commonutils.Spinners;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.SparseArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.gianlu.commonutils.R;
@@ -23,9 +25,11 @@ import java.util.List;
 
 public class LabeledSpinner extends LinearLayout {
     private final TextView label;
-    private final Spinner spinner;
-    private final int mLabelTextColor;
+    private final TextView selected;
     private final int mDropdownTextColor;
+    private Adapter adapter;
+    private SelectListener selectListener;
+    private PopupWindow popupWindow;
 
     public LabeledSpinner(Context context) {
         this(context, null, 0);
@@ -39,24 +43,34 @@ public class LabeledSpinner extends LinearLayout {
         super(context, attrs, defStyleAttr);
 
         inflate(context, R.layout.view_labeled_spinner, this);
-        setOrientation(VERTICAL);
 
-        this.label = (TextView) getChildAt(0);
-        this.spinner = (Spinner) getChildAt(1);
+        this.label = findViewById(R.id.labeledSpinner_label);
+        this.selected = findViewById(R.id.labeledSpinner_selected);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LabeledSpinner, 0, 0);
+        int textColor;
         try {
             setLabel(a.getString(R.styleable.LabeledSpinner_labelText));
-            mLabelTextColor = a.getColor(R.styleable.LabeledSpinner_labelTextColor, 0);
+            textColor = a.getColor(R.styleable.LabeledSpinner_textColor, 0);
             mDropdownTextColor = a.getColor(R.styleable.LabeledSpinner_dropdownTextColor, 0);
         } finally {
             a.recycle();
         }
 
-        if (mLabelTextColor != 0) {
-            label.setTextColor(mLabelTextColor);
-            spinner.setBackgroundTintList(ColorStateList.valueOf(mLabelTextColor));
+        if (textColor != 0) {
+            label.setTextColor(textColor);
+            selected.setTextColor(textColor);
+
+            ImageView icon = findViewById(R.id.labeledSpinner_icon);
+            icon.setImageTintList(ColorStateList.valueOf(textColor));
         }
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePopup();
+            }
+        });
     }
 
     @NonNull
@@ -65,34 +79,66 @@ public class LabeledSpinner extends LinearLayout {
         else return item.toString();
     }
 
+    private boolean dismissPopup() {
+        if (popupWindow != null) {
+            popupWindow.setOnDismissListener(null);
+            popupWindow.dismiss();
+            popupWindow = null;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void togglePopup() {
+        if (dismissPopup()) return;
+        if (adapter == null) throw new IllegalStateException("Adapter not attached!");
+
+        popupWindow = new PopupWindow(getContext());
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                dismissPopup();
+            }
+        });
+        popupWindow.setContentView(adapter.getDropdownView());
+        popupWindow.setElevation(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+        popupWindow.showAsDropDown(this);
+    }
+
     public void setStringItems(List<String> items, @NonNull String selected) {
-        this.spinner.setAdapter(new Adapter(getContext(), items));
-        this.spinner.setSelection(items.indexOf(selected), false);
+        this.adapter = new Adapter(getContext(), items);
+        setSelected(selected, false);
     }
 
     public void setNumberItems(List<? extends Number> items, @NonNull Number selected) {
-        this.spinner.setAdapter(new Adapter(getContext(), items));
-        this.spinner.setSelection(items.indexOf(selected), false);
+        this.adapter = new Adapter(getContext(), items);
+        setSelected(selected, false);
     }
 
     public <A extends GetText> void setItems(List<A> items, @NonNull A selected) {
-        this.spinner.setAdapter(new Adapter(getContext(), items));
-        this.spinner.setSelection(items.indexOf(selected), false);
+        this.adapter = new Adapter(getContext(), items);
+        setSelected(selected, false);
     }
 
     @SuppressWarnings("unchecked")
-    public <A> void setOnItemSelectedListener(@NonNull final SelectListener<A> listener) {
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                A item = (A) parent.getItemAtPosition(position);
-                listener.selected(item);
-            }
+    private void setSelected(Object item, boolean notify) {
+        if (adapter != null) {
+            adapter.setSelectedItem(item);
+            selected.setText(getText(getContext(), item));
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            if (notify) {
+                if (selectListener != null)
+                    selectListener.selected(item);
             }
-        });
+        }
+    }
+
+    public void setOnItemSelectedListener(@NonNull final SelectListener<?> listener) {
+        this.selectListener = listener;
     }
 
     public void setLabel(String str) {
@@ -101,7 +147,7 @@ public class LabeledSpinner extends LinearLayout {
 
     @SuppressWarnings("unchecked")
     public <A> A getSelectedItem() {
-        return (A) spinner.getSelectedItem();
+        return adapter == null ? null : (A) adapter.getSelectedItem();
     }
 
     public interface GetText {
@@ -113,101 +159,67 @@ public class LabeledSpinner extends LinearLayout {
         void selected(@NonNull A item);
     }
 
-    private class Adapter implements SpinnerAdapter {
+    private class Adapter {
         private final List<?> items;
         private final LayoutInflater inflater;
-        private final SparseArray<ViewHolder> dropdownViewHolders;
-        private final SparseArray<ViewHolder> viewHolders;
         private final Context context;
+        private int selectedIndex = 0;
+        private View dropdownView;
 
         private Adapter(Context context, List<?> items) {
             this.items = items;
             this.context = context;
-            this.viewHolders = new SparseArray<>(items.size());
-            this.dropdownViewHolders = new SparseArray<>(items.size());
             this.inflater = LayoutInflater.from(context);
         }
 
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getView(position, parent, true);
+        private void invalidate() {
+            dropdownView = null;
         }
 
-        @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
-        }
+        @NonNull
+        private View getView(int position, ViewGroup parent) {
+            final Object item = items.get(position);
 
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-        }
-
-        @Override
-        public final int getCount() {
-            return items.size();
-        }
-
-        @Override
-        public final Object getItem(int position) {
-            return items.get(position);
-        }
-
-        @Override
-        public final long getItemId(int position) {
-            return items.get(position).hashCode();
-        }
-
-        @Override
-        public final boolean hasStableIds() {
-            return true;
-        }
-
-        private View getView(int position, ViewGroup parent, boolean dropdown) {
-            SparseArray<ViewHolder> list = dropdown ? dropdownViewHolders : viewHolders;
-
-            ViewHolder holder = list.size() <= position ? null : list.get(position);
-            if (holder == null) {
-                holder = new ViewHolder(parent, dropdown);
-                list.put(position, holder);
-            }
-
-            holder.text.setText(getText(context, getItem(position)));
-
-            return holder.text;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getView(position, parent, false);
-        }
-
-        @Override
-        public final int getItemViewType(int position) {
-            return 0;
-        }
-
-        @Override
-        public final int getViewTypeCount() {
-            return 1;
-        }
-
-        @Override
-        public final boolean isEmpty() {
-            return items.isEmpty();
-        }
-
-        private class ViewHolder {
-            private final TextView text;
-
-            public ViewHolder(ViewGroup parent, boolean dropdown) {
-                text = (TextView) inflater.inflate(R.layout.item_labeled_spinner, parent, false);
-
-                if (dropdown) {
-                    if (mDropdownTextColor != 0)
-                        text.setTextColor(mDropdownTextColor);
-                } else {
-                    if (mLabelTextColor != 0)
-                        text.setTextColor(mLabelTextColor);
+            TextView text = (TextView) inflater.inflate(R.layout.item_labeled_spinner, parent, false);
+            text.setText(getText(context, item));
+            text.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setSelected(item, true);
+                    dismissPopup();
                 }
+            });
+
+            if (position == selectedIndex)
+                text.setTypeface(Typeface.DEFAULT_BOLD);
+
+            if (mDropdownTextColor != 0)
+                text.setTextColor(mDropdownTextColor);
+
+            return text;
+        }
+
+        private Object getSelectedItem() {
+            return items.get(selectedIndex);
+        }
+
+        private void setSelectedItem(Object selected) {
+            selectedIndex = items.indexOf(selected);
+            invalidate();
+        }
+
+        @NonNull
+        private View getDropdownView() {
+            if (dropdownView == null) {
+                ScrollView scrollView = new ScrollView(context);
+                LinearLayout linearLayout = new LinearLayout(context);
+                scrollView.addView(linearLayout);
+                linearLayout.setOrientation(VERTICAL);
+                for (int i = 0; i < items.size(); i++)
+                    linearLayout.addView(getView(i, linearLayout));
+                return dropdownView = scrollView;
+            } else {
+                return dropdownView;
             }
         }
     }

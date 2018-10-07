@@ -2,7 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="4dp"
-    android:paddingTop="2dp"
-    android:paddingEnd="4dp"
-    android:paddingBottom="2dp" />
+    android:background="?attr/selectableItemBackground"
+    android:paddingStart="8dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="6dp"
+    android:textSize="14sp" />

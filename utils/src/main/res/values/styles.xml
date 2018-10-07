@@ -63,7 +63,7 @@
     <!-- LabeledSpinner styleable -->
     <declare-styleable name="LabeledSpinner">
         <attr name="labelText" format="string" />
-        <attr name="labelTextColor" format="color" />
+        <attr name="textColor" format="color" />
         <attr name="dropdownTextColor" format="color" />
     </declare-styleable>
 </resources>
