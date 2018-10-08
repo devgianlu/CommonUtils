@@ -95,7 +95,7 @@ public class LabeledSpinner extends LinearLayout {
         if (dismissPopup()) return;
         if (adapter == null) throw new IllegalStateException("Adapter not attached!");
 
-        popupWindow = new PopupWindow(getContext());
+        popupWindow = new PopupWindow(adapter.getDropdownView(), ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
@@ -105,7 +105,6 @@ public class LabeledSpinner extends LinearLayout {
                 dismissPopup();
             }
         });
-        popupWindow.setContentView(adapter.getDropdownView());
         popupWindow.setElevation(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
         popupWindow.showAsDropDown(this);
     }
