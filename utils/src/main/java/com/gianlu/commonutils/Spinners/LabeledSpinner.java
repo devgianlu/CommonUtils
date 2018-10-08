@@ -150,6 +150,18 @@ public class LabeledSpinner extends LinearLayout {
         return adapter == null ? null : (A) adapter.getSelectedItem();
     }
 
+    public void setSelectedItem(GetText text, boolean notify) {
+        setSelected(text, notify);
+    }
+
+    public void setSelectedItem(String text, boolean notify) {
+        setSelected(text, notify);
+    }
+
+    public void setSelectedItem(Number num, boolean notify) {
+        setSelected(num, notify);
+    }
+
     public interface SelectListener<A> {
         void selected(@NonNull A item);
     }
