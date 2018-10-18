@@ -150,6 +150,8 @@ public final class Logging {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(log)));
         String line;
         while ((line = reader.readLine()) != null) {
+            if (line.isEmpty()) continue;
+
             try {
                 String[] split = line.split("\\|");
                 long timestamp = Long.parseLong(split[0]);
@@ -167,7 +169,8 @@ public final class Logging {
                 logLines.add(new LogLine(timestamp, version, type, message.toString()));
             } catch (Exception ex) {
                 if (!log.delete()) System.err.println("Cannot delete corrupted log file.");
-                if (CommonUtils.isDebug()) ex.printStackTrace();
+                if (CommonUtils.isDebug())
+                    new Exception("Couldn't parse line: " + line, ex).printStackTrace();
                 break;
             }
         }
@@ -275,7 +278,7 @@ public final class Logging {
             out.write('|');
             out.write(type.name().getBytes());
             out.write('\n');
-            out.write(message.getBytes());
+            out.write(message.replace("\n\n", "\n").getBytes());
             out.write('\n');
             out.write('\n');
         }
