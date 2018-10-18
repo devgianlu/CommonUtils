@@ -342,7 +342,7 @@ public final class CommonUtils {
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
-        Logging.LogFile log = Logging.getLatestLogFile(context, Logging.Type.SECRET);
+        Logging.LogFile log = Logging.getLatestLogFile(context);
         if (log != null) {
             try {
                 Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", log);
@@ -454,7 +454,6 @@ public final class CommonUtils {
 
     public static void setDebug(boolean debug) {
         CommonUtils.DEBUG = debug;
-        Logging.DEBUG = debug;
     }
 
     @NonNull

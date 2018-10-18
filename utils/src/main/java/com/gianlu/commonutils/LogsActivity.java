@@ -1,10 +1,6 @@
 package com.gianlu.commonutils;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +15,7 @@ import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 import java.io.IOException;
 import java.util.List;
 
-public class LogsActivity extends ActivityWithDialog implements Logging.LogLineAdapter.Listener {
+public class LogsActivity extends ActivityWithDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +29,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
         final RecyclerViewLayout layout = findViewById(R.id.logs_recyclerViewLayout);
         layout.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         layout.getList().addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        final List<Logging.LogFile> logFiles = Logging.listLogFiles(this, Logging.Type.LOG);
+        final List<Logging.LogFile> logFiles = Logging.listLogFiles(this);
 
         if (logFiles.isEmpty()) {
             spinner.setVisibility(View.GONE);
@@ -46,7 +42,7 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    layout.loadListData(new Logging.LogLineAdapter(LogsActivity.this, Logging.getLogLines(logFiles.get(i)), LogsActivity.this));
+                    layout.loadListData(new Logging.LogLineAdapter(LogsActivity.this, Logging.getLogLines(logFiles.get(i))));
                 } catch (IOException ex) {
                     Logging.log(ex);
                     onBackPressed();
@@ -71,15 +67,5 @@ public class LogsActivity extends ActivityWithDialog implements Logging.LogLineA
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onLogLineSelected(@NonNull Logging.LogLine line) {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        if (clipboard != null) {
-            ClipData clip = ClipData.newPlainText("stack trace", line.message);
-            clipboard.setPrimaryClip(clip);
-            Toaster.with(this).message(R.string.copiedToClipboard).show();
-        }
     }
 }

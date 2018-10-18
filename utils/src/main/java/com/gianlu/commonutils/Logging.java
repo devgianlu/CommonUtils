@@ -2,11 +2,13 @@ package com.gianlu.commonutils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -30,12 +33,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public final class Logging {
-    public static boolean DEBUG = BuildConfig.DEBUG; // Overwritten by CommonUtils
-    private static File logFile;
-    private static File secretLogFile;
+    @Nullable
+    private static Logger logger;
+
+    private Logging() {
+    }
 
     @NonNull
     private static File getLogsDirectory(@NonNull Context context) {
@@ -46,29 +52,18 @@ public final class Logging {
         return name.toLowerCase().endsWith(".log");
     }
 
-    private static boolean isSecretLogFile(@NonNull String name) {
-        return name.toLowerCase().endsWith(".secret");
-    }
-
     @NonNull
-    private static File[] listLogsInDirectory(@NonNull File dir, @NonNull final Type type) {
+    private static File[] listLogsInDirectory(@NonNull File dir) {
         return dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                if (type == Type.ALL) return isLogFile(name) || isSecretLogFile(name);
-                else if (type == Type.SECRET) return isSecretLogFile(name);
-                else return isLogFile(name);
+                return isLogFile(name);
             }
         });
     }
 
-    private static File[] listLogFilesInternal(@NonNull Context context, @NonNull Type type) {
-        File[] first = listLogsInDirectory(context.getFilesDir(), type);
-        File[] second = listLogsInDirectory(getLogsDirectory(context), type);
-        File[] files = new File[first.length + second.length];
-        System.arraycopy(first, 0, files, 0, first.length);
-        System.arraycopy(second, 0, files, first.length, second.length);
-        return files;
+    private static File[] listLogFilesInternal(@NonNull Context context) {
+        return listLogsInDirectory(getLogsDirectory(context));
     }
 
     @NonNull
@@ -88,7 +83,7 @@ public final class Logging {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
 
-        for (File file : listLogFilesInternal(context, Type.ALL)) {
+        for (File file : listLogFilesInternal(context)) {
             try {
                 Date date = getDate(file);
                 if (date.before(cal.getTime()))
@@ -101,7 +96,7 @@ public final class Logging {
     }
 
     public static void deleteAllLogs(Context context) {
-        for (File file : listLogFilesInternal(context, Type.ALL)) {
+        for (File file : listLogFilesInternal(context)) {
             if (!file.delete()) log("Couldn't delete " + file, true);
         }
 
@@ -109,8 +104,8 @@ public final class Logging {
     }
 
     @Nullable
-    public static LogFile getLatestLogFile(@NonNull Context context, @NonNull Type type) {
-        List<LogFile> logs = listLogFiles(context, type);
+    public static LogFile getLatestLogFile(@NonNull Context context) {
+        List<LogFile> logs = listLogFiles(context);
         return logs.isEmpty() ? null : logs.get(0);
     }
 
@@ -120,40 +115,19 @@ public final class Logging {
         return new SimpleDateFormat("d-MM-yyyy");
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void init(@NonNull Context context) {
-        File logs = getLogsDirectory(context);
-        if (!logs.exists()) logs.mkdir();
-
-        logFile = new File(logs, getFileDateFormatter().format(new Date()) + ".log");
-        secretLogFile = new File(logs, getFileDateFormatter().format(new Date()) + ".secret");
-
-        log("Logging initialized!", false);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static boolean shouldLog() {
-        if (logFile != null && secretLogFile != null) {
-            try {
-                logFile.createNewFile();
-                secretLogFile.createNewFile();
-            } catch (IOException ex) {
-                if (CommonUtils.isDebug()) ex.printStackTrace();
-            }
-
-            return logFile.canWrite() && secretLogFile.canWrite();
+        try {
+            logger = new Logger(context);
+            log("Logging initialized!", false);
+        } catch (IOException ex) {
+            System.err.println("Failed initializing logging!");
+            if (CommonUtils.isDebug())
+                ex.printStackTrace();
         }
-
-        return false;
     }
 
-    @NonNull
-    private static SimpleDateFormat getTimeFormatter() {
-        return new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-    }
-
-    public static List<LogFile> listLogFiles(Context context, @NonNull Type type) {
-        File[] files = listLogFilesInternal(context, type);
+    public static List<LogFile> listLogFiles(@NonNull Context context) {
+        File[] files = listLogFilesInternal(context);
 
         List<LogFile> logs = new ArrayList<>();
         for (File file : files) {
@@ -176,26 +150,24 @@ public final class Logging {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(log)));
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.startsWith("--ERROR--")) {
-                logLines.add(new LogLine(LogLine.Type.ERROR, line.replace("--ERROR--", "")));
-            } else if (line.startsWith("--INFO--")) {
-                logLines.add(new LogLine(LogLine.Type.INFO, line.replace("--INFO--", "")));
+            try {
+                String[] split = line.split("\\|");
+                long timestamp = Long.parseLong(split[0]);
+                String version = split[1];
+                LogLine.Type type = LogLine.Type.valueOf(split[2]);
+
+                StringBuilder message = new StringBuilder();
+                while ((line = reader.readLine()) != null && !line.isEmpty()) {
+                    message.append(line).append('\n');
+                }
+
+                logLines.add(new LogLine(timestamp, version, type, message.toString()));
+            } catch (Exception ex) {
+                if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
 
         return logLines;
-    }
-
-    private static void secret(@NonNull Throwable exx) {
-        if (DEBUG) exx.printStackTrace();
-        if (!shouldLog()) return;
-
-        try (FileOutputStream out = new FileOutputStream(secretLogFile, true)) {
-            out.write((getTimeFormatter().format(new Date()) + " >> " + getStackTrace(exx) + "\n\n").getBytes());
-            out.flush();
-        } catch (IOException ex) {
-            if (DEBUG) ex.printStackTrace();
-        }
     }
 
     @NonNull
@@ -206,46 +178,100 @@ public final class Logging {
         return sw.toString();
     }
 
-    public static void log(@Nullable Throwable ex) {
+    public static void log(Throwable ex) {
         if (ex == null) return;
-        log(ex.getMessage(), true);
-        secret(ex);
+        log(getStackTrace(ex), true);
     }
 
-    public static void log(String message, boolean isError) {
-        if (message == null) message = "No message given";
+    public static void log(String msg, boolean error) {
+        log(msg, error ? LogLine.Type.ERROR : LogLine.Type.INFO);
+    }
 
-        if (DEBUG) {
-            if (isError) System.err.println(message);
-            else System.out.println(message);
-        }
+    public static void log(String msg, @NonNull LogLine.Type type) {
+        if (msg == null) return;
+        if (logger != null) logger.log(System.currentTimeMillis(), msg, type);
+    }
 
-        if (shouldLog()) {
-            SimpleDateFormat sdf = getTimeFormatter();
-            try (FileOutputStream out = new FileOutputStream(logFile, true)) {
-                out.write(((isError ? "--ERROR--" : "--INFO--") + sdf.format(new Date()) + " >> " + message.replace("\n", " ") + "\n").getBytes());
-                out.flush();
-            } catch (IOException ex) {
-                if (DEBUG) ex.printStackTrace();
+    private static class Logger implements Runnable {
+        private final File logFile;
+        private final Queue<LogLine> queue = new LinkedBlockingQueue<>();
+        private final String appVersion;
+
+        private Logger(Context context) throws IOException {
+            File logs = getLogsDirectory(context);
+            if (!logs.exists() && !logs.mkdir())
+                throw new IOException("Logs directory cannot be created!");
+
+            logFile = new File(logs, getFileDateFormatter().format(new Date()) + ".log");
+            if (!logFile.createNewFile() && !logFile.exists())
+                throw new IOException("Couldn't create log file!");
+            if (!logFile.canWrite())
+                throw new IOException("Can write to file!");
+
+            try {
+                appVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+            } catch (PackageManager.NameNotFoundException ex) {
+                throw new IOException(ex);
             }
-        } else {
-            System.err.println("Can't produce log!");
         }
-    }
 
-    public enum Type {
-        ALL,
-        SECRET,
-        LOG
+        @Override
+        public void run() {
+            try (FileOutputStream out = new FileOutputStream(logFile)) {
+                LogLine line;
+                while ((line = queue.poll()) != null) {
+                    line.write(out, appVersion);
+                    out.flush();
+                }
+            } catch (IOException ex) {
+                if (CommonUtils.isDebug()) ex.printStackTrace();
+            }
+        }
+
+        public void log(long timeMillis, String msg, LogLine.Type type) {
+            queue.add(new LogLine(timeMillis, appVersion, type, msg));
+        }
     }
 
     public static class LogLine implements Serializable {
-        public final Type type;
-        public final String message;
+        private final Type type;
+        private final String message;
+        private final long timestamp;
+        private final String appVersion;
 
-        public LogLine(@NonNull Type type, @NonNull String message) {
+        public LogLine(long timestamp, @NonNull String appVersion, @NonNull Type type, @NonNull String message) {
+            this.timestamp = timestamp;
+            this.appVersion = appVersion;
             this.type = type;
             this.message = message;
+        }
+
+        public LogLine(@NonNull Type type, @NonNull String message) {
+            this.timestamp = System.currentTimeMillis();
+            this.appVersion = null;
+            this.type = type;
+            this.message = message;
+        }
+
+        @NonNull
+        public String message() {
+            return message;
+        }
+
+        private void write(OutputStream out, String fallbackVersion) throws IOException {
+            String version;
+            if (appVersion == null) version = fallbackVersion;
+            else version = appVersion;
+
+            out.write(String.valueOf(timestamp).getBytes());
+            out.write('|');
+            out.write(version.replace('|', '_').getBytes());
+            out.write('|');
+            out.write(type.name().getBytes());
+            out.write('\n');
+            out.write(message.getBytes());
+            out.write('\n');
+            out.write('\n');
         }
 
         public enum Type {
@@ -280,21 +306,27 @@ public final class Logging {
     @UiThread
     public static class LogLineAdapter extends RecyclerView.Adapter<LogLineAdapter.ViewHolder> {
         private final List<LogLine> logs;
-        private final Listener listener;
         private final LayoutInflater inflater;
 
-        public LogLineAdapter(Context context, List<LogLine> logs, @Nullable Listener listener) {
+        public LogLineAdapter(Context context, List<LogLine> logs) {
             this.inflater = LayoutInflater.from(context);
             this.logs = logs;
-            this.listener = listener;
         }
 
         @NonNull
-        @SuppressLint("SetTextI18n")
         public static View createLogLineView(LayoutInflater inflater, ViewGroup parent, LogLine line) {
             ViewHolder holder = new ViewHolder(inflater, parent);
+            setupLoglineHolder(holder, line);
+            return holder.itemView;
+        }
 
+        @SuppressLint("SetTextI18n")
+        public static void setupLoglineHolder(final ViewHolder holder, LogLine line) {
             holder.msg.setText(line.message);
+            holder.msg.setSingleLine(true);
+            holder.msg.setTag(true);
+            holder.msg.setEllipsize(TextUtils.TruncateAt.END);
+
             switch (line.type) {
                 case INFO:
                     holder.level.setText("INFO: ");
@@ -302,7 +334,7 @@ public final class Logging {
                     break;
                 case WARNING:
                     holder.level.setText("WARNING: ");
-                    holder.level.setTextColor(Color.YELLOW);
+                    holder.level.setTextColor(Color.rgb(253, 216, 53));
                     break;
                 case ERROR:
                     holder.level.setText("ERROR: ");
@@ -310,7 +342,18 @@ public final class Logging {
                     break;
             }
 
-            return holder.itemView;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if ((Boolean) holder.msg.getTag()) {
+                        holder.msg.setSingleLine(false);
+                        holder.msg.setTag(false);
+                    } else {
+                        holder.msg.setSingleLine(true);
+                        holder.msg.setTag(true);
+                    }
+                }
+            });
         }
 
         public void clear() {
@@ -329,42 +372,15 @@ public final class Logging {
             return new ViewHolder(inflater, parent);
         }
 
-        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final LogLine item = logs.get(position);
-
-            holder.msg.setText(item.message);
-            switch (item.type) {
-                case INFO:
-                    holder.level.setText("INFO: ");
-                    holder.level.setTextColor(Color.BLACK);
-                    break;
-                case WARNING:
-                    holder.level.setText("WARNING: ");
-                    holder.level.setTextColor(Color.YELLOW);
-                    break;
-                case ERROR:
-                    holder.level.setText("ERROR: ");
-                    holder.level.setTextColor(Color.RED);
-                    break;
-            }
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) listener.onLogLineSelected(item);
-                }
-            });
+            LogLine item = logs.get(position);
+            setupLoglineHolder(holder, item);
         }
 
         @Override
         public int getItemCount() {
             return logs.size();
-        }
-
-        public interface Listener {
-            void onLogLineSelected(@NonNull LogLine line);
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
