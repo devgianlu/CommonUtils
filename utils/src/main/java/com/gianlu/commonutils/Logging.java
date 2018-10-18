@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public final class Logging {
@@ -118,6 +117,7 @@ public final class Logging {
     public static void init(@NonNull Context context) {
         try {
             logger = new Logger(context);
+            new Thread(logger).start();
             log("Logging initialized!", false);
         } catch (IOException ex) {
             System.err.println("Failed initializing logging!");
@@ -157,13 +157,18 @@ public final class Logging {
                 LogLine.Type type = LogLine.Type.valueOf(split[2]);
 
                 StringBuilder message = new StringBuilder();
+                boolean first = true;
                 while ((line = reader.readLine()) != null && !line.isEmpty()) {
-                    message.append(line).append('\n');
+                    if (!first) message.append('\n');
+                    message.append(line);
+                    first = false;
                 }
 
                 logLines.add(new LogLine(timestamp, version, type, message.toString()));
             } catch (Exception ex) {
+                if (!log.delete()) System.err.println("Cannot delete corrupted log file.");
                 if (CommonUtils.isDebug()) ex.printStackTrace();
+                break;
             }
         }
 
@@ -194,7 +199,7 @@ public final class Logging {
 
     private static class Logger implements Runnable {
         private final File logFile;
-        private final Queue<LogLine> queue = new LinkedBlockingQueue<>();
+        private final LinkedBlockingQueue<LogLine> queue = new LinkedBlockingQueue<>();
         private final String appVersion;
 
         private Logger(Context context) throws IOException {
@@ -203,7 +208,7 @@ public final class Logging {
                 throw new IOException("Logs directory cannot be created!");
 
             logFile = new File(logs, getFileDateFormatter().format(new Date()) + ".log");
-            if (!logFile.createNewFile() && !logFile.exists())
+            if (!logFile.exists() && !logFile.createNewFile())
                 throw new IOException("Couldn't create log file!");
             if (!logFile.canWrite())
                 throw new IOException("Can write to file!");
@@ -215,15 +220,16 @@ public final class Logging {
             }
         }
 
+        @SuppressWarnings("InfiniteLoopStatement")
         @Override
         public void run() {
-            try (FileOutputStream out = new FileOutputStream(logFile)) {
-                LogLine line;
-                while ((line = queue.poll()) != null) {
+            try (FileOutputStream out = new FileOutputStream(logFile, true)) {
+                while (true) {
+                    LogLine line = queue.take();
                     line.write(out, appVersion);
                     out.flush();
                 }
-            } catch (IOException ex) {
+            } catch (IOException | InterruptedException ex) {
                 if (CommonUtils.isDebug()) ex.printStackTrace();
             }
         }
