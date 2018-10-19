@@ -326,19 +326,19 @@ public final class CommonUtils {
                 .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
 
         String emailBody = "-------- DO NOT EDIT --------" +
-                "\nOS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
-                "\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
-                "\nDevice: " + android.os.Build.DEVICE +
-                "\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
-                "\nApplication version: " + version +
-                "\nCrashlytics UID: " + Prefs.getString(CommonPK.ANALYTICS_USER_ID, null);
+                "\r\nOS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
+                "\r\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
+                "\r\nDevice: " + android.os.Build.DEVICE +
+                "\r\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
+                "\r\nApplication version: " + version +
+                "\r\nCrashlytics UID: " + Prefs.getString(CommonPK.ANALYTICS_USER_ID, null);
 
         if (sendEx != null) {
-            emailBody += "\n\n";
+            emailBody += "\r\n\r\n";
             emailBody += Logging.getStackTrace(sendEx);
         }
 
-        emailBody += "\n------------------------------------" + "\n\n\nProvide bug details\n";
+        emailBody += "\r\n------------------------------------" + "\r\n\r\n\r\nProvide bug details\r\n";
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
