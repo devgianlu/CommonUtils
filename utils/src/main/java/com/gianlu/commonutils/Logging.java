@@ -200,6 +200,10 @@ public final class Logging {
         if (logger != null) logger.log(System.currentTimeMillis(), msg, type);
     }
 
+    public static void log(@NonNull LogLine line) {
+        if (logger != null) logger.log(line);
+    }
+
     private static class Logger implements Runnable {
         private final File logFile;
         private final LinkedBlockingQueue<LogLine> queue = new LinkedBlockingQueue<>();
@@ -239,6 +243,10 @@ public final class Logging {
 
         public void log(long timeMillis, String msg, LogLine.Type type) {
             queue.add(new LogLine(timeMillis, appVersion, type, msg));
+        }
+
+        public void log(LogLine line) {
+            queue.add(line);
         }
     }
 
