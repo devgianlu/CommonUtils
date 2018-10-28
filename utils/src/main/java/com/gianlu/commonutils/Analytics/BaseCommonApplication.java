@@ -26,8 +26,14 @@ public abstract class BaseCommonApplication extends Application implements Threa
     public void uncaughtException(Thread thread, Throwable throwable) {
         Logging.log(throwable);
 
-        if (!CommonUtils.isDebug())
-            UncaughtExceptionActivity.startActivity(this, throwable);
+        if (!CommonUtils.isDebug()) {
+            if (uncaughtNotDebug(thread, throwable))
+                UncaughtExceptionActivity.startActivity(this, throwable);
+        }
+    }
+
+    protected boolean uncaughtNotDebug(Thread thread, Throwable throwable) {
+        return true;
     }
 
     protected abstract boolean isDebug();
