@@ -182,10 +182,10 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
                             List<String> toExclude = new ArrayList<>();
 
-                            if (!FossUtils.hasCrashlytics())
+                            if (!FossUtils.hasFabric())
                                 toExclude.add("Crashlytics");
 
-                            if (!FossUtils.hasFirebaseAnalytics() && !FossUtils.hasGoogleBilling())
+                            if (!FossUtils.hasGoogleBilling())
                                 toExclude.add("GooglePlayServices");
 
                             libsBuilder
@@ -204,7 +204,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 }));
             }
 
-            if (FossUtils.hasCrashlytics() || FossUtils.hasFirebaseAnalytics()) {
+            if (FossUtils.hasFabric()) {
                 developerBuilder.addItem(new MaterialAboutActionItem(R.string.usageStatistics, R.string.usageStatisticsSummary, R.drawable.baseline_track_changes_24, new MaterialAboutItemOnClickAction() {
                     @Override
                     public void onClick() {

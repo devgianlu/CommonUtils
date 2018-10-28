@@ -1,13 +1,14 @@
 package com.gianlu.commonutils.Analytics;
 
 import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.CommonUtils;
@@ -15,7 +16,6 @@ import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
 import com.gianlu.commonutils.Preferences.PrefsStorageModule;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yarolegovich.mp.io.MaterialPreferences;
 
 import java.util.UUID;
@@ -23,23 +23,24 @@ import java.util.UUID;
 import io.fabric.sdk.android.Fabric;
 
 public abstract class AnalyticsApplication extends Application implements Thread.UncaughtExceptionHandler {
-    private FirebaseAnalytics tracker;
 
-    public static void sendAnalytics(Context context, @NonNull String event, @Nullable Bundle bundle) {
-        AnalyticsApplication app = get(context);
-        if (app != null) app.sendAnalytics(event, bundle);
+    public static void sendAnalytics(@NonNull String eventName) {
+        sendAnalytics(eventName, null);
     }
 
-    public static void sendAnalytics(Context context, @NonNull String event) {
-        sendAnalytics(context, event, null);
-    }
+    public static void sendAnalytics(@NonNull String eventName, @Nullable Bundle bundle) {
+        CustomEvent event = new CustomEvent(eventName);
+        if (bundle != null) {
+            for (String key : bundle.keySet()) {
+                Object val = bundle.get(key);
+                if (val instanceof String)
+                    event.putCustomAttribute(key, (String) val);
+                else if (val instanceof Number)
+                    event.putCustomAttribute(key, (Number) val);
+            }
+        }
 
-    @Nullable
-    public static AnalyticsApplication get(Context context) {
-        if (context == null) return null;
-        Context app = context.getApplicationContext();
-        if (app instanceof AnalyticsApplication) return (AnalyticsApplication) app;
-        else return null;
+        Answers.getInstance().logCustom(event);
     }
 
     @Override
@@ -47,21 +48,11 @@ public abstract class AnalyticsApplication extends Application implements Thread
         Logging.log(throwable);
 
         if (!CommonUtils.isDebug()) {
-            if (FossUtils.hasCrashlytics())
+            if (FossUtils.hasFabric())
                 Crashlytics.logException(throwable);
 
-            if (uncaughtNotDebug(thread, throwable))
-                UncaughtExceptionActivity.startActivity(this, throwable);
+            UncaughtExceptionActivity.startActivity(this, throwable);
         }
-    }
-
-    protected boolean uncaughtNotDebug(Thread thread, Throwable throwable) {
-        return true;
-    }
-
-    public final void sendAnalytics(String event, @Nullable Bundle bundle) {
-        if (tracker != null && event != null && !isDebug() && Prefs.getBoolean(CommonPK.TRACKING_ENABLED, true))
-            tracker.logEvent(event, bundle);
     }
 
     protected abstract boolean isDebug();
@@ -90,10 +81,13 @@ public abstract class AnalyticsApplication extends Application implements Thread
 
         deprecatedBackwardCompatibility();
 
-        if (FossUtils.hasCrashlytics()) {
-            Fabric.with(this, new Crashlytics.Builder()
-                    .core(new CrashlyticsCore.Builder()
-                            .disabled(isDebug() || !Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED, true))
+        if (FossUtils.hasFabric()) {
+            Fabric.with(new Fabric.Builder(this)
+                    .kits(new Crashlytics.Builder()
+                            .answers(new Answers())
+                            .core(new CrashlyticsCore.Builder()
+                                    .disabled(isDebug() || !Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED, true))
+                                    .build())
                             .build())
                     .build());
 
@@ -106,13 +100,6 @@ public abstract class AnalyticsApplication extends Application implements Thread
             Crashlytics.setUserIdentifier(uuid);
         } else {
             Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, false);
-        }
-
-        if (FossUtils.hasFirebaseAnalytics()) {
-            tracker = FirebaseAnalytics.getInstance(this);
-            tracker.setAnalyticsCollectionEnabled(!isDebug() && Prefs.getBoolean(CommonPK.TRACKING_ENABLED, true));
-        } else {
-            Prefs.putBoolean(CommonPK.TRACKING_ENABLED, false);
         }
 
         MaterialPreferences.instance().setStorageModule(new PrefsStorageModule.Factory());
