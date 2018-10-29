@@ -1,9 +1,6 @@
 package com.gianlu.commonutils.Analytics;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -15,6 +12,9 @@ import com.gianlu.commonutils.Preferences.Prefs;
 
 import java.util.UUID;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.fabric.sdk.android.Fabric;
 
 public abstract class AnalyticsApplication extends BaseCommonApplication {

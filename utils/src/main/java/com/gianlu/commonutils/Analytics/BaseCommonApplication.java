@@ -1,7 +1,6 @@
 package com.gianlu.commonutils.Analytics;
 
 import android.app.Application;
-import android.support.annotation.CallSuper;
 
 import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.CommonUtils;
@@ -9,6 +8,8 @@ import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Preferences.Prefs;
 import com.gianlu.commonutils.Preferences.PrefsStorageModule;
 import com.yarolegovich.mp.io.MaterialPreferences;
+
+import androidx.annotation.CallSuper;
 
 public abstract class BaseCommonApplication extends Application implements Thread.UncaughtExceptionHandler {
 

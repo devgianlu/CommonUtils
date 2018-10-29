@@ -4,13 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FontsManager;
 import com.gianlu.commonutils.R;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 public class DrawingHelper {
     private static final float REDUCE_FACTOR_NO_CIRCLE = 0.8f; // Reduce by 20%

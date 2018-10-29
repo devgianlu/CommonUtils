@@ -2,11 +2,12 @@ package com.gianlu.commonutils.Preferences;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
+
+import androidx.annotation.NonNull;
 
 public class MaterialAboutVersionItem extends MaterialAboutActionItem {
 

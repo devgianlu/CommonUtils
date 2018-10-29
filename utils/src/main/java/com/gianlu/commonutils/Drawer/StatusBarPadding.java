@@ -1,12 +1,13 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
 import com.gianlu.commonutils.R;
+
+import androidx.annotation.Nullable;
 
 public class StatusBarPadding extends View {
     private final int mHeight;

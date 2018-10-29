@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +16,7 @@
             android:orientation="vertical"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/modalBottomSheet_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize" />
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/modalBottomSheet_scrollable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -52,10 +52,10 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
             </FrameLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/modalBottomSheet_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,4 +63,4 @@
         app:layout_anchor="@+id/modalBottomSheet_scrollable"
         app:layout_anchorGravity="top|end" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

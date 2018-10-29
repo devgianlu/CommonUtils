@@ -1,11 +1,12 @@
 package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class ProfilesAdapter<P extends BaseDrawerProfile, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     protected final Context context;

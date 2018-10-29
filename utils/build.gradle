@@ -30,22 +30,15 @@ android {
 }
 
 dependencies {
-    api 'com.android.support:appcompat-v7:28.0.0'
-    api 'com.android.support:support-v4:28.0.0'
-    api 'com.android.support:support-media-compat:28.0.0'
-    api 'com.android.support:design:28.0.0'
     api 'com.android.billingclient:billing:1.1'
     api 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
     standardApi 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     standardApi 'com.crashlytics.sdk.android:answers:1.4.3'
-    api 'com.github.daniel-stoneuk:material-about-library:2.3.0'
+    api 'com.github.daniel-stoneuk:material-about-library:2.4.2'
     api project(':MaterialPreferences')
-    api 'com.mikepenz:fastadapter:3.2.8'
-    api('com.mikepenz:aboutlibraries:6.1.1') {
+    api 'com.mikepenz:fastadapter:3.3.1'
+    api('com.mikepenz:aboutlibraries:6.2.0') {
         exclude group: 'com.mikepenz', module: 'iconics-core'
         exclude group: 'com.mikepenz', module: 'fastadapter'
-        exclude group: 'androidx.appcompat'
-        exclude group: 'androidx.cardview'
-        exclude group: 'androidx.recyclerview'
     }
 }

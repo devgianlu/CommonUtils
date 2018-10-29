@@ -2,7 +2,6 @@ package com.gianlu.commonutils.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,8 @@ import android.widget.TextView;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 public class GeneralItemsAdapter<E extends GeneralItemsAdapter.Item> extends BaseAdapter {
     private final List<E> items;

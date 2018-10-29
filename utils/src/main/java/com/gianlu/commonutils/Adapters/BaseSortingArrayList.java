@@ -1,12 +1,13 @@
 package com.gianlu.commonutils.Adapters;
 
-import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public abstract class BaseSortingArrayList<E, S> extends ArrayList<E> {
     private S currentSort;

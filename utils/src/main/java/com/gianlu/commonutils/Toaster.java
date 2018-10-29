@@ -3,12 +3,13 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import com.gianlu.commonutils.Dialogs.DialogUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 public class Toaster {
     private final static Handler handler = new Handler(Looper.getMainLooper());

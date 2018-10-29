@@ -1,12 +1,13 @@
 package com.gianlu.commonutils;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 
 import com.gianlu.commonutils.Preferences.Prefs;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public abstract class NightlyActivity extends AppCompatActivity {
 

@@ -1,9 +1,9 @@
 package com.gianlu.commonutils;
 
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-
 import java.util.Arrays;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 
 public final class MaterialColors {
     private static final int[] COLORS = new int[]{R.color.red, R.color.pink, R.color.purple, R.color.deepPurple, R.color.indigo, R.color.blue, R.color.lightBlue, R.color.cyan, R.color.teal, R.color.green, R.color.lightGreen, R.color.lime, R.color.yellow, R.color.amber, R.color.orange, R.color.deepOrange, R.color.brown};

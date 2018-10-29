@@ -1,7 +1,7 @@
 package com.gianlu.commonutils.Drawer;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 public class BaseDrawerItem {
     public final int id;

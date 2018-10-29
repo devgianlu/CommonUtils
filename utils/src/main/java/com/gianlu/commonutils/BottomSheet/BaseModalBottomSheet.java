@@ -2,15 +2,6 @@ package com.gianlu.commonutils.BottomSheet;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +14,16 @@ import android.widget.ProgressBar;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.FragmentActivity;
 
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
     private FloatingActionButton action;
@@ -70,7 +71,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
         Window window = getDialog().getWindow();
         if (window != null) {
-            View bottomSheet = window.findViewById(android.support.design.R.id.design_bottom_sheet);
+            View bottomSheet = window.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet == null)
                 window.getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new AttachCallbackTreeObserver());
             else
@@ -198,7 +199,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         public void onGlobalLayout() {
             Window window = getDialog().getWindow();
             if (window != null) {
-                View bottomSheet = window.findViewById(android.support.design.R.id.design_bottom_sheet);
+                View bottomSheet = window.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 if (bottomSheet != null) {
                     attachCustomCallback(bottomSheet);
                     window.getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(this);

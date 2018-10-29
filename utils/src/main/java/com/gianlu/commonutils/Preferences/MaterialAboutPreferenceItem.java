@@ -1,11 +1,11 @@
 package com.gianlu.commonutils.Preferences;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutItemOnClickAction;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 public class MaterialAboutPreferenceItem extends MaterialAboutActionItem {
     Listener listener;

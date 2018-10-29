@@ -4,12 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
@@ -34,6 +28,13 @@ import com.mikepenz.aboutlibraries.LibsBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
 
 public abstract class BasePreferenceActivity extends ActivityWithDialog implements MaterialAboutPreferenceItem.Listener, PreferencesBillingHelper.Listener {
     private PreferencesBillingHelper billingHelper;

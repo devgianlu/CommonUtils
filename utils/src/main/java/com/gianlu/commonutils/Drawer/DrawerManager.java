@@ -4,15 +4,6 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +18,16 @@ import com.gianlu.commonutils.SelectiveDividerItemDecoration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public final class DrawerManager<P extends BaseDrawerProfile> implements MenuItemsAdapter.Listener {
     private final Context context;
@@ -73,15 +74,15 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         mDrawerToggle.syncState();
 
         mMenuItemsList = drawerLayout.findViewById(R.id.drawer_menuItemsList);
-        mMenuItemsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mMenuItemsList.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
         mMenuItemsList.setHasFixedSize(true);
 
         mProfilesList = drawerLayout.findViewById(R.id.drawer_profilesList);
-        mProfilesList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mProfilesList.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
         mProfilesList.setHasFixedSize(true);
 
         mProfilesMenuItemsList = drawerLayout.findViewById(R.id.drawer_profilesMenuItems);
-        mProfilesMenuItemsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mProfilesMenuItemsList.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
         mProfilesMenuItemsList.setHasFixedSize(true);
 
         mAction = drawerLayout.findViewById(R.id.drawerHeader_action);

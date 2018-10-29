@@ -2,9 +2,6 @@ package com.gianlu.commonutils.Preferences;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +13,10 @@ import com.yarolegovich.mp.MaterialPreferenceCategory;
 import com.yarolegovich.mp.MaterialPreferenceScreen;
 import com.yarolegovich.mp.io.MaterialPreferences;
 import com.yarolegovich.mp.io.StorageModule;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 public abstract class BasePreferenceFragment extends FragmentWithDialog {
     private MaterialPreferenceScreen screen;

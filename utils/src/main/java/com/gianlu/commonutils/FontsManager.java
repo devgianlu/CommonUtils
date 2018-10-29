@@ -3,10 +3,11 @@ package com.gianlu.commonutils;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.util.LruCache;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
 
 public class FontsManager {
     public final static String ROBOTO_MEDIUM = "fonts/Roboto-Medium.ttf";

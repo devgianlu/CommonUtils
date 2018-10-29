@@ -1,8 +1,6 @@
 package com.gianlu.commonutils.Tutorial;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.gianlu.commonutils.CommonPK;
@@ -11,6 +9,9 @@ import com.gianlu.commonutils.Preferences.Prefs;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 
 public final class TutorialManager implements BaseTutorial.Listener {
     private final Listener listener;

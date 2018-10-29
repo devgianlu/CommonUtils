@@ -6,17 +6,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.annotation.UiThread;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.Toaster;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.annotation.UiThread;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 
 public class DialogUtils {
@@ -57,7 +58,7 @@ public class DialogUtils {
     }
 
     public static boolean isContextValid(Context context) {
-        return context != null && context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
+        return context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
     }
 
     public static void showDialogValid(@NonNull final Context context, @NonNull final Dialog dialog) {

@@ -1,9 +1,6 @@
 package com.gianlu.commonutils;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +11,11 @@ import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 
 import java.io.IOException;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class LogsActivity extends ActivityWithDialog {
     @Override
@@ -27,7 +29,7 @@ public class LogsActivity extends ActivityWithDialog {
 
         final Spinner spinner = findViewById(R.id.logs_spinner);
         final RecyclerViewLayout layout = findViewById(R.id.logs_recyclerViewLayout);
-        layout.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        layout.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         layout.getList().addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         final List<Logging.LogFile> logFiles = Logging.listLogFiles(this);
 

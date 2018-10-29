@@ -6,8 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,6 +21,9 @@ import com.gianlu.commonutils.GetText;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class LabeledSpinner extends LinearLayout {
     private final TextView label;
