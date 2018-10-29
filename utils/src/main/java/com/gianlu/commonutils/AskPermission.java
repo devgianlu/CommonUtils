@@ -49,10 +49,14 @@ public class AskPermission {
         int code = ThreadLocalRandom.current().nextInt(32);
         PhantomFragment fragment = PhantomFragment.get(listener, permission, code);
 
-        activity.getSupportFragmentManager()
-                .beginTransaction()
-                .add(fragment, PHANTOM_TAG + code)
-                .commitNow();
+        try {
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(fragment, PHANTOM_TAG + code)
+                    .commitNow();
+        } catch (IllegalStateException ex) {
+            Logging.log(ex);
+        }
     }
 
     public interface Listener {
