@@ -81,6 +81,15 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     private void attachCustomCallback(@NonNull View bottomSheet) {
         BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setBottomSheetCallback(prepareCallback());
+
+        attachedBehavior(bottomSheet.getContext(), behavior);
+    }
+
+    @CallSuper
+    protected void attachedBehavior(@NonNull Context context, @NonNull BottomSheetBehavior behavior) {
+        int screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+        int peekHeight = screenHeight * 9 / 16;
+        behavior.setPeekHeight(peekHeight);
     }
 
     public final void update(@NonNull Update payload) {
