@@ -81,7 +81,7 @@ public class PreferencesBillingHelper {
 
     private void showDonateDialog(final Activity activity, List<SkuDetails> products) {
         RecyclerView list = new RecyclerView(activity);
-        list.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        list.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
         list.setAdapter(new SkuAdapter(activity, products, new SkuAdapter.Listener() {
             @Override
             public void onItemSelected(@NonNull SkuDetails product) {
