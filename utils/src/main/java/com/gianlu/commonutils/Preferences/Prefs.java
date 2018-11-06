@@ -147,6 +147,10 @@ public final class Prefs {
         return getJSONArray(key.key(), fallback);
     }
 
+    public static boolean isJSONArrayEmpty(Key key) throws JSONException {
+        return getJSONArray(key.key(), new JSONArray()).length() == 0;
+    }
+
     public static JSONArray getJSONArray(KeyWithDefault<JSONArray> key) throws JSONException {
         return getJSONArray(key.key(), key.fallback());
     }
