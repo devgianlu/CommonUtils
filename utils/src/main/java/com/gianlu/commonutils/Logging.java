@@ -80,8 +80,12 @@ public final class Logging {
     }
 
     public static void clearLogs(@NonNull Context context) {
+        clearLogs(context, 7);
+    }
+
+    public static void clearLogs(@NonNull Context context, int days) {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -7);
+        cal.add(Calendar.DATE, -days);
 
         for (File file : listLogFilesInternal(context)) {
             try {
