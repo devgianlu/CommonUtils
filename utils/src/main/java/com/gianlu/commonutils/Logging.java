@@ -199,6 +199,10 @@ public final class Logging {
     public static void log(String msg, @NonNull LogLine.Type type) {
         if (msg == null) return;
         if (logger != null) logger.log(System.currentTimeMillis(), msg, type);
+        if (CommonUtils.isDebug()) {
+            if (type == LogLine.Type.ERROR || type == LogLine.Type.WARNING) System.err.println(msg);
+            else System.out.println(msg);
+        }
     }
 
     public static void log(@NonNull LogLine line) {
