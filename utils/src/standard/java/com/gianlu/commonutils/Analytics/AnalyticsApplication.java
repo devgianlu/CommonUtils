@@ -40,7 +40,7 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
 
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-        Crashlytics.logException(throwable);
+        // Crashlytics.logException(throwable);
     }
 
     @Override
