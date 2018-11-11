@@ -6,6 +6,8 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -256,11 +258,11 @@ public final class CommonUtils {
         v.startAnimation(a);
     }
 
-    public static void collapseTitle(TextView v) {
+    public static void collapseTitle(@NonNull TextView v) {
         v.setSingleLine(true);
     }
 
-    public static void expandTitle(TextView v) {
+    public static void expandTitle(@NonNull TextView v) {
         v.setSingleLine(false);
     }
 
@@ -280,26 +282,43 @@ public final class CommonUtils {
         return color;
     }
 
-    public static void animateCollapsingArrowBellows(View view, boolean expanded) {
+    public static void animateCollapsingArrowBellows(@NonNull View view, boolean expanded) {
         if (expanded) view.animate().rotation(0).setDuration(200).start();
         else view.animate().rotation(180).setDuration(200).start();
     }
 
+    public static void clearTextOnEdit(@NonNull final TextInputLayout layout) {
+        getEditText(layout).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                layout.setErrorEnabled(false);
+            }
+        });
+    }
+
     @NonNull
-    public static EditText getEditText(TextInputLayout layout) {
+    public static EditText getEditText(@NonNull TextInputLayout layout) {
         if (layout.getEditText() == null)
             throw new IllegalStateException("TextInputLayout hasn't a TextInputEditText");
         return layout.getEditText();
     }
 
     @NonNull
-    public static String getText(TextInputLayout layout) {
+    public static String getText(@NonNull TextInputLayout layout) {
         if (layout.getEditText() == null)
             throw new IllegalStateException("TextInputLayout hasn't a TextInputEditText");
         return layout.getEditText().getText().toString();
     }
 
-    public static void setText(TextInputLayout layout, CharSequence val) {
+    public static void setText(@NonNull TextInputLayout layout, CharSequence val) {
         if (layout.getEditText() != null) layout.getEditText().setText(val);
     }
 
