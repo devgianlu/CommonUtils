@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 
+import com.gianlu.commonutils.R;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
@@ -17,5 +19,7 @@ public abstract class ThemedModalBottomSheet<Setup, Update> extends BaseModalBot
     }
 
     @StyleRes
-    protected abstract int getCustomTheme(@NonNull Setup payload);
+    protected int getCustomTheme(@NonNull Setup payload) {
+        return R.style.AppTheme;
+    }
 }
