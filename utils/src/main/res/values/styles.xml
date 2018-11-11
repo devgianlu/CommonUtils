@@ -1,13 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="colorAccentRef" format="reference|color" />
+    <attr name="colorPrimaryRef" format="reference|color" />
+    <attr name="colorPrimaryDarkRef" format="reference|color" />
+    <attr name="colorBackgroundFloatingRef" format="reference|color" />
 
-    <!-- Placeholders -->
+    <!-- App theme -->
     <style name="AppTheme" />
 
-    <!--
-    <attr name="colorControlNormal" format="reference|color" />
-    <attr name="colorBackgroundFloating" format="reference|color" />
-    -->
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccentRef">@color/colorAccent</item>
+        <item name="colorPrimaryRef">@color/colorPrimary</item>
+        <item name="colorPrimaryDarkRef">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="dialogTheme">@style/DialogFix</item>
+        <item name="colorBackgroundFloatingRef">?android:attr/colorBackgroundFloating</item>
+    </style>
+
+    <!-- No action bar theme -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.Drawer" parent="AppTheme.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Dialog fix -->
+    <style name="DialogFixCommon" parent="@style/Theme.AppCompat.DayNight.Dialog">
+        <item name="android:windowNoTitle">false</item>
+        <item name="colorAccent">?attr/colorAccentRef</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="buttonStyle">@style/DialogFixButton</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="DialogFix" parent="DialogFixCommon">
+        <item name="android:background">?android:attr/colorBackgroundFloating</item>
+    </style>
+
+    <style name="DialogFixButton" parent="@android:style/Widget.Material.Light.Button">
+        <item name="android:textColor">?attr/colorAccentRef</item>
+    </style>
 
     <!-- Material About default -->
     <style name="MaterialAbout.Default" parent="MaterialAbout.Light" />
@@ -27,16 +67,14 @@
     </style>
 
     <!-- Fullscreen stuff -->
-    <style name="FullscreenTheme" parent="Theme.AppCompat.Light">
+    <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <color name="black_overlay">#66000000</color>
-
     <style name="FullscreenActionBarStyle">
-        <item name="android:background">@color/black_overlay</item>
+        <item name="android:background">#66000000</item>
     </style>
 
     <!-- Drawer layout (see other variants) -->
