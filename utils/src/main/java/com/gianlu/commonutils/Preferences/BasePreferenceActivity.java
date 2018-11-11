@@ -14,7 +14,6 @@ import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
 import com.gianlu.commonutils.Analytics.AnalyticsPreferenceDialog;
-import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.FossUtils;
@@ -171,7 +170,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
-                            CommonUtils.sendEmail(context, null);
+                            Logging.sendEmail(context, null);
                         }
                     }))
                     .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, new MaterialAboutItemOnClickAction() {

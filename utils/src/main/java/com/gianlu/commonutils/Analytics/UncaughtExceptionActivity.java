@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
+import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 
 import androidx.appcompat.app.ActionBar;
@@ -40,7 +40,7 @@ public class UncaughtExceptionActivity extends ActivityWithDialog {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.sendEmail(UncaughtExceptionActivity.this, (Throwable) getIntent().getSerializableExtra("exception"));
+                Logging.sendEmail(UncaughtExceptionActivity.this, (Throwable) getIntent().getSerializableExtra("exception"));
             }
         });
     }

@@ -2,13 +2,17 @@ package com.gianlu.commonutils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.gianlu.commonutils.Preferences.Prefs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +38,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 public final class Logging {
@@ -46,6 +51,11 @@ public final class Logging {
     @NonNull
     private static File getLogsDirectory(@NonNull Context context) {
         return new File(context.getFilesDir(), "logs");
+    }
+
+    @NonNull
+    private static File getCacheLogsDirectory(@NonNull Context context) {
+        return new File(context.getCacheDir(), "logs");
     }
 
     private static boolean isLogFile(@NonNull String name) {
@@ -107,10 +117,60 @@ public final class Logging {
         init(context);
     }
 
-    @Nullable
-    public static LogFile getLatestLogFile(@NonNull Context context) {
-        List<LogFile> logs = listLogFiles(context);
-        return logs.isEmpty() ? null : logs.get(0);
+    public static void sendEmail(@NonNull Context context, @Nullable Throwable sendEx) {
+        String version;
+        try {
+            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException ex) {
+            version = context.getString(R.string.unknown);
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SEND)
+                .setType("message/rfc822")
+                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.devgianluEmail)})
+                .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
+
+        String emailBody = "-------- DO NOT EDIT --------" +
+                "\r\nOS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
+                "\r\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
+                "\r\nDevice: " + android.os.Build.DEVICE +
+                "\r\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
+                "\r\nApplication version: " + version +
+                "\r\nCrashlytics UID: " + Prefs.getString(CommonPK.ANALYTICS_USER_ID, null);
+
+        if (sendEx != null) {
+            emailBody += "\r\n\r\n";
+            emailBody += getStackTrace(sendEx);
+        }
+
+        emailBody += "\r\n------------------------------------" + "\r\n\r\n\r\nProvide bug details\r\n";
+
+        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
+
+        List<Logging.LogFile> logs = listLogFiles(context);
+        if (!logs.isEmpty()) {
+            File logsCache = getCacheLogsDirectory(context);
+            if (!logsCache.exists() && !logsCache.mkdir()) {
+                Logging.log("Failed creating logs cache directory!", true);
+            } else {
+                try {
+                    File dest = new File(logsCache, "all-" + getFileDateFormatter().format(new Date()) + ".zip");
+                    CommonUtils.zip(logs, dest);
+
+                    Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", dest);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+                } catch (IllegalArgumentException | IOException ex) {
+                    Logging.log(ex);
+                }
+            }
+        }
+
+        try {
+            context.startActivity(Intent.createChooser(intent, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toaster.with(context).message(R.string.noMailClients).ex(ex).show();
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -131,6 +191,7 @@ public final class Logging {
         }
     }
 
+    @NonNull
     public static List<LogFile> listLogFiles(@NonNull Context context) {
         File[] files = listLogFilesInternal(context);
 
@@ -189,6 +250,11 @@ public final class Logging {
         PrintWriter writer = new PrintWriter(sw);
         ex.printStackTrace(writer);
         return sw.toString();
+    }
+
+    public static void log(@NonNull String msg, Throwable ex) {
+        if (ex == null) return;
+        log(msg + '\n' + getStackTrace(ex), true);
     }
 
     public static void log(Throwable ex) {

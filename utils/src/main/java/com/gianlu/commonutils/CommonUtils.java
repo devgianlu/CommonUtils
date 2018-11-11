@@ -1,14 +1,11 @@
 package com.gianlu.commonutils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.gianlu.commonutils.Preferences.Prefs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -52,6 +48,8 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
@@ -59,7 +57,6 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,20 +64,36 @@ public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
+    public static void zip(List<? extends File> files, File dest) throws IOException {
+        byte[] buffer = new byte[8192];
+        try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(dest))) {
+            for (File file : files) {
+                out.putNextEntry(new ZipEntry(file.getName()));
+                try (FileInputStream in = new FileInputStream(file)) {
+                    int read;
+                    while ((read = in.read(buffer)) != -1)
+                        out.write(buffer, 0, read);
+                } finally {
+                    out.closeEntry();
+                }
+            }
+        }
+    }
+
     public static boolean isVisible(@NonNull Fragment fragment) {
         View root = fragment.getView();
         return root != null && root.getGlobalVisibleRect(new Rect());
     }
 
-    public static void setBackgroundColor(FloatingActionButton fab, @ColorRes int color) {
+    public static void setBackgroundColor(@NonNull FloatingActionButton fab, @ColorRes int color) {
         fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(fab.getContext(), color)));
     }
 
-    public static List<NameValuePair> splitQuery(URL url) {
+    public static List<NameValuePair> splitQuery(@NonNull URL url) {
         return splitQuery(url.getQuery());
     }
 
-    public static List<NameValuePair> splitQuery(String query) {
+    public static List<NameValuePair> splitQuery(@NonNull String query) {
         try {
             List<NameValuePair> queryPairs = new ArrayList<>();
             String[] pairs = query.split("&");
@@ -98,6 +111,7 @@ public final class CommonUtils {
         }
     }
 
+    @NonNull
     public static String formQuery(List<NameValuePair> pairs) {
         StringBuilder builder = new StringBuilder();
         boolean first = true;
@@ -216,7 +230,7 @@ public final class CommonUtils {
         v.startAnimation(a);
     }
 
-    public static void collapse(final View v, @Nullable Animation.AnimationListener listener) {
+    public static void collapse(@NonNull final View v, @Nullable Animation.AnimationListener listener) {
         final int initialHeight = v.getMeasuredHeight();
 
         Animation a = new Animation() {
@@ -310,54 +324,6 @@ public final class CommonUtils {
             int digitGroups = (int) (Math.log10(v) / Math.log10(si ? 1000 : 1024));
             if (digitGroups > 4) return "∞ B/s";
             return new DecimalFormat("#,##0.#").format(v / Math.pow(si ? 1000 : 1024, digitGroups)) + " " + units[digitGroups];
-        }
-    }
-
-    public static void sendEmail(@NonNull Context context, @Nullable Throwable sendEx) {
-        String version;
-        try {
-            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException ex) {
-            version = context.getString(R.string.unknown);
-        }
-
-        Intent intent = new Intent(Intent.ACTION_SEND)
-                .setType("message/rfc822")
-                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.devgianluEmail)})
-                .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
-
-        String emailBody = "-------- DO NOT EDIT --------" +
-                "\r\nOS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
-                "\r\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
-                "\r\nDevice: " + android.os.Build.DEVICE +
-                "\r\nModel (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")" +
-                "\r\nApplication version: " + version +
-                "\r\nCrashlytics UID: " + Prefs.getString(CommonPK.ANALYTICS_USER_ID, null);
-
-        if (sendEx != null) {
-            emailBody += "\r\n\r\n";
-            emailBody += Logging.getStackTrace(sendEx);
-        }
-
-        emailBody += "\r\n------------------------------------" + "\r\n\r\n\r\nProvide bug details\r\n";
-
-        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
-
-        Logging.LogFile log = Logging.getLatestLogFile(context);
-        if (log != null) {
-            try {
-                Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", log);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.putExtra(Intent.EXTRA_STREAM, uri);
-            } catch (IllegalArgumentException ex) {
-                Logging.log(ex);
-            }
-        }
-
-        try {
-            context.startActivity(Intent.createChooser(intent, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toaster.with(context).message(R.string.noMailClients).ex(ex).show();
         }
     }
 

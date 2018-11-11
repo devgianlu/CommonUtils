@@ -40,7 +40,7 @@ public class OfflineActivity extends ActivityWithDialog {
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.sendEmail(OfflineActivity.this, null);
+                Logging.sendEmail(OfflineActivity.this, null);
             }
         });
 
