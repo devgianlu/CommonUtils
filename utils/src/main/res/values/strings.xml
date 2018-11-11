@@ -41,12 +41,16 @@
     <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="devgianlu" translatable="false">devgianlu</string>
     <string name="devgianluEmail" translatable="false">altomanigianluca@gmail.com</string>
-    <string name="tutorial">Tutorial</string>
-    <string name="restartTutorial">Restart tutorial</string>
-    <string name="developer">Developer</string>
-    <string name="usageStatistics">Usage statistics</string>
-    <string name="usageStatisticsSummary">Toggle which information is sent to the developer</string>
-    <string name="usageStatisticsDialogLong">I (the developer) receive information about the usage of the app and the crashes. You can toggle them separately down below.</string>
-    <string name="usageTracking">Usage tracking</string>
-    <string name="crashesTracking">Crashes tracking</string>
+
+    <!-- Prefs -->
+    <string name="prefs_nightMode">Enable night mode (dark theme)</string>
+    <string name="prefs_nightMode_summary">Always enable night mode, regarding of the system default.</string>
+    <string name="prefs_usageStatistics">Usage statistics</string>
+    <string name="prefs_usageStatisticsSummary">Toggle which information is sent to the developer</string>
+    <string name="prefs_usageStatisticsDialogLong">I (the developer) receive information about the usage of the app and the crashes. You can toggle them separately down below.</string>
+    <string name="prefs_usageTracking">Usage tracking</string>
+    <string name="prefs_crashesTracking">Crashes tracking</string>
+    <string name="prefs_tutorial">Tutorial</string>
+    <string name="prefs_restartTutorial">Restart tutorial</string>
+    <string name="prefs_developer">Developer</string>
 </resources>

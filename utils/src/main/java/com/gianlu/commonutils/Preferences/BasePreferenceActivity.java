@@ -161,7 +161,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
                             .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
-                    .addItem(new MaterialAboutActionItem(R.string.developer, R.string.devgianlu, R.drawable.baseline_person_24, new MaterialAboutItemOnClickAction() {
+                    .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, new MaterialAboutItemOnClickAction() {
                         @Override
                         public void onClick() {
                             openLink(context, "https://gianlu.xyz");
@@ -205,7 +205,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             }
 
             if (FossUtils.hasFabric()) {
-                developerBuilder.addItem(new MaterialAboutActionItem(R.string.usageStatistics, R.string.usageStatisticsSummary, R.drawable.baseline_track_changes_24, new MaterialAboutItemOnClickAction() {
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, new MaterialAboutItemOnClickAction() {
                     @Override
                     public void onClick() {
                         AnalyticsPreferenceDialog.get()
@@ -281,9 +281,9 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             MaterialAboutCard.Builder tutorialBuilder = null;
             if (parent.hasTutorial()) {
                 tutorialBuilder = new MaterialAboutCard.Builder()
-                        .title(R.string.tutorial);
+                        .title(R.string.prefs_tutorial);
 
-                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.restartTutorial, 0, R.drawable.baseline_settings_backup_restore_24, new MaterialAboutItemOnClickAction() {
+                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_restartTutorial, 0, R.drawable.baseline_settings_backup_restore_24, new MaterialAboutItemOnClickAction() {
                     @Override
                     public void onClick() {
                         TutorialManager.restartTutorial();

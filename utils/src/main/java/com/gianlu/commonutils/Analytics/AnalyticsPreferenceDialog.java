@@ -30,7 +30,7 @@ public class AnalyticsPreferenceDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setTitle(R.string.usageStatistics);
+        dialog.setTitle(R.string.prefs_usageStatistics);
         return dialog;
     }
 

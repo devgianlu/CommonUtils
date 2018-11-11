@@ -11,7 +11,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:paddingBottom="8dp"
-        android:text="@string/usageStatisticsDialogLong" />
+        android:text="@string/prefs_usageStatisticsDialogLong" />
 
     <CheckBox
         android:id="@+id/analyticsPrefsDialog_tracking"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:text="@string/usageTracking" />
+        android:text="@string/prefs_usageTracking" />
 
     <CheckBox
         android:id="@+id/analyticsPrefsDialog_crashReport"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:text="@string/crashesTracking" />
+        android:text="@string/prefs_crashesTracking" />
 
     <Button
         android:id="@+id/analyticsPrefsDialog_ok"
