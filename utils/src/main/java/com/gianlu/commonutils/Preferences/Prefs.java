@@ -88,7 +88,11 @@ public final class Prefs {
     // getString
 
     public static String getString(String key, String fallback) {
-        return prefs.getString(key, fallback);
+        try {
+            return prefs.getString(key, fallback);
+        } catch (ClassCastException ex) {
+            return String.valueOf(prefs.getInt(key, Integer.parseInt(fallback)));
+        }
     }
 
     public static String getString(Key key, String fallback) {
