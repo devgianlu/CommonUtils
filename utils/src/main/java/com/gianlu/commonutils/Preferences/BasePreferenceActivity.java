@@ -1,5 +1,6 @@
 package com.gianlu.commonutils.Preferences;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -38,8 +39,12 @@ import androidx.fragment.app.Fragment;
 public abstract class BasePreferenceActivity extends ActivityWithDialog implements MaterialAboutPreferenceItem.Listener, PreferencesBillingHelper.Listener {
     private PreferencesBillingHelper billingHelper;
 
-    private static void openLink(Context context, String uri) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+    private static void openLink(@NonNull Context context, @NonNull String uri) {
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
+        } catch (ActivityNotFoundException ex) {
+            Toaster.with(context).message(R.string.missingWebBrowser).ex(ex).show();
+        }
     }
 
     @Override
