@@ -22,11 +22,6 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
 
     @Override
     @CallSuper
-    public void uncaughtException(Thread thread, Throwable throwable) {
-    }
-
-    @Override
-    @CallSuper
     public void onCreate() {
         super.onCreate();
 

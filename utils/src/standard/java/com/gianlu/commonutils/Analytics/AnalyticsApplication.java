@@ -39,11 +39,6 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     @Override
-    public void uncaughtException(Thread thread, Throwable throwable) {
-        // Crashlytics.logException(throwable);
-    }
-
-    @Override
     @CallSuper
     public void onCreate() {
         super.onCreate();

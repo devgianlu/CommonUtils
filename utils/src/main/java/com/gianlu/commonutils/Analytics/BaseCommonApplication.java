@@ -23,14 +23,15 @@ public abstract class BaseCommonApplication extends Application implements Threa
         }
     }
 
+    /**
+     * Never called in debug.
+     */
     @Override
-    public void uncaughtException(Thread thread, Throwable throwable) {
+    public final void uncaughtException(Thread thread, Throwable throwable) {
         Logging.log(throwable);
 
-        if (!CommonUtils.isDebug()) {
-            if (uncaughtNotDebug(thread, throwable))
-                UncaughtExceptionActivity.startActivity(this, throwable);
-        }
+        if (uncaughtNotDebug(thread, throwable))
+            UncaughtExceptionActivity.startActivity(this, throwable);
     }
 
     protected boolean uncaughtNotDebug(Thread thread, Throwable throwable) {
@@ -49,7 +50,7 @@ public abstract class BaseCommonApplication extends Application implements Threa
         CommonUtils.setDebug(isDebug());
         Logging.init(this);
         Logging.clearLogs(this);
-        Thread.setDefaultUncaughtExceptionHandler(this);
+        if (!isDebug()) Thread.setDefaultUncaughtExceptionHandler(this);
 
         deprecatedBackwardCompatibility();
 
