@@ -26,23 +26,23 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public final class DrawerManager<P extends BaseDrawerProfile> implements MenuItemsAdapter.Listener {
+public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> implements MenuItemsAdapter.Listener<E> {
     private final Context context;
     private final ActionBarDrawerToggle mDrawerToggle;
     private final DrawerLayout mDrawerLayout;
-    private final Config<P> config;
+    private final Config<P, E> config;
     private final RecyclerView mMenuItemsList;
     private final RecyclerView mProfilesList;
     private final ImageButton mAction;
     private final RecyclerView mProfilesMenuItemsList;
     private final LinearLayout mProfilesContainer;
-    private MenuItemsAdapter menuItemsAdapter;
+    private MenuItemsAdapter<E> menuItemsAdapter;
     private ProfilesAdapter<P, ?> profilesAdapter;
     private SelectiveDividerItemDecoration menuItemsDecoration;
 
-    private DrawerManager(@NonNull Config<P> config, @NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
+    private DrawerManager(@NonNull Config<P, E> config, @NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
         this.config = config;
-        this.context = drawerLayout.getContext();
+        this.context = activity;
 
         mDrawerLayout = drawerLayout;
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -105,17 +105,17 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
     }
 
     @Override
-    public void onMenuItemSelected(@NonNull BaseDrawerItem which) {
+    public void onMenuItemSelected(@NonNull BaseDrawerItem<E> which) {
         if (config.menuListener != null)
             setDrawerState(false, config.menuListener.onDrawerMenuItemSelected(which));
     }
 
     private void setupProfilesMenuItems() {
-        mProfilesMenuItemsList.setAdapter(new MenuItemsAdapter(context, config.profilesMenuItems, this));
+        mProfilesMenuItemsList.setAdapter(new MenuItemsAdapter<>(context, config.profilesMenuItems, this));
     }
 
     private void setupMenuItems() {
-        menuItemsAdapter = new MenuItemsAdapter(context, config.menuItems, this);
+        menuItemsAdapter = new MenuItemsAdapter<>(context, config.menuItems, this);
         mMenuItemsList.setAdapter(menuItemsAdapter);
         mMenuItemsList.removeItemDecoration(menuItemsDecoration);
         menuItemsDecoration = new SelectiveDividerItemDecoration(context, SelectiveDividerItemDecoration.VERTICAL, config.menuSeparators);
@@ -253,11 +253,11 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         });
     }
 
-    public void updateBadge(int which, int badgeNumber) {
+    public void updateBadge(@NonNull E which, int badgeNumber) {
         if (menuItemsAdapter != null) menuItemsAdapter.updateBadge(which, badgeNumber);
     }
 
-    public void setActiveItem(int which) {
+    public void setActiveItem(@NonNull E which) {
         if (menuItemsAdapter != null) menuItemsAdapter.setActiveItem(which);
     }
 
@@ -293,8 +293,8 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         setupProfiles();
     }
 
-    public interface MenuDrawerListener {
-        boolean onDrawerMenuItemSelected(@NonNull BaseDrawerItem item);
+    public interface MenuDrawerListener<E extends Enum> {
+        boolean onDrawerMenuItemSelected(@NonNull BaseDrawerItem<E> item);
     }
 
     public interface ProfilesDrawerListener<P extends BaseDrawerProfile> {
@@ -307,44 +307,44 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         void drawerAction();
     }
 
-    public static class Config<P extends BaseDrawerProfile> {
-        private final List<BaseDrawerItem> menuItems = new ArrayList<>();
-        private final List<BaseDrawerItem> profilesMenuItems = new ArrayList<>();
+    public static class Config<P extends BaseDrawerProfile, E extends Enum> {
+        private final List<BaseDrawerItem<E>> menuItems = new ArrayList<>();
+        private final List<BaseDrawerItem<E>> profilesMenuItems = new ArrayList<>();
         private final List<Integer> menuSeparators = new ArrayList<>();
         private final List<P> profiles = new ArrayList<>();
-        private final MenuDrawerListener menuListener;
+        private final MenuDrawerListener<E> menuListener;
         private OnAction actionListener = null;
         private P singleProfile = null;
         private ProfilesDrawerListener<P> profilesListener;
         private AdapterProvider<P> adapterProvider;
 
-        public Config(@NonNull MenuDrawerListener menuListener) {
+        public Config(@NonNull MenuDrawerListener<E> menuListener) {
             this.menuListener = menuListener;
         }
 
-        public Config<P> singleProfile(@NonNull P profile, @Nullable OnAction actionListener) {
+        public Config<P, E> singleProfile(@NonNull P profile, @Nullable OnAction actionListener) {
             this.singleProfile = profile;
             this.actionListener = actionListener;
             this.profiles.clear();
             return this;
         }
 
-        public Config<P> addMenuItemSeparator() {
+        public Config<P, E> addMenuItemSeparator() {
             menuSeparators.add(menuItems.size() - 1);
             return this;
         }
 
-        public Config<P> addMenuItem(@NonNull BaseDrawerItem item) {
+        public Config<P, E> addMenuItem(@NonNull BaseDrawerItem<E> item) {
             menuItems.add(item);
             return this;
         }
 
-        public Config<P> addProfilesMenuItem(@NonNull BaseDrawerItem item) {
+        public Config<P, E> addProfilesMenuItem(@NonNull BaseDrawerItem<E> item) {
             profilesMenuItems.add(item);
             return this;
         }
 
-        public Config<P> addProfiles(@NonNull Collection<P> profiles, @NonNull ProfilesDrawerListener<P> profilesListener, @NonNull AdapterProvider<P> adapterProvider) {
+        public Config<P, E> addProfiles(@NonNull Collection<P> profiles, @NonNull ProfilesDrawerListener<P> profilesListener, @NonNull AdapterProvider<P> adapterProvider) {
             this.profilesListener = profilesListener;
             this.adapterProvider = adapterProvider;
             this.profiles.addAll(profiles);
@@ -354,7 +354,7 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         }
 
         @NonNull
-        public DrawerManager<P> build(@NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
+        public DrawerManager<P, E> build(@NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
             return new DrawerManager<>(this, activity, drawerLayout, toolbar);
         }
 

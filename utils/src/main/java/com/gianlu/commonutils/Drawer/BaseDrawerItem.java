@@ -3,16 +3,14 @@ package com.gianlu.commonutils.Drawer;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
-public class BaseDrawerItem {
-    public final int id;
+public class BaseDrawerItem<E extends Enum> {
+    public final E id;
     public final int icon;
     public final String name;
     int badgeNumber = -1;
     boolean active = false;
 
-    public BaseDrawerItem(int id, @DrawableRes int icon, @NonNull String name) {
-        if (id < 0) throw new IllegalArgumentException("Must be > 0!");
-
+    public BaseDrawerItem(@NonNull E id, @DrawableRes int icon, @NonNull String name) {
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -28,6 +26,6 @@ public class BaseDrawerItem {
 
     @Override
     public int hashCode() {
-        return id;
+        return id.ordinal();
     }
 }

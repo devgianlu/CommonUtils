@@ -20,15 +20,15 @@ import androidx.annotation.UiThread;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.ViewHolder> {
+public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuItemsAdapter.ViewHolder> {
     private final LayoutInflater inflater;
-    private final List<BaseDrawerItem> items;
-    private final Listener listener;
+    private final List<BaseDrawerItem<E>> items;
+    private final Listener<E> listener;
     private final int colorTextPrimary;
     private final int colorAccent;
     private final Drawable selectableItemBackground;
 
-    MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem> items, Listener listener) {
+    MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem<E>> items, Listener<E> listener) {
         this.inflater = LayoutInflater.from(context);
         this.items = items;
         this.listener = listener;
@@ -45,7 +45,7 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull MenuItemsAdapter.ViewHolder holder, int position) {
-        final BaseDrawerItem item = items.get(position);
+        final BaseDrawerItem<E> item = items.get(position);
 
         holder.icon.setImageResource(item.icon);
         holder.name.setText(item.name);
@@ -67,12 +67,10 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         if (item.active) {
             holder.name.setTextColor(colorAccent);
             holder.itemView.setBackgroundResource(R.drawable.item_drawer_active);
-            FontsManager.set(holder.name, FontsManager.ROBOTO_BOLD);
             holder.icon.setImageTintList(ColorStateList.valueOf(colorAccent));
         } else {
             holder.name.setTextColor(colorTextPrimary);
             holder.itemView.setBackground(selectableItemBackground);
-            FontsManager.set(holder.name, FontsManager.ROBOTO_REGULAR);
             holder.icon.setImageTintList(ColorStateList.valueOf(colorTextPrimary));
         }
     }
@@ -82,16 +80,16 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         return items.size();
     }
 
-    private int indexOf(int id) {
+    private int indexOf(E which) {
         for (int i = 0; i < items.size(); i++)
-            if (items.get(i).id == id)
+            if (items.get(i).id == which)
                 return i;
 
         return -1;
     }
 
     @UiThread
-    void updateBadge(int which, int badgeNumber) {
+    void updateBadge(E which, int badgeNumber) {
         int pos = indexOf(which);
         if (pos != -1) {
             BaseDrawerItem item = items.get(pos);
@@ -103,7 +101,7 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
     }
 
     @UiThread
-    void setActiveItem(int which) {
+    void setActiveItem(E which) {
         int pos = indexOf(which);
         for (int i = 0; i < getItemCount(); i++) {
             BaseDrawerItem item = items.get(i);
@@ -115,8 +113,8 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         }
     }
 
-    public interface Listener {
-        void onMenuItemSelected(@NonNull BaseDrawerItem which);
+    public interface Listener<E extends Enum> {
+        void onMenuItemSelected(@NonNull BaseDrawerItem<E> which);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -129,6 +127,7 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
 
             icon = itemView.findViewById(R.id.drawerItem_icon);
             name = itemView.findViewById(R.id.drawerItem_name);
+            FontsManager.set(name, FontsManager.ROBOTO_BOLD);
             badge = itemView.findViewById(R.id.drawerItem_badge);
         }
     }
