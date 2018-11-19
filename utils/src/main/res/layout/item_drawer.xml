@@ -4,10 +4,10 @@
     android:layout_height="48dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="12dp"
-    android:paddingEnd="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="12dp">
+    android:paddingTop="12dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="12dp">
 
     <ImageView
         android:id="@+id/drawerItem_icon"
@@ -20,6 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:ellipsize="end"
         android:lines="1"
         android:textColor="?android:textColorPrimary" />
 
@@ -28,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:background="@drawable/drawer_badge"
         android:gravity="center"
         android:lines="1"
         android:minWidth="20dp"

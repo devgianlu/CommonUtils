@@ -14,21 +14,23 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile, VH extends Re
     protected final DrawerManager.ProfilesDrawerListener<P> listener;
     private RecyclerView list;
 
-    public ProfilesAdapter(Context context, List<P> profiles, DrawerManager.ProfilesDrawerListener<P> listener) {
+    public ProfilesAdapter(@NonNull Context context, @NonNull List<P> profiles, @NonNull DrawerManager.ProfilesDrawerListener<P> listener) {
         this.context = context;
         this.profiles = profiles;
         this.listener = listener;
     }
 
     public final void startProfilesTest() {
-        for (int i = 0; i < profiles.size(); i++)
+        for (int i = 0; i < profiles.size(); i++) {
             if (i == profiles.size() - 1) runTest(i);
             else runTest(i);
+        }
     }
 
     protected abstract P getItem(int pos);
 
-    protected abstract void runTest(int pos);
+    protected void runTest(int pos) {
+    }
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -52,14 +54,14 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile, VH extends Re
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener != null) listener.onDrawerProfileSelected(profile);
+                listener.onDrawerProfileSelected(profile);
             }
         });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return listener != null && listener.onDrawerProfileLongClick(profile);
+                return listener.onDrawerProfileLongClick(profile);
             }
         });
     }

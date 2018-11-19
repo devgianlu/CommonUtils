@@ -240,7 +240,7 @@ public class PreferencesBillingHelper {
             final Button buy;
 
             ViewHolder(ViewGroup parent) {
-                super(inflater.inflate(R.layout.product_item, parent, false));
+                super(inflater.inflate(R.layout.item_product, parent, false));
 
                 icon = itemView.findViewById(R.id.productItem_icon);
                 title = itemView.findViewById(R.id.productItem_title);

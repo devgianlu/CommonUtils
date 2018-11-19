@@ -7,8 +7,8 @@ public class BaseDrawerItem {
     public final int id;
     public final int icon;
     public final String name;
-    public int badgeNumber = -1;
-    public boolean active = false;
+    int badgeNumber = -1;
+    boolean active = false;
 
     public BaseDrawerItem(int id, @DrawableRes int icon, @NonNull String name) {
         if (id < 0) throw new IllegalArgumentException("Must be > 0!");

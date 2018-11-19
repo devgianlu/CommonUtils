@@ -138,7 +138,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         @Override
         public final ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType == ITEM_LOADING)
-                return new LoadingViewHolder(inflater.inflate(R.layout.loading_item, parent, false));
+                return new LoadingViewHolder(inflater.inflate(R.layout.item_loading, parent, false));
             else if (viewType == ITEM_SEPARATOR)
                 return new SeparatorViewHolder(inflater.inflate(R.layout.separator_item, parent, false));
             else

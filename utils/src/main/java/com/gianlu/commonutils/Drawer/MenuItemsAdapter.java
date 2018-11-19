@@ -2,6 +2,7 @@ package com.gianlu.commonutils.Drawer;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.gianlu.commonutils.R;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,13 +24,17 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
     private final LayoutInflater inflater;
     private final List<BaseDrawerItem> items;
     private final Listener listener;
-    private final Context context;
+    private final int colorTextPrimary;
+    private final int colorAccent;
+    private final Drawable selectableItemBackground;
 
     MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem> items, Listener listener) {
         this.inflater = LayoutInflater.from(context);
         this.items = items;
-        this.context = context;
         this.listener = listener;
+        this.colorTextPrimary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
+        this.colorAccent = ContextCompat.getColor(context, R.color.colorAccent);
+        this.selectableItemBackground = CommonUtils.resolveAttrAsDrawable(context, android.R.attr.selectableItemBackground);
     }
 
     @Override
@@ -46,7 +52,6 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
 
         if (item.badgeNumber >= 0) {
             holder.badge.setVisibility(View.VISIBLE);
-            holder.badge.setBackgroundResource(R.drawable.drawer_badge);
             holder.badge.setText(String.valueOf(item.badgeNumber));
         } else {
             holder.badge.setVisibility(View.GONE);
@@ -60,15 +65,15 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         });
 
         if (item.active) {
-            int accent = ContextCompat.getColor(context, R.color.colorAccent);
-            holder.name.setTextColor(accent);
+            holder.name.setTextColor(colorAccent);
+            holder.itemView.setBackgroundResource(R.drawable.item_drawer_active);
             FontsManager.set(holder.name, FontsManager.ROBOTO_BOLD);
-            holder.icon.setImageTintList(ColorStateList.valueOf(accent));
+            holder.icon.setImageTintList(ColorStateList.valueOf(colorAccent));
         } else {
-            int primary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
-            holder.name.setTextColor(primary);
+            holder.name.setTextColor(colorTextPrimary);
+            holder.itemView.setBackground(selectableItemBackground);
             FontsManager.set(holder.name, FontsManager.ROBOTO_REGULAR);
-            holder.icon.setImageTintList(ColorStateList.valueOf(primary));
+            holder.icon.setImageTintList(ColorStateList.valueOf(colorTextPrimary));
         }
     }
 
@@ -85,7 +90,8 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         return -1;
     }
 
-    public void updateBadge(int which, int badgeNumber) {
+    @UiThread
+    void updateBadge(int which, int badgeNumber) {
         int pos = indexOf(which);
         if (pos != -1) {
             BaseDrawerItem item = items.get(pos);
@@ -96,7 +102,8 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         }
     }
 
-    public void setActiveItem(int which) {
+    @UiThread
+    void setActiveItem(int which) {
         int pos = indexOf(which);
         for (int i = 0; i < getItemCount(); i++) {
             BaseDrawerItem item = items.get(i);
@@ -117,9 +124,8 @@ public class MenuItemsAdapter extends RecyclerView.Adapter<MenuItemsAdapter.View
         final TextView name;
         final TextView badge;
 
-        public ViewHolder(ViewGroup parent) {
-            super(inflater.inflate(R.layout.drawer_item_primary, parent, false));
-            itemView.setBackground(CommonUtils.resolveAttrAsDrawable(parent.getContext(), R.attr.selectableItemBackground));
+        public ViewHolder(@NonNull ViewGroup parent) {
+            super(inflater.inflate(R.layout.item_drawer, parent, false));
 
             icon = itemView.findViewById(R.id.drawerItem_icon);
             name = itemView.findViewById(R.id.drawerItem_name);

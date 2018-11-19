@@ -6,12 +6,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gianlu.commonutils.CommonUtils;
-import com.gianlu.commonutils.LettersIcons.LettersImageView;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.SelectiveDividerItemDecoration;
 
@@ -19,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -86,9 +83,6 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         mProfilesMenuItemsList.setHasFixedSize(true);
 
         mAction = drawerLayout.findViewById(R.id.drawerHeader_action);
-
-        ImageView headerBackground = drawerLayout.findViewById(R.id.drawerHeader_background);
-        headerBackground.setImageResource(config.headerDrawable);
 
         setupMenuItems();
         if (config.singleProfile != null) {
@@ -286,11 +280,9 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
 
     public void setCurrentProfile(@NonNull P profile) {
         TextView profileName = mDrawerLayout.findViewById(R.id.drawerHeader_profileName);
-        profileName.setText(profile.getProfileName(context));
+        profileName.setText(profile.getPrimaryText(context));
         TextView secondaryText = mDrawerLayout.findViewById(R.id.drawerHeader_profileSecondaryText);
         secondaryText.setText(profile.getSecondaryText(context));
-        LettersImageView currAccount = mDrawerLayout.findViewById(R.id.drawerHeader_currentAccount);
-        currAccount.setLetters(profile.getInitials(context));
     }
 
     public boolean isOpen() {
@@ -321,15 +313,13 @@ public final class DrawerManager<P extends BaseDrawerProfile> implements MenuIte
         private final List<Integer> menuSeparators = new ArrayList<>();
         private final List<P> profiles = new ArrayList<>();
         private final MenuDrawerListener menuListener;
-        private final int headerDrawable;
         private OnAction actionListener = null;
         private P singleProfile = null;
         private ProfilesDrawerListener<P> profilesListener;
         private AdapterProvider<P> adapterProvider;
 
-        public Config(@NonNull MenuDrawerListener menuListener, @DrawableRes int headerDrawable) {
+        public Config(@NonNull MenuDrawerListener menuListener) {
             this.menuListener = menuListener;
-            this.headerDrawable = headerDrawable;
         }
 
         public Config<P> singleProfile(@NonNull P profile, @Nullable OnAction actionListener) {

@@ -6,11 +6,8 @@ import androidx.annotation.NonNull;
 
 public interface BaseDrawerProfile {
     @NonNull
-    String getProfileName(@NonNull Context context);
+    String getPrimaryText(@NonNull Context context);
 
     @NonNull
     String getSecondaryText(@NonNull Context context);
-
-    @NonNull
-    String getInitials(@NonNull Context context);
 }
