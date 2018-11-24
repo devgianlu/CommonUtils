@@ -45,11 +45,10 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         this.listener = listener;
 
         InfiniteAdapter adapter = (InfiniteAdapter) getAdapter();
-        if (getAdapter() != null)
-            adapter.attachListener(listener);
+        if (adapter != null) adapter.attachListener(listener);
     }
 
-    public void setAdapter(InfiniteAdapter adapter) {
+    public void setAdapter(@NonNull InfiniteAdapter adapter) {
         super.setAdapter(adapter);
 
         if (listener != null)
@@ -160,7 +159,8 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
 
             int count = 0;
             for (int i = pos + 1; i < items.size(); i++) {
-                if (items.get(i).item == null) break;
+                ItemEnclosure<E> item = items.get(i);
+                if (item == null || item.item == null) break;
                 else count++;
             }
 
@@ -218,40 +218,34 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
             moreContent(page, new ContentProvider<E>() {
                 @Override
                 public void onMoreContent(@NonNull final List<E> content) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (items.get(items.size() - 1) == null) {
-                                items.remove(null);
-                                notifyItemRemoved(items.size() - 1);
-                            }
-
-                            int start = items.size();
-                            int lastSeparator = findLastSeparator();
-                            populate(content);
-                            if (config.separatorWithCount && lastSeparator != -1)
-                                notifyItemChanged(lastSeparator);
-                            notifyItemRangeInserted(start, content.size());
-                            loading = false;
+                    handler.post(() -> {
+                        if (items.get(items.size() - 1) == null) {
+                            items.remove(null);
+                            notifyItemRemoved(items.size() - 1);
                         }
+
+                        int start = items.size();
+                        int lastSeparator = findLastSeparator();
+                        populate(content);
+                        if (config.separatorWithCount && lastSeparator != -1)
+                            notifyItemChanged(lastSeparator);
+                        notifyItemRangeInserted(start, content.size());
+                        loading = false;
                     });
                 }
 
                 @Override
                 public void onReloadAllContent(@NonNull final List<E> content) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (items.get(items.size() - 1) == null) {
-                                items.remove(null);
-                                notifyItemRemoved(items.size() - 1);
-                            }
-
-                            items.clear();
-                            populate(content);
-                            notifyDataSetChanged();
-                            loading = false;
+                    handler.post(() -> {
+                        if (items.get(items.size() - 1) == null) {
+                            items.remove(null);
+                            notifyItemRemoved(items.size() - 1);
                         }
+
+                        items.clear();
+                        populate(content);
+                        notifyDataSetChanged();
+                        loading = false;
                     });
                 }
 
@@ -261,16 +255,13 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
                         listener.onFailedLoadingContent(ex);
                     Logging.log(ex);
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (items.get(items.size() - 1) == null) {
-                                items.remove(null);
-                                notifyItemRemoved(items.size() - 1);
-                            }
-
-                            loading = false;
+                    handler.post(() -> {
+                        if (items.get(items.size() - 1) == null) {
+                            items.remove(null);
+                            notifyItemRemoved(items.size() - 1);
                         }
+
+                        loading = false;
                     });
                 }
             });
@@ -375,14 +366,11 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
 
     private class CustomScrollListener extends RecyclerView.OnScrollListener {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, final int dy) {
-            recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (!canScrollVertically(1) && dy > 0)
-                        if (getAdapter() instanceof InfiniteAdapter)
-                            ((InfiniteAdapter) getAdapter()).loadMoreContent();
-                }
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, final int dy) {
+            recyclerView.post(() -> {
+                if (!canScrollVertically(1) && dy > 0)
+                    if (getAdapter() instanceof InfiniteAdapter)
+                        ((InfiniteAdapter) getAdapter()).loadMoreContent();
             });
         }
     }
