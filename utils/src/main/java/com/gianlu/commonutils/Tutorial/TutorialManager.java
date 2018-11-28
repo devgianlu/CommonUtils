@@ -62,12 +62,7 @@ public final class TutorialManager implements BaseTutorial.Listener {
         tutorial.newSequence(activity);
         if (listener.buildSequence(tutorial)) {
             isShowingTutorial = true;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tutorial.show(TutorialManager.this);
-                }
-            });
+            activity.runOnUiThread(() -> tutorial.show(TutorialManager.this));
         }
     }
 

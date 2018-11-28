@@ -62,24 +62,18 @@ public class DialogUtils {
     }
 
     public static void showDialogValid(@NonNull final Context context, @NonNull final Dialog dialog) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!isContextValid(context)) return;
-                dialog.show();
-            }
+        handler.post(() -> {
+            if (!isContextValid(context)) return;
+            dialog.show();
         });
     }
 
     public static void showDialogValid(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final OnDialogCreatedListener listener) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!isContextValid(context)) return;
-                Dialog dialog = builder.create();
-                if (listener != null) listener.created(dialog);
-                dialog.show();
-            }
+        handler.post(() -> {
+            if (!isContextValid(context)) return;
+            Dialog dialog = builder.create();
+            if (listener != null) listener.created(dialog);
+            dialog.show();
         });
     }
 

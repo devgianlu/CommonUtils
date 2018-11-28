@@ -96,11 +96,8 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
 
     private void setupSingleProfile() {
         mAction.setImageResource(R.drawable.outline_exit_to_app_24);
-        mAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (config.actionListener != null) config.actionListener.drawerAction();
-            }
+        mAction.setOnClickListener(v -> {
+            if (config.actionListener != null) config.actionListener.drawerAction();
         });
     }
 
@@ -245,12 +242,7 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
         mProfilesList.setAdapter(profilesAdapter);
 
         mAction.setImageResource(R.drawable.baseline_arrow_drop_down_24);
-        mAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleProfileList();
-            }
-        });
+        mAction.setOnClickListener(view -> toggleProfileList());
     }
 
     public void updateBadge(@NonNull E which, int badgeNumber) {

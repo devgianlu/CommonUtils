@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -78,21 +77,18 @@ public class SuperTextView extends AppCompatTextView {
         setHtml(compatText);
         setEllipsize(TextUtils.TruncateAt.END);
         setMaxLines(1);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCompact) {
-                    setHtml(fullText.replace(compatText, makeBold(compatText)));
-                    setEllipsize(null);
-                    setMaxLines(Integer.MAX_VALUE);
-                } else {
-                    setHtml(compatText);
-                    setEllipsize(TextUtils.TruncateAt.END);
-                    setMaxLines(1);
-                }
-
-                isCompact = !isCompact;
+        setOnClickListener(v -> {
+            if (isCompact) {
+                setHtml(fullText.replace(compatText, makeBold(compatText)));
+                setEllipsize(null);
+                setMaxLines(Integer.MAX_VALUE);
+            } else {
+                setHtml(compatText);
+                setEllipsize(TextUtils.TruncateAt.END);
+                setMaxLines(1);
             }
+
+            isCompact = !isCompact;
         });
     }
 

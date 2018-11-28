@@ -67,13 +67,10 @@ public class GeneralItemsAdapter<E extends GeneralItemsAdapter.Item> extends Bas
             delete.setVisibility(View.GONE);
         } else {
             delete.setVisibility(View.VISIBLE);
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.delete(item);
-                    items.remove(position);
-                    notifyDataSetChanged();
-                }
+            delete.setOnClickListener(v -> {
+                listener.delete(item);
+                items.remove(position);
+                notifyDataSetChanged();
             });
         }
 

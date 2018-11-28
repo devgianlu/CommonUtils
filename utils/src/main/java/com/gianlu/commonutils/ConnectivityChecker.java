@@ -29,19 +29,9 @@ public class ConnectivityChecker {
             @Override
             public void run() {
                 if (checkInternal(false)) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.goodToGo();
-                        }
-                    });
+                    handler.post(listener::goodToGo);
                 } else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.offline();
-                        }
-                    });
+                    handler.post(listener::offline);
                 }
             }
         }.start();

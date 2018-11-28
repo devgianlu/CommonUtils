@@ -20,12 +20,7 @@ public abstract class ActivityWithDialog extends NightlyActivity {
     }
 
     public final void showDialog(@NonNull AlertDialog.Builder dialog) {
-        DialogUtils.showDialogValid(this, dialog, new DialogUtils.OnDialogCreatedListener() {
-            @Override
-            public void created(@NonNull Dialog dialog) {
-                mDialog = dialog;
-            }
-        });
+        DialogUtils.showDialogValid(this, dialog, dialog1 -> mDialog = dialog1);
     }
 
     public final void showDialog(@NonNull DialogFragment dialog) {

@@ -104,12 +104,7 @@ public class Toaster {
         if (error || msg.length() > 48) duration = Toast.LENGTH_LONG;
         else duration = Toast.LENGTH_SHORT;
 
-        Runnable action = new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, msg, duration).show();
-            }
-        };
+        Runnable action = () -> Toast.makeText(context, msg, duration).show();
 
         if (Looper.myLooper() == Looper.getMainLooper()) action.run();
         else handler.post(action);

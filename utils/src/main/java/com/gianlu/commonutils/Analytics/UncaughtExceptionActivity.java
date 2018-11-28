@@ -37,11 +37,6 @@ public class UncaughtExceptionActivity extends ActivityWithDialog {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         Button email = findViewById(R.id.uncaughtException_email);
-        email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logging.sendEmail(UncaughtExceptionActivity.this, (Throwable) getIntent().getSerializableExtra("exception"));
-            }
-        });
+        email.setOnClickListener(v -> Logging.sendEmail(UncaughtExceptionActivity.this, (Throwable) getIntent().getSerializableExtra("exception")));
     }
 }

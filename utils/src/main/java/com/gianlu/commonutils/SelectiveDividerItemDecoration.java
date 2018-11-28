@@ -96,11 +96,14 @@ public class SelectiveDividerItemDecoration extends RecyclerView.ItemDecoration 
             bottom = parent.getHeight();
         }
 
+        RecyclerView.LayoutManager lm = parent.getLayoutManager();
+        if (lm == null) return;
+
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             if (isDecorated(i)) {
                 View child = parent.getChildAt(i);
-                parent.getLayoutManager().getDecoratedBoundsWithMargins(child, mBounds);
+                lm.getDecoratedBoundsWithMargins(child, mBounds);
                 int right = mBounds.right + Math.round(child.getTranslationX());
                 int left = right - mDivider.getIntrinsicWidth();
                 mDivider.setBounds(left, top, right, bottom);

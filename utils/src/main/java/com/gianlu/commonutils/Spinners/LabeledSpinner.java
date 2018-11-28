@@ -67,12 +67,7 @@ public class LabeledSpinner extends LinearLayout {
             icon.setImageTintList(ColorStateList.valueOf(textColor));
         }
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                togglePopup();
-            }
-        });
+        setOnClickListener(v -> togglePopup());
     }
 
     @NonNull
@@ -100,12 +95,7 @@ public class LabeledSpinner extends LinearLayout {
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                dismissPopup();
-            }
-        });
+        popupWindow.setOnDismissListener(this::dismissPopup);
         popupWindow.setElevation(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
         popupWindow.showAsDropDown(this);
     }
@@ -190,12 +180,9 @@ public class LabeledSpinner extends LinearLayout {
 
             TextView text = (TextView) inflater.inflate(R.layout.item_labeled_spinner, parent, false);
             text.setText(getText(context, item));
-            text.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSelected(item, true);
-                    dismissPopup();
-                }
+            text.setOnClickListener(v -> {
+                setSelected(item, true);
+                dismissPopup();
             });
 
             if (position == selectedIndex)

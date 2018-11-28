@@ -37,12 +37,7 @@ public class OfflineActivity extends ActivityWithDialog {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         Button email = findViewById(R.id.offline_email);
-        email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logging.sendEmail(OfflineActivity.this, null);
-            }
-        });
+        email.setOnClickListener(v -> Logging.sendEmail(OfflineActivity.this, null));
 
         Button offline = findViewById(R.id.offline_retry);
         final Class<?> retryClass = (Class) getIntent().getSerializableExtra("retry");
@@ -50,13 +45,8 @@ public class OfflineActivity extends ActivityWithDialog {
             offline.setVisibility(View.GONE);
         } else {
             offline.setVisibility(View.VISIBLE);
-            offline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(OfflineActivity.this, retryClass)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                }
-            });
+            offline.setOnClickListener(v -> startActivity(new Intent(OfflineActivity.this, retryClass)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)));
         }
     }
 }
