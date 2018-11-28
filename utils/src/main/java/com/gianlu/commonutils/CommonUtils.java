@@ -2,6 +2,7 @@ package com.gianlu.commonutils;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -65,6 +66,19 @@ import androidx.recyclerview.widget.RecyclerView;
 public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
+
+    public static boolean isNightModeOn(@NonNull Context context, boolean fallback) {
+        int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (mode) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                return true;
+            case Configuration.UI_MODE_NIGHT_NO:
+                return false;
+            default:
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                return fallback;
+        }
+    }
 
     public static void zip(List<? extends File> files, File dest) throws IOException {
         byte[] buffer = new byte[8192];
