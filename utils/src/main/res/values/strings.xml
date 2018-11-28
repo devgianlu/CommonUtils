@@ -54,4 +54,5 @@
     <string name="prefs_restartTutorial">Restart tutorial</string>
     <string name="prefs_developer">Developer</string>
     <string name="missingWebBrowser">Your device seems to be missing a web browser.</string>
+    <string name="exportLogFiles">Export log files</string>
 </resources>

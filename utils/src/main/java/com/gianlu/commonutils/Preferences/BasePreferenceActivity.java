@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutItem;
-import com.danielstone.materialaboutlibrary.items.MaterialAboutItemOnClickAction;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard;
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList;
@@ -166,57 +165,34 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
                             .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
-                    .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, new MaterialAboutItemOnClickAction() {
-                        @Override
-                        public void onClick() {
-                            openLink(context, "https://gianlu.xyz");
-                        }
-                    }))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, new MaterialAboutItemOnClickAction() {
-                        @Override
-                        public void onClick() {
-                            Logging.sendEmail(context, null);
-                        }
-                    }))
-                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, new MaterialAboutItemOnClickAction() {
-                        @Override
-                        public void onClick() {
-                            LibsBuilder libsBuilder = new LibsBuilder()
-                                    .withVersionShown(true)
-                                    .withActivityTitle(context.getString(R.string.third_part));
+                    .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, () -> openLink(context, "https://gianlu.xyz")))
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> Logging.sendEmail(context, null)))
+                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, () -> {
+                        LibsBuilder libsBuilder = new LibsBuilder()
+                                .withVersionShown(true)
+                                .withActivityTitle(context.getString(R.string.third_part));
 
-                            List<String> toExclude = new ArrayList<>();
+                        List<String> toExclude = new ArrayList<>();
 
-                            if (!FossUtils.hasFabric())
-                                toExclude.add("Crashlytics");
+                        if (!FossUtils.hasFabric())
+                            toExclude.add("Crashlytics");
 
-                            if (!FossUtils.hasGoogleBilling())
-                                toExclude.add("GooglePlayServices");
+                        if (!FossUtils.hasGoogleBilling())
+                            toExclude.add("GooglePlayServices");
 
-                            libsBuilder
-                                    .withExcludedLibraries(toExclude.toArray(new String[0]))
-                                    .start(context);
-                        }
+                        libsBuilder
+                                .withExcludedLibraries(toExclude.toArray(new String[0]))
+                                .start(context);
                     }));
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {
-                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, R.drawable.baseline_bug_report_24, new MaterialAboutItemOnClickAction() {
-                    @Override
-                    public void onClick() {
-                        openLink(context, openSourceUrl);
-                    }
-                }));
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, R.drawable.baseline_bug_report_24, () -> openLink(context, openSourceUrl)));
             }
 
             if (FossUtils.hasFabric()) {
-                developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, new MaterialAboutItemOnClickAction() {
-                    @Override
-                    public void onClick() {
-                        AnalyticsPreferenceDialog.get()
-                                .show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG);
-                    }
-                }));
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, () -> AnalyticsPreferenceDialog.get()
+                        .show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG)));
             }
 
             MaterialAboutCard.Builder preferencesBuilder = null;
@@ -236,51 +212,46 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutActionItem.Builder()
                             .icon(R.drawable.baseline_announcement_24)
                             .text(R.string.logs)
-                            .setOnClickAction(new MaterialAboutItemOnClickAction() {
-                                @Override
-                                public void onClick() {
-                                    startActivity(new Intent(context, LogsActivity.class));
+                            .setOnClickAction(() -> startActivity(new Intent(context, LogsActivity.class))).build())
+                    .addItem(new MaterialAboutActionItem.Builder()
+                            .icon(R.drawable.baseline_share_24)
+                            .text(R.string.exportLogFiles)
+                            .setOnClickAction(() -> {
+                                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                if (!Logging.exportLogFiles(context, shareIntent)) {
+                                    DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.noLogs));
+                                    return;
                                 }
-                            }).build())
+
+                                shareIntent.setType("application/zip");
+                                startActivity(Intent.createChooser(shareIntent, getString(R.string.exportLogFiles)));
+                            })
+                            .build())
                     .addItem(new MaterialAboutActionItem.Builder()
                             .icon(R.drawable.baseline_delete_24)
                             .text(R.string.deleteAllLogs)
-                            .setOnClickAction(new MaterialAboutItemOnClickAction() {
-                                @Override
-                                public void onClick() {
-                                    Logging.deleteAllLogs(context);
-                                    DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.logDeleted));
-                                }
+                            .setOnClickAction(() -> {
+                                Logging.deleteAllLogs(context);
+                                DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.logDeleted));
                             }).build())
                     .build();
 
             MaterialAboutCard.Builder donateBuilder = new MaterialAboutCard.Builder()
                     .title(R.string.rateDonate);
             if (FossUtils.hasGoogleBilling()) {
-                donateBuilder.addItem(new MaterialAboutActionItem(R.string.rateApp, R.string.leaveReview, R.drawable.baseline_rate_review_24, new MaterialAboutItemOnClickAction() {
-                    @Override
-                    public void onClick() {
-                        try {
-                            openLink(context, "market://details?id=" + context.getPackageName());
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            openLink(context, "https://play.google.com/store/apps/details?id=" + context.getPackageName());
-                        }
+                donateBuilder.addItem(new MaterialAboutActionItem(R.string.rateApp, R.string.leaveReview, R.drawable.baseline_rate_review_24, () -> {
+                    try {
+                        openLink(context, "market://details?id=" + context.getPackageName());
+                    } catch (ActivityNotFoundException ex) {
+                        openLink(context, "https://play.google.com/store/apps/details?id=" + context.getPackageName());
                     }
-                })).addItem(new MaterialAboutActionItem(R.string.donateGoogle, R.string.donateGoogleSummary, R.drawable.baseline_attach_money_24, new MaterialAboutItemOnClickAction() {
-                    @Override
-                    public void onClick() {
-                        if (parent != null) parent.donate();
-                    }
+                })).addItem(new MaterialAboutActionItem(R.string.donateGoogle, R.string.donateGoogleSummary, R.drawable.baseline_attach_money_24, () -> {
+                    if (parent != null) parent.donate();
                 }));
             }
 
             if (!FossUtils.hasGoogleBilling() || !parent.disablePayPalOnGooglePlay()) {
-                donateBuilder.addItem(new MaterialAboutActionItem(R.string.donatePaypal, R.string.donatePaypalSummary, R.drawable.baseline_money_24, new MaterialAboutItemOnClickAction() {
-                    @Override
-                    public void onClick() {
-                        openLink(context, "https://paypal.me/devgianlu");
-                    }
-                }));
+                donateBuilder.addItem(new MaterialAboutActionItem(R.string.donatePaypal, R.string.donatePaypalSummary, R.drawable.baseline_money_24, () -> openLink(context, "https://paypal.me/devgianlu")));
             }
 
             MaterialAboutCard.Builder tutorialBuilder = null;
@@ -288,12 +259,9 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 tutorialBuilder = new MaterialAboutCard.Builder()
                         .title(R.string.prefs_tutorial);
 
-                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_restartTutorial, 0, R.drawable.baseline_settings_backup_restore_24, new MaterialAboutItemOnClickAction() {
-                    @Override
-                    public void onClick() {
-                        TutorialManager.restartTutorial();
-                        parent.onBackPressed();
-                    }
+                tutorialBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_restartTutorial, 0, R.drawable.baseline_settings_backup_restore_24, () -> {
+                    TutorialManager.restartTutorial();
+                    parent.onBackPressed();
                 }));
 
                 List<MaterialAboutItem> items = parent.customizeTutorialCard();
