@@ -1,7 +1,6 @@
 package com.gianlu.commonutils;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -32,12 +31,7 @@ public class AskPermission {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 listener.askRationale(builder);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request(activity, permission, listener);
-                    }
-                });
+                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> request(activity, permission, listener));
 
                 DialogUtils.showDialog(activity, builder);
             } else {

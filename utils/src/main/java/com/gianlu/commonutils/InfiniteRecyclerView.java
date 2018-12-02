@@ -111,7 +111,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
             for (E element : elements) {
                 Date date = getDateFromItem(element);
                 if (config.separator != null && date != null && currDay != date.getTime() / 86400000) {
-                    items.add(new ItemEnclosure<E>(null, date));
+                    items.add(new ItemEnclosure<>(null, date));
                     currDay = date.getTime() / 86400000;
                 }
 

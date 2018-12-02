@@ -52,6 +52,7 @@ public class NameValuePair {
         return Objects.hash(key, value);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "(" + key + "=" + value + ")";

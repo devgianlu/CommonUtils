@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.gianlu.commonutils.CommonPK;
@@ -47,29 +46,14 @@ public class AnalyticsPreferenceDialog extends DialogFragment {
 
         CheckBox tracking = layout.findViewById(R.id.analyticsPrefsDialog_tracking);
         tracking.setChecked(Prefs.getBoolean(CommonPK.TRACKING_ENABLED, true));
-        tracking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.putBoolean(CommonPK.TRACKING_ENABLED, isChecked);
-            }
-        });
+        tracking.setOnCheckedChangeListener((buttonView, isChecked) -> Prefs.putBoolean(CommonPK.TRACKING_ENABLED, isChecked));
 
         CheckBox crashReport = layout.findViewById(R.id.analyticsPrefsDialog_crashReport);
         crashReport.setChecked(Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED, true));
-        crashReport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, isChecked);
-            }
-        });
+        crashReport.setOnCheckedChangeListener((buttonView, isChecked) -> Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, isChecked));
 
         Button ok = layout.findViewById(R.id.analyticsPrefsDialog_ok);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissAllowingStateLoss();
-            }
-        });
+        ok.setOnClickListener(v -> dismissAllowingStateLoss());
 
         return layout;
     }

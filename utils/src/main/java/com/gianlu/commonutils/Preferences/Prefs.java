@@ -229,7 +229,7 @@ public final class Prefs {
     }
 
     public static void removeFromSet(String key, String value) {
-        Set<String> set = getSet(key, new HashSet<String>());
+        Set<String> set = getSet(key, new HashSet<>());
         set.remove(value);
         prefs.edit().putStringSet(key, set).apply();
     }
@@ -239,7 +239,7 @@ public final class Prefs {
     }
 
     public static void addToSet(String key, String value) {
-        Set<String> set = getSet(key, new HashSet<String>());
+        Set<String> set = getSet(key, new HashSet<>());
         set.add(value);
         prefs.edit().putStringSet(key, set).apply();
     }

@@ -18,7 +18,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -64,12 +63,7 @@ public final class Logging {
 
     @NonNull
     private static File[] listLogsInDirectory(@NonNull File dir) {
-        return dir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return isLogFile(name);
-            }
-        });
+        return dir.listFiles((dir1, name) -> isLogFile(name));
     }
 
     private static File[] listLogFilesInternal(@NonNull Context context) {
@@ -147,6 +141,16 @@ public final class Logging {
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
+        exportLogFiles(context, intent);
+
+        try {
+            context.startActivity(Intent.createChooser(intent, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toaster.with(context).message(R.string.noMailClients).ex(ex).show();
+        }
+    }
+
+    public static boolean exportLogFiles(@NonNull Context context, @NonNull Intent intent) {
         List<Logging.LogFile> logs = listLogFiles(context);
         if (!logs.isEmpty()) {
             File logsCache = getCacheLogsDirectory(context);
@@ -160,17 +164,14 @@ public final class Logging {
                     Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".logs", dest);
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    return true;
                 } catch (IllegalArgumentException | IOException ex) {
                     Logging.log(ex);
                 }
             }
         }
 
-        try {
-            context.startActivity(Intent.createChooser(intent, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toaster.with(context).message(R.string.noMailClients).ex(ex).show();
-        }
+        return false;
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -311,8 +312,9 @@ public final class Logging {
                     line.write(out, appVersion);
                     out.flush();
                 }
-            } catch (IOException | InterruptedException ex) {
+            } catch (IOException ex) {
                 if (CommonUtils.isDebug()) ex.printStackTrace();
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -434,16 +436,13 @@ public final class Logging {
                     break;
             }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if ((Boolean) holder.msg.getTag()) {
-                        holder.msg.setSingleLine(false);
-                        holder.msg.setTag(false);
-                    } else {
-                        holder.msg.setSingleLine(true);
-                        holder.msg.setTag(true);
-                    }
+            holder.itemView.setOnClickListener(view -> {
+                if ((Boolean) holder.msg.getTag()) {
+                    holder.msg.setSingleLine(false);
+                    holder.msg.setTag(false);
+                } else {
+                    holder.msg.setSingleLine(true);
+                    holder.msg.setTag(true);
                 }
             });
         }

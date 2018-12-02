@@ -94,11 +94,8 @@ public class BreadcrumbsView extends LinearLayout implements View.OnClickListene
     }
 
     public void scrollToEnd() {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                if (parent != null) parent.fullScroll(View.FOCUS_RIGHT);
-            }
+        post(() -> {
+            if (parent != null) parent.fullScroll(View.FOCUS_RIGHT);
         });
     }
 

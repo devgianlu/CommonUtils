@@ -57,11 +57,8 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
             holder.badge.setVisibility(View.GONE);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) listener.onMenuItemSelected(item);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onMenuItemSelected(item);
         });
 
         if (item.active) {
