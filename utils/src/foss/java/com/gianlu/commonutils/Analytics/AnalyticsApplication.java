@@ -13,11 +13,15 @@ import androidx.annotation.Nullable;
 public abstract class AnalyticsApplication extends BaseCommonApplication {
 
     public static void sendAnalytics(String event, @Nullable Bundle bundle) {
-        Logging.log("Dropping event " + event + " because of foss version.", false);
+        Logging.log(String.format("(event: %s, bundle: %s)", event, bundle == null ? null : bundle.toString()), false);
     }
 
     public static void sendAnalytics(@NonNull String event) {
         sendAnalytics(event, null);
+    }
+
+    public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
+        Logging.log(String.format("(key: %s, value: %s)", key, val), false);
     }
 
     @Override
