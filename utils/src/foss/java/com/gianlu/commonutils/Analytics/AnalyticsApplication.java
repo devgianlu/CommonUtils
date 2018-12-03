@@ -24,6 +24,14 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
         Logging.log(String.format("(key: %s, value: %s)", key, val), false);
     }
 
+    public static void setCrashlyticsInt(@NonNull String key, int val) {
+        Logging.log(String.format("(key: %s, value: %s)", key, val), false);
+    }
+
+    public static void setCrashlyticsBool(@NonNull String key, boolean val) {
+        Logging.log(String.format("(key: %s, value: %s)", key, val), false);
+    }
+
     @Override
     @CallSuper
     public void onCreate() {
