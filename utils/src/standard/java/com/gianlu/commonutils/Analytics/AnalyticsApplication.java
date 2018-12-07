@@ -38,6 +38,18 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
         Answers.getInstance().logCustom(event);
     }
 
+    public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
+        Crashlytics.setString(key, val);
+    }
+
+    public static void setCrashlyticsInt(@NonNull String key, int val) {
+        Crashlytics.setInt(key, val);
+    }
+
+    public static void setCrashlyticsBool(@NonNull String key, boolean val) {
+        Crashlytics.setBool(key, val);
+    }
+
     @Override
     @CallSuper
     public void onCreate() {

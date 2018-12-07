@@ -281,10 +281,6 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
         return mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
-    public void reloadProfiles() {
-        setupProfiles();
-    }
-
     public interface MenuDrawerListener<E extends Enum> {
         boolean onDrawerMenuItemSelected(@NonNull BaseDrawerItem<E> item);
     }
