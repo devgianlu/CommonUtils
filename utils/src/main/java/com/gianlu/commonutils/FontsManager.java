@@ -40,6 +40,10 @@ public class FontsManager {
         textView.setTypeface(get(textView.getContext(), path));
     }
 
+    public static void set(@NonNull @Font String path, @NonNull TextView... views) {
+        for (TextView view : views) set(view, path);
+    }
+
     public static void set(@NonNull Context context, @NonNull Paint paint, @NonNull @Font String path) {
         paint.setTypeface(get(context, path));
     }
