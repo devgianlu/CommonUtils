@@ -143,52 +143,63 @@ public final class Prefs {
 
     // getJSONArray
 
+    @Deprecated
     public static JSONArray getJSONArray(String key, JSONArray fallback) throws JSONException {
         return new JSONArray(getBase64String(key, fallback.toString()));
     }
 
+    @Deprecated
     public static JSONArray getJSONArray(Key key, JSONArray fallback) throws JSONException {
         return getJSONArray(key.key(), fallback);
     }
 
+    @Deprecated
     public static boolean isJSONArrayEmpty(Key key) throws JSONException {
         return getJSONArray(key.key(), new JSONArray()).length() == 0;
     }
 
+    @Deprecated
     public static JSONArray getJSONArray(KeyWithDefault<JSONArray> key) throws JSONException {
         return getJSONArray(key.key(), key.fallback());
     }
 
     // getJSONArray
 
+    @Deprecated
     public static JSONObject getJSONObject(String key, JSONObject fallback) throws JSONException {
         return new JSONObject(getBase64String(key, fallback.toString()));
     }
 
+    @Deprecated
     public static JSONObject getJSONObject(Key key, JSONObject fallback) throws JSONException {
         return getJSONObject(key.key(), fallback);
     }
 
+    @Deprecated
     public static JSONObject getJSONObject(KeyWithDefault<JSONObject> key) throws JSONException {
         return getJSONObject(key.key(), key.fallback());
     }
 
     // putJSONArray
 
+    @Deprecated
     public static void putJSONArray(Key key, JSONArray value) {
         putJSONArray(key.key(), value);
     }
 
+    @Deprecated
     public static void putJSONArray(String key, JSONArray value) {
         putBase64String(key, value.toString());
     }
 
     // putJSONArray
 
+    @Deprecated
     public static void putJSONObject(Key key, JSONObject value) {
         putJSONObject(key.key(), value);
     }
 
+    @Deprecated
     public static void putJSONObject(String key, JSONObject value) {
         putBase64String(key, value.toString());
     }
