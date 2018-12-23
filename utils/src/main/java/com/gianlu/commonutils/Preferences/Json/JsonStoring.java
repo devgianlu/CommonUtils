@@ -1,6 +1,9 @@
 package com.gianlu.commonutils.Preferences.Json;
 
+import com.gianlu.commonutils.Preferences.Prefs;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -33,9 +36,41 @@ public abstract class JsonStoring {
         return storing;
     }
 
-    @Nullable
-    public abstract JSONObject getJsonObject(@NonNull String key);
+    public boolean isJsonArrayEmpty(@NonNull String key) throws JSONException {
+        JSONArray array = getJsonArray(key);
+        if (array == null) return true;
+        else return array.length() == 0;
+    }
+
+    public final boolean isJsonArrayEmpty(@NonNull Prefs.Key key) throws JSONException {
+        return isJsonArrayEmpty(key.key());
+    }
 
     @Nullable
-    public abstract JSONArray getJsonArray(@NonNull String key);
+    public abstract JSONObject getJsonObject(@NonNull String key) throws JSONException;
+
+    @Nullable
+    public abstract JSONArray getJsonArray(@NonNull String key) throws JSONException;
+
+    @Nullable
+    public final JSONArray getJsonArray(@NonNull Prefs.Key key) throws JSONException {
+        return getJsonArray(key.key());
+    }
+
+    @Nullable
+    public final JSONObject getJsonObject(@NonNull Prefs.Key key) throws JSONException {
+        return getJsonObject(key.key());
+    }
+
+    public abstract void putJsonArray(@NonNull String key, JSONArray array) throws JSONException;
+
+    public abstract void putJsonObject(@NonNull String key, JSONObject obj) throws JSONException;
+
+    public final void putJsonArray(@NonNull Prefs.Key key, JSONArray array) throws JSONException {
+        putJsonArray(key.key(), array);
+    }
+
+    public final void putJsonObject(@NonNull Prefs.Key key, JSONObject obj) throws JSONException {
+        putJsonObject(key.key(), obj);
+    }
 }
