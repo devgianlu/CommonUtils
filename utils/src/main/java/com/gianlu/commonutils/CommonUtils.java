@@ -301,7 +301,7 @@ public final class CommonUtils {
         else view.animate().rotation(180).setDuration(200).start();
     }
 
-    public static void clearTextOnEdit(@NonNull final TextInputLayout layout) {
+    public static void clearErrorOnEdit(@NonNull final TextInputLayout layout) {
         getEditText(layout).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
