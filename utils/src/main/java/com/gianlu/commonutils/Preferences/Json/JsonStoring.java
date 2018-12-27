@@ -14,7 +14,7 @@ import androidx.collection.LruCache;
 
 public abstract class JsonStoring {
     private static JsonStoring intoPrefsDefault;
-    private static LruCache<File, JsonStoring> intoFileCache = new LruCache<>(5);
+    private final static LruCache<File, JsonStoring> intoFileCache = new LruCache<>(5);
 
     JsonStoring() {
     }
