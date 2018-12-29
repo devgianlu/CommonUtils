@@ -44,7 +44,7 @@
 
     <!-- Prefs -->
     <string name="prefs_nightMode">Enable night mode (dark theme)</string>
-    <string name="prefs_nightMode_summary">Always enable night mode, regarding of the system default.</string>
+    <string name="prefs_nightMode_summary">Always enable night mode, regardless of the system default.</string>
     <string name="prefs_usageStatistics">Usage statistics</string>
     <string name="prefs_usageStatisticsSummary">Toggle which information is sent to the developer</string>
     <string name="prefs_usageStatisticsDialogLong">I (the developer) receive information about the usage of the app and the crashes. You can toggle them separately down below.</string>
