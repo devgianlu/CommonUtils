@@ -7,6 +7,7 @@ import com.gianlu.commonutils.Toaster;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -45,6 +46,11 @@ public abstract class FragmentWithDialog extends Fragment {
     public final void showToast(@NonNull Toaster toaster) {
         if (getContext() == null) return;
         toaster.show(getContext());
+    }
+
+    public final void showProgress(@StringRes int res) {
+        if (getContext() == null) return;
+        showDialog(DialogUtils.progressDialog(getContext(), res));
     }
 
     public final void onBackPressed() {

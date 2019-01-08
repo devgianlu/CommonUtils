@@ -7,6 +7,7 @@ import com.gianlu.commonutils.Toaster;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -36,6 +37,10 @@ public abstract class ActivityWithDialog extends NightlyActivity {
     public final void dismissDialog() {
         if (mDialog != null) mDialog.dismiss();
         mDialog = null;
+    }
+
+    public final void showProgress(@StringRes int res) {
+        showDialog(DialogUtils.progressDialog(this, res));
     }
 
     public final boolean hasVisibleDialog() {
