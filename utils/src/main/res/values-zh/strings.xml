@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false" />
     <string name="log_activity_title">日志</string>
     <string name="deleteAllLogs">删除所有日志</string>
     <string name="unknown">未知</string>
