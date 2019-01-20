@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import androidx.annotation.NonNull;
@@ -107,8 +108,6 @@ public final class Logging {
         for (File file : listLogFilesInternal(context)) {
             if (!file.delete()) log("Couldn't delete " + file, true);
         }
-
-        init(context);
     }
 
     public static void sendEmail(@NonNull Context context, @Nullable Throwable sendEx) {
@@ -118,6 +117,8 @@ public final class Logging {
         } catch (PackageManager.NameNotFoundException ex) {
             version = context.getString(R.string.unknown);
         }
+
+        version += "-" + BuildConfig.FLAVOR;
 
         Intent intent = new Intent(Intent.ACTION_SEND)
                 .setType("message/rfc822")
@@ -283,7 +284,7 @@ public final class Logging {
     private static class Logger implements Runnable {
         private final File logFile;
         private final LinkedBlockingQueue<LogLine> queue = new LinkedBlockingQueue<>();
-        private final String appVersion;
+        private final String appTag;
 
         private Logger(Context context) throws IOException {
             File logs = getLogsDirectory(context);
@@ -297,7 +298,7 @@ public final class Logging {
                 throw new IOException("Can write to file!");
 
             try {
-                appVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+                appTag = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName + "-" + BuildConfig.FLAVOR;
             } catch (PackageManager.NameNotFoundException ex) {
                 throw new IOException(ex);
             }
@@ -309,7 +310,7 @@ public final class Logging {
             try (FileOutputStream out = new FileOutputStream(logFile, true)) {
                 while (true) {
                     LogLine line = queue.take();
-                    line.write(out, appVersion);
+                    line.write(out, appTag);
                     out.flush();
                 }
             } catch (IOException ex) {
@@ -319,7 +320,7 @@ public final class Logging {
         }
 
         public void log(long timeMillis, String msg, LogLine.Type type) {
-            queue.add(new LogLine(timeMillis, appVersion, type, msg));
+            queue.add(new LogLine(timeMillis, appTag, type, msg));
         }
 
         public void log(LogLine line) {
@@ -354,8 +355,9 @@ public final class Logging {
 
         private void write(OutputStream out, String fallbackVersion) throws IOException {
             String version;
-            if (appVersion == null) version = fallbackVersion;
-            else version = appVersion;
+            if (appVersion == null || Objects.equals(appVersion, fallbackVersion))
+                version = fallbackVersion;
+            else version = appVersion + "(" + fallbackVersion + ")";
 
             out.write(String.valueOf(timestamp).getBytes());
             out.write('|');
