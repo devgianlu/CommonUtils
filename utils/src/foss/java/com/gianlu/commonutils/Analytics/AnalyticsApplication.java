@@ -32,6 +32,10 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
         Logging.log(String.format("(key: %s, value: %s)", key, val), false);
     }
 
+    public static void crashlyticsLog(@NonNull String msg) {
+        // Do nothing, this is called only from Logging#log
+    }
+
     @Override
     @CallSuper
     public void onCreate() {

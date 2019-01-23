@@ -50,6 +50,10 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
         Crashlytics.setBool(key, val);
     }
 
+    public static void crashlyticsLog(@NonNull String msg) {
+        Crashlytics.log(msg);
+    }
+
     @Override
     @CallSuper
     public void onCreate() {
