@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import io.fabric.sdk.android.Fabric;
 
 public abstract class AnalyticsApplication extends BaseCommonApplication {
+    private static volatile boolean CRASHLYTICS_READY = false;
 
     public static void sendAnalytics(@NonNull String eventName) {
         sendAnalytics(eventName, null);
@@ -39,19 +40,23 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
-        Crashlytics.setString(key, val);
+        if (CRASHLYTICS_READY)
+            Crashlytics.setString(key, val);
     }
 
     public static void setCrashlyticsInt(@NonNull String key, int val) {
-        Crashlytics.setInt(key, val);
+        if (CRASHLYTICS_READY)
+            Crashlytics.setInt(key, val);
     }
 
     public static void setCrashlyticsBool(@NonNull String key, boolean val) {
-        Crashlytics.setBool(key, val);
+        if (CRASHLYTICS_READY)
+            Crashlytics.setBool(key, val);
     }
 
     public static void crashlyticsLog(@NonNull String msg) {
-        Crashlytics.log(msg);
+        if (CRASHLYTICS_READY)
+            Crashlytics.log(msg);
     }
 
     @Override
@@ -76,8 +81,10 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
             }
 
             Crashlytics.setUserIdentifier(uuid);
+            CRASHLYTICS_READY = true;
         } else {
             Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, false);
+            CRASHLYTICS_READY = false;
         }
     }
 }
