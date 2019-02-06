@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gianlu.commonutils.Analytics.AnalyticsApplication;
 import com.gianlu.commonutils.Preferences.Prefs;
 
 import java.io.BufferedReader;
@@ -20,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -310,7 +310,9 @@ public final class Logging {
             try (FileOutputStream out = new FileOutputStream(logFile, true)) {
                 while (true) {
                     LogLine line = queue.take();
-                    line.write(out, appTag);
+                    String str = line.build(appTag);
+                    out.write(str.getBytes());
+                    AnalyticsApplication.crashlyticsLog(str);
                     out.flush();
                 }
             } catch (IOException ex) {
@@ -333,6 +335,7 @@ public final class Logging {
         private final String message;
         private final long timestamp;
         private final String appVersion;
+        private String line;
 
         public LogLine(long timestamp, @NonNull String appVersion, @NonNull Type type, @NonNull String message) {
             this.timestamp = timestamp;
@@ -353,21 +356,19 @@ public final class Logging {
             return message;
         }
 
-        private void write(OutputStream out, String fallbackVersion) throws IOException {
+        @NonNull
+        private String build(String fallbackVersion) {
+            if (line != null) return line;
+
             String version;
             if (appVersion == null || Objects.equals(appVersion, fallbackVersion))
                 version = fallbackVersion;
             else version = appVersion + "(" + fallbackVersion + ")";
 
-            out.write(String.valueOf(timestamp).getBytes());
-            out.write('|');
-            out.write(version.replace('|', '_').getBytes());
-            out.write('|');
-            out.write(type.name().getBytes());
-            out.write('\n');
-            out.write(message.replace("\n\n", "\n").getBytes());
-            out.write('\n');
-            out.write('\n');
+            return line = String.valueOf(String.valueOf(timestamp)) + '|' +
+                    String.valueOf(version.replace('|', '_')) + '|' +
+                    String.valueOf(type.name()) + '\n' +
+                    String.valueOf(message.replace("\n\n", "\n")) + "\n\n";
         }
 
         public enum Type {
