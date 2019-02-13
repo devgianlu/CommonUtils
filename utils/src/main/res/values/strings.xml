@@ -17,8 +17,6 @@
     <string name="closeDrawer">Close drawer</string>
     <string name="donateGoogle">Donate via Google Play</string>
     <string name="donateGoogleSummary">Part of the money will be subtracted by Google</string>
-    <string name="donatePaypal">Donate via PayPal</string>
-    <string name="donatePaypalSummary">I will receive all the money</string>
     <string name="about_app">About this application</string>
     <string name="connectingBillingService">Connecting to the billing service. Please wait…</string>
     <string name="noMailClients">There are no email clients installed!</string>
@@ -41,6 +39,7 @@
     <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="devgianlu" translatable="false">devgianlu</string>
     <string name="devgianluEmail" translatable="false">altomanigianluca@gmail.com</string>
+    <string name="donate_summary">Donate from my website: I\'ll get all the money!</string>
 
     <!-- Prefs -->
     <string name="prefs_nightMode">Enable night mode (dark theme)</string>

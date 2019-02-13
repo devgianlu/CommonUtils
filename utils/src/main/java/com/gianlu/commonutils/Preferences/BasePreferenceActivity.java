@@ -134,7 +134,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
     @Nullable
     protected abstract String getOpenSourceUrl();
 
-    protected abstract boolean disablePayPalOnGooglePlay();
+    protected abstract boolean disableOtherDonationsOnGooglePlay();
 
     public static class MainFragment extends MaterialAboutFragment {
         private BasePreferenceActivity parent;
@@ -250,8 +250,8 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 }));
             }
 
-            if (!FossUtils.hasGoogleBilling() || !parent.disablePayPalOnGooglePlay()) {
-                donateBuilder.addItem(new MaterialAboutActionItem(R.string.donatePaypal, R.string.donatePaypalSummary, R.drawable.baseline_money_24, () -> openLink(context, "https://paypal.me/devgianlu")));
+            if (!FossUtils.hasGoogleBilling() || !parent.disableOtherDonationsOnGooglePlay()) {
+                donateBuilder.addItem(new MaterialAboutActionItem(R.string.donate, R.string.donate_summary, R.drawable.baseline_money_24, () -> openLink(context, "https://gianlu.xyz/donate/")));
             }
 
             MaterialAboutCard.Builder tutorialBuilder = null;
