@@ -16,10 +16,8 @@
     <string name="closeDrawer">关闭抽屉菜单</string>
     <string name="donateGoogle">通过Google Play捐赠</string>
     <string name="donateGoogleSummary">Google将抽取其中部分资金</string>
-    <string name="donatePaypal">通过PayPal捐赠</string>
-    <string name="donatePaypalSummary">我可以拿到所有的钱</string>
     <string name="about_app">关于本应用</string>
-    <string name="connectingBillingService">正连接到结算服务。请稍候...</string>
+    <string name="connectingBillingService">正连接到结算服务。请稍候…</string>
     <string name="noMailClients">本机没有安装电子邮件客户端!</string>
     <string name="offline">您正处于离线状态!</string>
     <string name="copiedToClipboard">已复制到剪贴板!</string>
