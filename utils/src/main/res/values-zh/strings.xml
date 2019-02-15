@@ -38,6 +38,7 @@
     <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="devgianlu" translatable="false">devgianlu</string>
     <string name="devgianluEmail" translatable="false">altomanigianluca@gmail.com</string>
+    <string name="donate_summary">通过我的网站捐赠：我可以拿到所有的钱！</string>
 
     <!-- Prefs -->
     <string name="prefs_nightMode">启用夜间模式(暗色主题)</string>
