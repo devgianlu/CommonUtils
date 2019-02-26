@@ -101,6 +101,8 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
     @Override
     public final void onPreferenceSelected(@NonNull Class<? extends BasePreferenceFragment> clazz) {
+        if (isFinishing() || isDestroyed()) return;
+
         try {
             BasePreferenceFragment fragment = clazz.newInstance();
             String tag = fragment.getClass().getName();
