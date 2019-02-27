@@ -14,7 +14,7 @@ public abstract class ProfilesAdapter<P extends BaseDrawerProfile, VH extends Re
     private RecyclerView list;
 
     public ProfilesAdapter(@NonNull Context context, @NonNull List<P> profiles, @NonNull DrawerManager.ProfilesDrawerListener<P> listener) {
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.profiles = profiles;
         this.listener = listener;
     }

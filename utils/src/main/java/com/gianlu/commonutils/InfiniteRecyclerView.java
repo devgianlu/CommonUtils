@@ -288,8 +288,8 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
             private Drawable separator = null;
             private boolean separatorWithCount = false;
 
-            public Config(Context context) {
-                this.context = context;
+            public Config(@NonNull Context context) {
+                this.context = context.getApplicationContext();
                 this.items = new ArrayList<>();
             }
 
