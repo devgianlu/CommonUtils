@@ -80,6 +80,14 @@ public final class CommonUtils {
         }
     }
 
+    public static void setTextColor(@NonNull TextView view, @ColorRes int res) {
+        view.setTextColor(ContextCompat.getColor(view.getContext(), res));
+    }
+
+    public static void setTextColorFromAttr(@NonNull TextView view, @AttrRes int res) {
+        view.setTextColor(resolveAttrAsColor(view.getContext(), res));
+    }
+
     public static void zip(List<? extends File> files, File dest) throws IOException {
         byte[] buffer = new byte[8192];
         try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(dest))) {
