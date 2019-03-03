@@ -74,18 +74,13 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         private FailedLoadingContentListener listener;
         private boolean loading = false;
 
-        public InfiniteAdapter(Config<E> config) {
+        public InfiniteAdapter(@NonNull Context context, @NonNull Config<E> config) {
             this.config = config;
-            this.inflater = LayoutInflater.from(config.context);
+            this.inflater = LayoutInflater.from(context);
             this.handler = new Handler(Looper.getMainLooper());
             this.items = new ArrayList<>();
 
             populate(config.items);
-        }
-
-        @NonNull
-        protected Context getContext() {
-            return config.context;
         }
 
         protected int remove(E element) {
@@ -282,14 +277,12 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         }
 
         public final static class Config<E> {
-            private final Context context;
             private final List<E> items;
             private int maxPages = UNDETERMINED_PAGES;
             private Drawable separator = null;
             private boolean separatorWithCount = false;
 
-            public Config(@NonNull Context context) {
-                this.context = context.getApplicationContext();
+            public Config() {
                 this.items = new ArrayList<>();
             }
 
@@ -319,7 +312,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
                 return this;
             }
 
-            public Config<E> separators(boolean withCount) {
+            public Config<E> separators(Context context, boolean withCount) {
                 separatorWithCount = withCount;
                 TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.listDivider});
                 separator = a.getDrawable(0);
