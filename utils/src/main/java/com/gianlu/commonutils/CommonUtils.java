@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,6 +60,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -484,13 +487,17 @@ public final class CommonUtils {
         return builder.toString();
     }
 
-    public static void setRecyclerViewTopMargin(Context context, RecyclerView.ViewHolder holder) {
+    public static void setRecyclerViewTopMargin(@NonNull RecyclerView.ViewHolder holder) {
         if (holder.itemView.getLayoutParams() == null) return;
+
+        Context context = holder.itemView.getContext();
         ((RecyclerView.LayoutParams) holder.itemView.getLayoutParams()).topMargin = holder.getLayoutPosition() == 0 ? (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics()) : 0;
     }
 
-    public static void setRecyclerViewBottomMargin(Context context, RecyclerView.ViewHolder holder, int items) {
+    public static void setRecyclerViewBottomMargin(@NonNull RecyclerView.ViewHolder holder, int items) {
         if (holder.itemView.getLayoutParams() == null) return;
+
+        Context context = holder.itemView.getContext();
         ((RecyclerView.LayoutParams) holder.itemView.getLayoutParams()).bottomMargin = holder.getLayoutPosition() == items - 1 ? (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics()) : 0;
     }
 
@@ -575,5 +582,17 @@ public final class CommonUtils {
         int count = 0;
         for (int i = 0; i < str.length(); i++) if (str.charAt(i) == c) count++;
         return count;
+    }
+
+    public static void setText(@NonNull TextView view, @PluralsRes int res, int num, Object... args) {
+        view.setText(view.getContext().getResources().getQuantityString(res, num, args));
+    }
+
+    public static void setText(TextView view, @StringRes int res, Object... args) {
+        view.setText(view.getContext().getResources().getString(res, args));
+    }
+
+    public static void setImageTintColor(ImageView view, @ColorRes int res) {
+        view.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), res)));
     }
 }
