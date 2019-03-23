@@ -584,7 +584,7 @@ public final class CommonUtils {
         return count;
     }
 
-    public static void setText(@NonNull TextView view, @PluralsRes int res, int num, Object... args) {
+    public static void setTextPlural(@NonNull TextView view, @PluralsRes int res, int num, Object... args) {
         view.setText(view.getContext().getResources().getQuantityString(res, num, args));
     }
 
