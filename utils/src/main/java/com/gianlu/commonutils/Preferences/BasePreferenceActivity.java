@@ -108,7 +108,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             String tag = fragment.getClass().getName();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.basePreference, fragment, tag)
-                    .commit();
+                    .commitAllowingStateLoss();
 
             setTitle(fragment.getTitleRes());
         } catch (InstantiationException | IllegalAccessException ex) {
