@@ -70,6 +70,15 @@ public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
+    @NonNull
+    public static String decodeUrl(@NonNull String url) {
+        try {
+            return URLDecoder.decode(url, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public static boolean isNightModeOn(@NonNull Context context, boolean fallback) {
         int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (mode) {
@@ -584,7 +593,7 @@ public final class CommonUtils {
         return count;
     }
 
-    public static void setText(@NonNull TextView view, @PluralsRes int res, int num, Object... args) {
+    public static void setTextPlural(@NonNull TextView view, @PluralsRes int res, int num, Object... args) {
         view.setText(view.getContext().getResources().getQuantityString(res, num, args));
     }
 
