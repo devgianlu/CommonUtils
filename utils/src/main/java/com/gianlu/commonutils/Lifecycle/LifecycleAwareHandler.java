@@ -18,7 +18,7 @@ public class LifecycleAwareHandler {
         if (ctx instanceof Activity) {
             return !((Activity) ctx).isDestroyed() && !((Activity) ctx).isFinishing();
         } else if (ctx instanceof Fragment) {
-            return canPost(((Fragment) ctx).getActivity());
+            return ((Fragment) ctx).isAdded() && canPost(((Fragment) ctx).getActivity());
         } else {
             return true;
         }
