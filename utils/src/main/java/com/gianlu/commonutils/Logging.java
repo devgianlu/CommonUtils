@@ -12,6 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.gianlu.commonutils.Analytics.AnalyticsApplication;
 import com.gianlu.commonutils.Preferences.Prefs;
 
@@ -34,12 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 public final class Logging {
     @Nullable
@@ -365,10 +365,10 @@ public final class Logging {
                 version = fallbackVersion;
             else version = appVersion + "(" + fallbackVersion + ")";
 
-            return line = String.valueOf(String.valueOf(timestamp)) + '|' +
-                    String.valueOf(version.replace('|', '_')) + '|' +
-                    String.valueOf(type.name()) + '\n' +
-                    String.valueOf(message.replace("\n\n", "\n")) + "\n\n";
+            return line = String.valueOf(timestamp) + '|' +
+                    version.replace('|', '_') + '|' +
+                    type.name() + '\n' +
+                    message.replace("\n\n", "\n") + "\n\n";
         }
 
         public enum Type {
