@@ -10,6 +10,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -41,7 +42,7 @@ public class RecyclerViewLayout extends FrameLayout {
         disableSwipeRefresh();
     }
 
-    public void enableSwipeRefresh(SwipeRefreshLayout.OnRefreshListener listener, @ColorRes int... colors) {
+    public void enableSwipeRefresh(@NonNull SwipeRefreshLayout.OnRefreshListener listener, @ColorRes int... colors) {
         if (colors.length <= 0) throw new IllegalArgumentException("Provide at least one color!");
 
         swipeRefreshEnabled = true;
@@ -109,27 +110,34 @@ public class RecyclerViewLayout extends FrameLayout {
         message.setInfo(textRes, args);
     }
 
-    public void loadListData(RecyclerView.Adapter adapter, boolean show) {
+    public void loadListData(@NonNull RecyclerView.Adapter adapter, boolean show) {
         list.setAdapter(adapter);
         if (show) showList();
     }
 
-    public void loadListData(RecyclerView.Adapter adapter) {
+    public void loadListData(@NonNull RecyclerView.Adapter adapter) {
         loadListData(adapter, true);
     }
 
-    public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    public void setLayoutManager(@NonNull RecyclerView.LayoutManager layoutManager) {
         list.setLayoutManager(layoutManager);
     }
 
+    public void useVerticalLinearLayoutManager() {
+        setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+    }
+
+    @NonNull
     public ProgressBar getProgressBar() {
         return loading;
     }
 
+    @NonNull
     public InfiniteRecyclerView getList() {
         return list;
     }
 
+    @NonNull
     public SwipeRefreshLayout getSwipeRefreshLayout() {
         return swipeRefresh;
     }
