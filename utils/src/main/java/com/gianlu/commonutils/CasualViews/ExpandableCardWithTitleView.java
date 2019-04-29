@@ -23,7 +23,8 @@ public class ExpandableCardWithTitleView extends CardView {
     private final LinearLayout layout;
     private final SuperTextView title;
     private final ImageButton toggle;
-    private boolean hasBody = false;
+    private View body;
+    private ExpandableCardWithTitleView[] exclusiveOpenViews;
 
     public ExpandableCardWithTitleView(@NonNull Context context) {
         this(context, null, 0);
@@ -50,11 +51,35 @@ public class ExpandableCardWithTitleView extends CardView {
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (!hasBody) {
+        if (body == null) {
+            body = child;
             layout.addView(child, index, params);
-            toggle.setOnClickListener((v) -> CommonUtils.handleCollapseClick(toggle, child));
-            hasBody = true;
+            toggle.setOnClickListener((v) -> handleCollapseClick());
         }
+    }
+
+    private void handleCollapseClick() {
+        if (CommonUtils.isExpanded(body)) collapse();
+        else expand();
+    }
+
+    public void expand() {
+        CommonUtils.expand(body, null);
+        CommonUtils.animateCollapsingArrowBellows(toggle, true);
+
+        if (exclusiveOpenViews != null && exclusiveOpenViews.length > 0) {
+            for (ExpandableCardWithTitleView view : exclusiveOpenViews)
+                view.collapse();
+        }
+    }
+
+    public void collapse() {
+        CommonUtils.collapse(body, null);
+        CommonUtils.animateCollapsingArrowBellows(toggle, false);
+    }
+
+    public void exclusiveOpen(ExpandableCardWithTitleView... views) {
+        exclusiveOpenViews = views;
     }
 
     public void setTitle(@StringRes int res) {
