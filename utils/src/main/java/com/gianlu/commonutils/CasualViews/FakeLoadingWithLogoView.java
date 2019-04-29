@@ -120,6 +120,23 @@ public class FakeLoadingWithLogoView extends FrameLayout {
         bar.accelerateTo(1000, 100, listener);
     }
 
+    public void endFakeAnimation(@NonNull Runnable onEnd) {
+        bar.accelerateTo(1000, 100, new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                onEnd.run();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
     public void setLogoRes(@DrawableRes int res) {
         logo.setImageResource(res);
     }
