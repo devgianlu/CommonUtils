@@ -64,8 +64,10 @@ public class ExpandableCardWithTitleView extends CardView {
     }
 
     public void expand() {
-        CommonUtils.expand(body, null);
-        CommonUtils.animateCollapsingArrowBellows(toggle, true);
+        if (!CommonUtils.isExpanded(body)) {
+            CommonUtils.expand(body, null);
+            CommonUtils.animateCollapsingArrowBellows(toggle, true);
+        }
 
         if (exclusiveOpenViews != null && exclusiveOpenViews.length > 0) {
             for (ExpandableCardWithTitleView view : exclusiveOpenViews)
@@ -74,8 +76,10 @@ public class ExpandableCardWithTitleView extends CardView {
     }
 
     public void collapse() {
-        CommonUtils.collapse(body, null);
-        CommonUtils.animateCollapsingArrowBellows(toggle, false);
+        if (CommonUtils.isExpanded(body)) {
+            CommonUtils.collapse(body, null);
+            CommonUtils.animateCollapsingArrowBellows(toggle, false);
+        }
     }
 
     public void exclusiveOpen(ExpandableCardWithTitleView... views) {
@@ -84,5 +88,19 @@ public class ExpandableCardWithTitleView extends CardView {
 
     public void setTitle(@StringRes int res) {
         title.setText(res);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled) {
+            toggle.setEnabled(true);
+            title.setEnabled(true);
+        } else {
+            collapse();
+            toggle.setEnabled(false);
+            title.setEnabled(false);
+        }
+
+        super.setEnabled(enabled);
     }
 }
