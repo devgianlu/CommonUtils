@@ -120,8 +120,8 @@ public class FakeLoadingWithLogoView extends FrameLayout {
         bar.accelerateTo(1000, 100, listener);
     }
 
-    public void endFakeAnimation(@NonNull Runnable onEnd) {
-        bar.accelerateTo(1000, 100, new Animation.AnimationListener() {
+    public void endFakeAnimation(@NonNull Runnable onEnd, boolean fade) {
+        endFakeAnimation(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
             }
@@ -129,6 +129,7 @@ public class FakeLoadingWithLogoView extends FrameLayout {
             @Override
             public void onAnimationEnd(Animation animation) {
                 onEnd.run();
+                if (fade) fadeAway();
             }
 
             @Override
@@ -207,24 +208,29 @@ public class FakeLoadingWithLogoView extends FrameLayout {
             anim.setAnimationListener(listener);
 
             if (getAnimation() != null) {
-                waitEnd = () -> startAnimation(anim);
+                if (getAnimation().hasEnded() || !getAnimation().hasStarted()) {
+                    clearAnimation();
+                    startAnimation(anim);
+                } else {
+                    waitEnd = () -> startAnimation(anim);
 
-                getAnimation().setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+                    getAnimation().setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        if (waitEnd != null) waitEnd.ended();
-                    }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            if (waitEnd != null) waitEnd.ended();
+                        }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+                    });
 
-                clearAnimation();
+                    clearAnimation();
+                }
             } else {
                 startAnimation(anim);
             }
