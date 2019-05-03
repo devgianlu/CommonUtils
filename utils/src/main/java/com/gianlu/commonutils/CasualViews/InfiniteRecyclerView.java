@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.CasualViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,17 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.Logging;
+import com.gianlu.commonutils.R;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
     private FailedLoadingContentListener listener;

@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.CasualViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
+
+import com.gianlu.commonutils.R;
 
 @UiThread
 public class MessageView extends LinearLayout {

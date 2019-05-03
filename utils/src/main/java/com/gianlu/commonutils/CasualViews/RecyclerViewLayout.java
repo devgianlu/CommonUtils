@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.CasualViews;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,6 +13,8 @@ import androidx.annotation.StringRes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.gianlu.commonutils.R;
 
 public class RecyclerViewLayout extends FrameLayout {
     private final ProgressBar loading;

@@ -1,4 +1,4 @@
-package com.gianlu.commonutils;
+package com.gianlu.commonutils.CasualViews;
 
 import android.content.Context;
 import android.text.Html;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import com.gianlu.commonutils.FontsManager;
 
 public class SuperTextView extends AppCompatTextView {
     private boolean isCompact;

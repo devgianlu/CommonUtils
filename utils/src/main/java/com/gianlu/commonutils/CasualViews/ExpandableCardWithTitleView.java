@@ -17,7 +17,6 @@ import androidx.cardview.widget.CardView;
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FontsManager;
 import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.SuperTextView;
 
 public class ExpandableCardWithTitleView extends CardView {
     private final LinearLayout layout;
