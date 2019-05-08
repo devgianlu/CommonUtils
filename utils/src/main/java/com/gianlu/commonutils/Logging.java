@@ -254,9 +254,8 @@ public final class Logging {
         return sw.toString();
     }
 
-    public static void log(@NonNull String msg, Throwable ex) {
-        if (ex == null) return;
-        log(msg + '\n' + getStackTrace(ex), true);
+    public static void log(@NonNull String msg, @Nullable Throwable ex) {
+        log(msg + (ex != null ? ('\n' + getStackTrace(ex)) : ""), true);
     }
 
     public static void log(Throwable ex) {
