@@ -485,9 +485,15 @@ public final class CommonUtils {
         CommonUtils.DEBUG = debug;
     }
 
+
     @NonNull
     public static String join(Object[] objs, String separator) {
         return join(Arrays.asList(objs), separator);
+    }
+
+    @NonNull
+    public static String join(Collection<?> objs, String separator, boolean copy) {
+        return join(copy ? new ArrayList<>(objs) : objs, separator);
     }
 
     @NonNull
