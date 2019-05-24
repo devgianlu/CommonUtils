@@ -5,11 +5,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.gianlu.commonutils.Dialogs.DialogUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import com.gianlu.commonutils.Dialogs.DialogUtils;
 
 public class Toaster {
     private final static Handler handler = new Handler(Looper.getMainLooper());
@@ -78,7 +78,7 @@ public class Toaster {
         show(context);
     }
 
-    public void show(@NonNull final Context context) {
+    public void show(@NonNull Context context) {
         if (shown) {
             if (CommonUtils.isDebug()) System.out.println("Skipping toast, already shown!");
             return;
@@ -104,7 +104,10 @@ public class Toaster {
         if (error || msg.length() > 48) duration = Toast.LENGTH_LONG;
         else duration = Toast.LENGTH_SHORT;
 
-        Runnable action = () -> Toast.makeText(context, msg, duration).show();
+        Runnable action = () -> {
+            if (DialogUtils.isContextValid(context))
+                Toast.makeText(context, msg, duration).show();
+        };
 
         if (Looper.myLooper() == Looper.getMainLooper()) action.run();
         else handler.post(action);
