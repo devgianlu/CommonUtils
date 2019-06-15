@@ -17,7 +17,7 @@
         <!-- Uncaught exception activity -->
         <activity
             android:name=".Analytics.UncaughtExceptionActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:theme="@style/FullscreenTheme" />
 
         <!-- Offline activity -->
