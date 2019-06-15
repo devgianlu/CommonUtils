@@ -4,20 +4,26 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClient.BillingResponseCode;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
@@ -25,11 +31,6 @@ import com.gianlu.commonutils.Toaster;
 
 import java.util.Arrays;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class PreferencesBillingHelper {
     private final Object billingReady = new Object();
@@ -42,19 +43,19 @@ public class PreferencesBillingHelper {
         this.products = Arrays.asList(products);
     }
 
-    public void onStart(Activity activity) {
-        billingClient = BillingClient.newBuilder(activity).setListener(new InternalListener()).build();
+    public void onStart(@NonNull Activity activity) {
+        billingClient = BillingClient.newBuilder(activity).enablePendingPurchases().setListener(new InternalListener()).build();
         billingClient.startConnection(new BillingClientStateListener() {
             private boolean retried = false;
 
             @Override
-            public void onBillingSetupFinished(@BillingClient.BillingResponse int code) {
-                if (code == BillingClient.BillingResponse.OK) {
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingResponseCode.OK) {
                     synchronized (billingReady) {
                         billingReady.notifyAll();
                     }
                 } else {
-                    handleBillingErrors(code);
+                    handleBillingErrors(billingResult.getResponseCode());
                 }
             }
 
@@ -70,24 +71,22 @@ public class PreferencesBillingHelper {
         });
     }
 
-    private void buyProduct(Activity activity, @NonNull SkuDetails product) {
+    private void buyProduct(@NonNull Activity activity, @NonNull SkuDetails product) {
         BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                .setSku(product.getSku()).setType(BillingClient.SkuType.INAPP)
+                .setSkuDetails(product)
                 .build();
 
-        int responseCode = billingClient.launchBillingFlow(activity, flowParams);
-        if (responseCode != BillingClient.BillingResponse.OK) handleBillingErrors(responseCode);
+        BillingResult result = billingClient.launchBillingFlow(activity, flowParams);
+        if (result.getResponseCode() != BillingResponseCode.OK)
+            handleBillingErrors(result.getResponseCode());
     }
 
-    private void showDonateDialog(final Activity activity, List<SkuDetails> products) {
+    private void showDonateDialog(@NonNull Activity activity, List<SkuDetails> products) {
         RecyclerView list = new RecyclerView(activity);
         list.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
-        list.setAdapter(new SkuAdapter(activity, products, new SkuAdapter.Listener() {
-            @Override
-            public void onItemSelected(@NonNull SkuDetails product) {
-                buyProduct(activity, product);
-                listener.dismissDialog();
-            }
+        list.setAdapter(new SkuAdapter(activity, products, product -> {
+            buyProduct(activity, product);
+            listener.dismissDialog();
         }));
 
         listener.showDialog(new AlertDialog.Builder(activity)
@@ -96,23 +95,20 @@ public class PreferencesBillingHelper {
                 .setView(list));
     }
 
-    public void donate(final Activity activity, boolean wasWaiting) {
+    public void donate(@NonNull Activity activity, boolean wasWaiting) {
         if (!wasWaiting)
             listener.showDialog(DialogUtils.progressDialog(activity, R.string.connectingBillingService));
 
         if (billingClient != null && billingClient.isReady()) {
             SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
             params.setSkusList(products).setType(BillingClient.SkuType.INAPP);
-            billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-                @Override
-                public void onSkuDetailsResponse(@BillingClient.BillingResponse int responseCode, List<SkuDetails> products) {
-                    listener.dismissDialog();
+            billingClient.querySkuDetailsAsync(params.build(), (billingResult, skuDetailsList) -> {
+                listener.dismissDialog();
 
-                    if (responseCode == BillingClient.BillingResponse.OK)
-                        showDonateDialog(activity, products);
-                    else
-                        handleBillingErrors(responseCode);
-                }
+                if (billingResult.getResponseCode() == BillingResponseCode.OK)
+                    showDonateDialog(activity, skuDetailsList);
+                else
+                    handleBillingErrors(billingResult.getResponseCode());
             });
         } else {
             new Thread() {
@@ -131,25 +127,26 @@ public class PreferencesBillingHelper {
         }
     }
 
-    private void handleBillingErrors(@BillingClient.BillingResponse int code) {
+    private void handleBillingErrors(@BillingResponseCode int code) {
         switch (code) {
-            case BillingClient.BillingResponse.BILLING_UNAVAILABLE:
-            case BillingClient.BillingResponse.SERVICE_UNAVAILABLE:
-            case BillingClient.BillingResponse.SERVICE_DISCONNECTED:
+            case BillingResponseCode.BILLING_UNAVAILABLE:
+            case BillingResponseCode.SERVICE_UNAVAILABLE:
+            case BillingResponseCode.SERVICE_DISCONNECTED:
+            case BillingResponseCode.SERVICE_TIMEOUT:
                 listener.showToast(Toaster.build().message(R.string.failedBillingConnection));
                 break;
-            case BillingClient.BillingResponse.USER_CANCELED:
+            case BillingResponseCode.USER_CANCELED:
                 listener.showToast(Toaster.build().message(R.string.userCancelled));
                 break;
-            case BillingClient.BillingResponse.DEVELOPER_ERROR:
-            case BillingClient.BillingResponse.ITEM_UNAVAILABLE:
-            case BillingClient.BillingResponse.FEATURE_NOT_SUPPORTED:
-            case BillingClient.BillingResponse.ITEM_ALREADY_OWNED:
-            case BillingClient.BillingResponse.ITEM_NOT_OWNED:
-            case BillingClient.BillingResponse.ERROR:
+            case BillingResponseCode.DEVELOPER_ERROR:
+            case BillingResponseCode.ITEM_UNAVAILABLE:
+            case BillingResponseCode.FEATURE_NOT_SUPPORTED:
+            case BillingResponseCode.ITEM_ALREADY_OWNED:
+            case BillingResponseCode.ITEM_NOT_OWNED:
+            case BillingResponseCode.ERROR:
                 listener.showToast(Toaster.build().message(R.string.failedBuying));
                 break;
-            case BillingClient.BillingResponse.OK:
+            case BillingResponseCode.OK:
                 break;
         }
     }
@@ -209,18 +206,12 @@ public class PreferencesBillingHelper {
             holder.title.setText(item.getTitle());
             holder.description.setText(item.getDescription());
             holder.buy.setText(item.getPrice());
-            holder.buy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) listener.onItemSelected(item);
-                }
+            holder.buy.setOnClickListener(view -> {
+                if (listener != null) listener.onItemSelected(item);
             });
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) listener.onItemSelected(item);
-                }
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) listener.onItemSelected(item);
             });
         }
 
@@ -254,11 +245,11 @@ public class PreferencesBillingHelper {
     private class InternalListener implements PurchasesUpdatedListener {
 
         @Override
-        public void onPurchasesUpdated(@BillingClient.BillingResponse int responseCode, List<Purchase> purchases) {
-            if (responseCode == BillingClient.BillingResponse.OK)
-                listener.showToast(Toaster.build().message(R.string.thankYou).extra(purchases.toString()));
+        public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+            if (billingResult.getResponseCode() == BillingResponseCode.OK)
+                listener.showToast(Toaster.build().message(R.string.thankYou).extra(purchases == null ? null : purchases.toString()));
             else
-                handleBillingErrors(responseCode);
+                handleBillingErrors(billingResult.getResponseCode());
         }
     }
 }
