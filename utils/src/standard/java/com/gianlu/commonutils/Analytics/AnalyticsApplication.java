@@ -2,6 +2,10 @@ package com.gianlu.commonutils.Analytics;
 
 import android.os.Bundle;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -12,9 +16,6 @@ import com.gianlu.commonutils.Preferences.Prefs;
 
 import java.util.UUID;
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.fabric.sdk.android.Fabric;
 
 public abstract class AnalyticsApplication extends BaseCommonApplication {
@@ -40,23 +41,23 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
-        if (CRASHLYTICS_READY)
-            Crashlytics.setString(key, val);
+        if (CRASHLYTICS_READY) Crashlytics.setString(key, val);
     }
 
     public static void setCrashlyticsInt(@NonNull String key, int val) {
-        if (CRASHLYTICS_READY)
-            Crashlytics.setInt(key, val);
+        if (CRASHLYTICS_READY) Crashlytics.setInt(key, val);
+    }
+
+    public static void setCrashlyticsLong(@NonNull String key, long val) {
+        if (CRASHLYTICS_READY) Crashlytics.setLong(key, val);
     }
 
     public static void setCrashlyticsBool(@NonNull String key, boolean val) {
-        if (CRASHLYTICS_READY)
-            Crashlytics.setBool(key, val);
+        if (CRASHLYTICS_READY) Crashlytics.setBool(key, val);
     }
 
     public static void crashlyticsLog(@NonNull String msg) {
-        if (CRASHLYTICS_READY)
-            Crashlytics.log(msg);
+        if (CRASHLYTICS_READY) Crashlytics.log(msg);
     }
 
     @Override

@@ -2,13 +2,13 @@ package com.gianlu.commonutils.Analytics;
 
 import android.os.Bundle;
 
-import com.gianlu.commonutils.CommonPK;
-import com.gianlu.commonutils.Logging;
-import com.gianlu.commonutils.Preferences.Prefs;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.gianlu.commonutils.CommonPK;
+import com.gianlu.commonutils.Logging;
+import com.gianlu.commonutils.Preferences.Prefs;
 
 public abstract class AnalyticsApplication extends BaseCommonApplication {
 
@@ -25,11 +25,15 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setCrashlyticsInt(@NonNull String key, int val) {
-        Logging.log(String.format("(key: %s, value: %s)", key, val), false);
+        Logging.log(String.format("(key: %s, value: %d)", key, val), false);
     }
 
     public static void setCrashlyticsBool(@NonNull String key, boolean val) {
-        Logging.log(String.format("(key: %s, value: %s)", key, val), false);
+        Logging.log(String.format("(key: %s, value: %b)", key, val), false);
+    }
+
+    public static void setCrashlyticsLong(@NonNull String key, long val) {
+        Logging.log(String.format("(key: %s, value: %d)", key, val), false);
     }
 
     public static void crashlyticsLog(@NonNull String msg) {
