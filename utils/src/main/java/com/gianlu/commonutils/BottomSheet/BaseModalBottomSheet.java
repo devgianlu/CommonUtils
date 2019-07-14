@@ -1,6 +1,7 @@
 package com.gianlu.commonutils.BottomSheet;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -11,13 +12,6 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.gianlu.commonutils.Dialogs.DialogUtils;
-import com.gianlu.commonutils.Logging;
-import com.gianlu.commonutils.R;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,9 +19,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentActivity;
 
+import com.gianlu.commonutils.Dialogs.DialogUtils;
+import com.gianlu.commonutils.Logging;
+import com.gianlu.commonutils.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
     private FloatingActionButton action;
-    private FrameLayout header;
+    private ModalBottomSheetHeaderView header;
     private FrameLayout body;
     private ProgressBar loading;
     private Toolbar toolbar;
@@ -43,7 +44,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     /**
      * @return Whether the implementation provides a layout for the header
      */
-    protected abstract boolean onCreateHeader(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Setup payload);
+    protected abstract boolean onCreateHeader(@NonNull LayoutInflater inflater, @NonNull ModalBottomSheetHeaderView header, @NonNull Setup payload);
 
     protected abstract void onCreateBody(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Setup payload);
 
@@ -84,6 +85,8 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         behavior.setBottomSheetCallback(prepareCallback());
 
         attachedBehavior(bottomSheet.getContext(), behavior);
+
+        bottomSheet.setBackgroundColor(Color.TRANSPARENT);
     }
 
     @CallSuper
