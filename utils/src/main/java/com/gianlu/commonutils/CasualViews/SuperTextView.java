@@ -95,6 +95,6 @@ public class SuperTextView extends AppCompatTextView {
     }
 
     public void setTypeface(@NonNull @FontsManager.Font String path) {
-        FontsManager.set(this, path);
+        FontsManager.set(path, this);
     }
 }
