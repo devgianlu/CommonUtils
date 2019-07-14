@@ -26,6 +26,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
     private FloatingActionButton action;
     private ModalBottomSheetHeaderView header;
@@ -36,8 +38,8 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     private Setup payload;
     private int lastHeaderEndPadding = -1;
 
-    @Nullable
-    protected Setup getSetupPayload() {
+    @NotNull
+    public Setup getSetupPayload() {
         return payload;
     }
 
