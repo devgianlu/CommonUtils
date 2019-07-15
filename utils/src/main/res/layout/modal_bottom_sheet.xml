@@ -30,7 +30,8 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/modalBottomSheet_scrollable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:minHeight="44dp">
 
             <FrameLayout
@@ -53,6 +54,14 @@
                     android:visibility="gone" />
             </FrameLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <FrameLayout
+            android:id="@+id/modalBottomSheet_bodyNoScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?attr/colorBackgroundFloating"
+            android:visibility="gone" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
