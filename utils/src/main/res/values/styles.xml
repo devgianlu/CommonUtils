@@ -8,7 +8,7 @@
     <!-- App theme -->
     <style name="AppTheme" />
 
-    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -33,7 +33,7 @@
     </style>
 
     <!-- Dialog fix -->
-    <style name="DialogFixCommon" parent="Theme.AppCompat.DayNight.Dialog">
+    <style name="DialogFixCommon" parent="Theme.MaterialComponents.DayNight.Dialog.Bridge">
         <item name="android:windowNoTitle">false</item>
         <item name="colorAccent">?attr/colorAccentRef</item>
         <item name="colorPrimary">@color/colorPrimary</item>
