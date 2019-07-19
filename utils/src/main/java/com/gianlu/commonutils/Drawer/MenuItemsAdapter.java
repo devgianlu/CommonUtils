@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FontsManager;
 import com.gianlu.commonutils.R;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuItemsAdapter.ViewHolder> {
     private final LayoutInflater inflater;
@@ -124,7 +124,7 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
 
             icon = itemView.findViewById(R.id.drawerItem_icon);
             name = itemView.findViewById(R.id.drawerItem_name);
-            FontsManager.set(name, FontsManager.ROBOTO_BOLD);
+            FontsManager.set(FontsManager.ROBOTO_BOLD, name);
             badge = itemView.findViewById(R.id.drawerItem_badge);
         }
     }

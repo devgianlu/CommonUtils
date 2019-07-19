@@ -36,12 +36,8 @@ public class FontsManager {
         return typeface;
     }
 
-    public static void set(@NonNull TextView textView, @NonNull @Font String path) {
-        textView.setTypeface(get(textView.getContext(), path));
-    }
-
     public static void set(@NonNull @Font String path, @NonNull TextView... views) {
-        for (TextView view : views) set(view, path);
+        for (TextView view : views) view.setTypeface(get(view.getContext(), path));
     }
 
     public static void set(@NonNull Context context, @NonNull Paint paint, @NonNull @Font String path) {

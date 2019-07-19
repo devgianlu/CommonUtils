@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize" />
 
-            <FrameLayout
+            <com.gianlu.commonutils.BottomSheet.ModalBottomSheetHeaderView
                 android:id="@+id/modalBottomSheet_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -30,13 +30,14 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/modalBottomSheet_scrollable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:minHeight="44dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:background="?attr/colorBackgroundFloating"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="?attr/colorBackgroundFloating">
 
                 <ProgressBar
                     android:id="@+id/modalBottomSheet_loading"
@@ -53,6 +54,14 @@
                     android:visibility="gone" />
             </FrameLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <FrameLayout
+            android:id="@+id/modalBottomSheet_bodyNoScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?attr/colorBackgroundFloating"
+            android:visibility="gone" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

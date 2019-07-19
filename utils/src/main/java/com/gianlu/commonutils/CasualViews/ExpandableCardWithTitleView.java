@@ -45,7 +45,7 @@ public class ExpandableCardWithTitleView extends CardView {
         toggle = titleLayout.findViewById(R.id.expandableCardViewTitle_toggle);
         layout.addView(titleLayout);
 
-        FontsManager.set(title, FontsManager.ROBOTO_BOLD);
+        FontsManager.set(FontsManager.ROBOTO_BOLD, title);
     }
 
     @Override
