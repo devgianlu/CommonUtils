@@ -12,7 +12,9 @@
     <application>
 
         <!-- Logs activity -->
-        <activity android:name=".LogsActivity" />
+        <activity
+            android:name=".LogsActivity"
+            android:configChanges="uiMode" />
 
         <!-- Uncaught exception activity -->
         <activity
@@ -21,7 +23,9 @@
             android:theme="@style/FullscreenTheme" />
 
         <!-- Offline activity -->
-        <activity android:name=".OfflineActivity" />
+        <activity
+            android:name=".OfflineActivity"
+            android:configChanges="uiMode" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
