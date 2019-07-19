@@ -2,21 +2,14 @@ package com.gianlu.commonutils;
 
 import android.os.Bundle;
 
-import com.gianlu.commonutils.Preferences.Prefs;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-public abstract class NightlyActivity extends AppCompatActivity {
+import com.gianlu.commonutils.Preferences.Prefs;
 
-    @Override
-    @CallSuper
-    protected void onResume() {
-        super.onResume();
-        applyNight();
-    }
+public abstract class NightlyActivity extends AppCompatActivity {
 
     @Override
     @CallSuper
@@ -26,6 +19,6 @@ public abstract class NightlyActivity extends AppCompatActivity {
     }
 
     public final void applyNight() {
-        getDelegate().setLocalNightMode(Prefs.getBoolean(CommonPK.NIGHT_MODE, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_AUTO);
+        getDelegate().setLocalNightMode(Prefs.getBoolean(CommonPK.NIGHT_MODE, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_UNSPECIFIED);
     }
 }

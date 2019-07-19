@@ -3,8 +3,6 @@ package com.gianlu.commonutils.Dialogs;
 import android.app.Dialog;
 import android.content.Context;
 
-import com.gianlu.commonutils.Toaster;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -12,11 +10,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.gianlu.commonutils.Toaster;
+
 public abstract class FragmentWithDialog extends Fragment {
 
     @Override
     @CallSuper
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         if (!(context instanceof ActivityWithDialog))
