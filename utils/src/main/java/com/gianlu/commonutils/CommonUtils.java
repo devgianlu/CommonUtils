@@ -485,30 +485,33 @@ public final class CommonUtils {
         CommonUtils.DEBUG = debug;
     }
 
-
     @NonNull
-    public static String join(Object[] objs, String separator) {
+    public static String join(@NonNull Object[] objs, @NonNull String separator) {
         return join(Arrays.asList(objs), separator);
     }
 
     @NonNull
-    public static String join(Collection<?> objs, String separator, boolean copy) {
+    public static String join(@NonNull Collection<?> objs, @NonNull String separator, boolean copy) {
         return join(copy ? new ArrayList<>(objs) : objs, separator);
     }
 
     @NonNull
-    public static String join(Collection<?> objs, String separator) {
-        if (objs == null) return "";
+    public static <T> String join(@NonNull Collection<T> objs, @NonNull String separator, @Nullable ToString<T> func) {
         StringBuilder builder = new StringBuilder();
 
         boolean first = true;
-        for (Object obj : objs) {
+        for (T obj : objs) {
             if (!first) builder.append(separator);
             first = false;
-            builder.append(obj.toString());
+            builder.append(func == null ? obj.toString() : func.toString(obj));
         }
 
         return builder.toString();
+    }
+
+    @NonNull
+    public static String join(@NonNull Collection<?> objs, @NonNull String separator) {
+        return join(objs, separator, null);
     }
 
     public static void setRecyclerViewTopMargin(@NonNull RecyclerView.ViewHolder holder) {
@@ -618,5 +621,10 @@ public final class CommonUtils {
 
     public static void setImageTintColor(ImageView view, @ColorRes int res) {
         view.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), res)));
+    }
+
+    public interface ToString<T> {
+        @NonNull
+        String toString(@NonNull T obj);
     }
 }
