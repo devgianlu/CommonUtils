@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 
-public class FontsManager {
+public final class FontsManager {
     public final static String ROBOTO_MEDIUM = "fonts/Roboto-Medium.ttf";
     public final static String ROBOTO_THIN = "fonts/Roboto-Thin.ttf";
     public final static String ROBOTO_LIGHT = "fonts/Roboto-Light.ttf";

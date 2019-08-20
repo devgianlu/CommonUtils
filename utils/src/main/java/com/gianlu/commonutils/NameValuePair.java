@@ -1,15 +1,15 @@
 package com.gianlu.commonutils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-public class NameValuePair {
+public final class NameValuePair {
     private final String key;
     private final String value;
 

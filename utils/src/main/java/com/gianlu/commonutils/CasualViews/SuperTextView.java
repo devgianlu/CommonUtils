@@ -16,65 +16,66 @@ import com.gianlu.commonutils.FontsManager;
 public class SuperTextView extends AppCompatTextView {
     private boolean isCompact;
 
-    public SuperTextView(Context context, String fullText, String compatText, @ColorInt int textColor) {
+    public SuperTextView(@NonNull Context context, @NonNull String fullText, @NonNull String compatText, @ColorInt int textColor) {
         super(context);
         setCompactedText(fullText, compatText);
         setTextColor(textColor);
     }
 
-    public SuperTextView(Context context, String fullText, String compatText) {
+    public SuperTextView(@NonNull Context context, @NonNull String fullText, @NonNull String compatText) {
         super(context);
         setCompactedText(fullText, compatText);
     }
 
-    public SuperTextView(Context context, @Nullable AttributeSet attrs) {
+    public SuperTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SuperTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SuperTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public SuperTextView(Context context, @StringRes int str) {
+    public SuperTextView(@NonNull Context context, @StringRes int str) {
         super(context);
         setHtml(str);
     }
 
-    public SuperTextView(Context context, String str) {
+    public SuperTextView(@NonNull Context context, @NonNull String str) {
         this(context, str, -1);
     }
 
-    public SuperTextView(Context context, @StringRes int str, Object... args) {
+    public SuperTextView(@NonNull Context context, @StringRes int str, Object... args) {
         super(context, null);
         setHtml(str, args);
     }
 
-    public SuperTextView(Context context, @StringRes int str, @ColorInt int color) {
+    public SuperTextView(@NonNull Context context, @StringRes int str, @ColorInt int color) {
         super(context, null);
         setHtml(str);
         setTextColor(color);
     }
 
-    public SuperTextView(Context context, String str, @ColorInt int textColor) {
+    public SuperTextView(@NonNull Context context, @NonNull String str, @ColorInt int textColor) {
         super(context);
         setHtml(str);
         if (textColor != 0) setTextColor(textColor);
     }
 
     @NonNull
-    public static String makeBold(String str) {
+    public static String makeBold(@NonNull String str) {
         return "<b>" + str + "</b>";
     }
 
-    public void setHtml(String html) {
-        setText(Html.fromHtml(html));
+    public void setHtml(@Nullable String html) {
+        if (html == null) setText(null);
+        else setText(Html.fromHtml(html));
     }
 
     public void setHtml(@StringRes int html, Object... args) {
         setHtml(getContext().getString(html, args));
     }
 
-    public void setCompactedText(final String fullText, final String compatText) {
+    public void setCompactedText(@NonNull String fullText, @NonNull String compatText) {
         isCompact = true;
         setHtml(compatText);
         setEllipsize(TextUtils.TruncateAt.END);

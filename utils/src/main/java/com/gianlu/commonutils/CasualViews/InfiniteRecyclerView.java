@@ -138,7 +138,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
             if (viewType == ITEM_LOADING)
                 return new LoadingViewHolder(inflater.inflate(R.layout.item_loading, parent, false));
             else if (viewType == ITEM_SEPARATOR)
-                return new SeparatorViewHolder(inflater.inflate(R.layout.separator_item, parent, false));
+                return new SeparatorViewHolder(inflater.inflate(R.layout.item_separator_with_text, parent, false));
             else
                 return createViewHolder(parent);
         }
@@ -356,7 +356,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
                 super(itemView);
 
                 line = itemView.findViewById(R.id.separatorItem_line);
-                date = itemView.findViewById(R.id.separatorItem_date);
+                date = itemView.findViewById(R.id.separatorItem_text);
             }
         }
     }

@@ -481,7 +481,7 @@ public final class Logging {
             final TextView level;
 
             public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
-                super(inflater.inflate(R.layout.log_line_item, parent, false));
+                super(inflater.inflate(R.layout.item_log_line, parent, false));
 
                 msg = itemView.findViewById(R.id.logLine_msg);
                 level = itemView.findViewById(R.id.logLine_level);

@@ -11,7 +11,7 @@ import androidx.annotation.StringRes;
 
 import com.gianlu.commonutils.Dialogs.DialogUtils;
 
-public class Toaster {
+public final class Toaster {
     private final static Handler handler = new Handler(Looper.getMainLooper());
     private final Context context;
     private String msg;

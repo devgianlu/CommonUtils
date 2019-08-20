@@ -49,13 +49,13 @@ public class MessageView extends LinearLayout {
         }
     }
 
-    private void set(@DrawableRes int iconRes, @StringRes int textRes, Object... args) {
+    public void set(@DrawableRes int iconRes, @StringRes int textRes, Object... args) {
         this.icon.setImageResource(iconRes);
         this.text.setHtml(textRes, args);
         this.setVisibility(VISIBLE);
     }
 
-    private void set(@DrawableRes int iconRes, @NonNull String text) {
+    public void set(@DrawableRes int iconRes, @NonNull String text) {
         this.icon.setImageResource(iconRes);
         this.text.setHtml(text);
         this.setVisibility(VISIBLE);
@@ -65,19 +65,19 @@ public class MessageView extends LinearLayout {
         this.setVisibility(GONE);
     }
 
-    public void setInfo(@StringRes int textRes, Object... args) {
+    public void info(@StringRes int textRes, Object... args) {
         set(infoRes, textRes, args);
     }
 
-    public void setInfo(@NonNull String text) {
+    public void info(@NonNull String text) {
         set(infoRes, text);
     }
 
-    public void setError(@StringRes int textRes, Object... args) {
+    public void error(@StringRes int textRes, Object... args) {
         set(errorRes, textRes, args);
     }
 
-    public void setError(@NonNull String text) {
+    public void error(@NonNull String text) {
         set(errorRes, text);
     }
 }

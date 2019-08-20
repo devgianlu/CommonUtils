@@ -5,11 +5,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.gianlu.commonutils.R;
-
 import androidx.annotation.Nullable;
 
-public class StatusBarPadding extends View {
+import com.gianlu.commonutils.R;
+
+public final class StatusBarPadding extends View {
     private final int mHeight;
 
     public StatusBarPadding(Context context) {

@@ -9,15 +9,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
-import com.gianlu.commonutils.CommonPK;
-import com.gianlu.commonutils.Preferences.Prefs;
-import com.gianlu.commonutils.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class AnalyticsPreferenceDialog extends DialogFragment {
+import com.gianlu.commonutils.CommonPK;
+import com.gianlu.commonutils.Preferences.Prefs;
+import com.gianlu.commonutils.R;
+
+public final class AnalyticsPreferenceDialog extends DialogFragment {
     public static final String TAG = AnalyticsPreferenceDialog.class.getName();
 
     @NonNull
@@ -39,7 +39,7 @@ public class AnalyticsPreferenceDialog extends DialogFragment {
         setStyle(STYLE_NORMAL, R.style.DialogFix);
     }
 
-    @Nullable
+    @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.dialog_analytics_preference, container, false);

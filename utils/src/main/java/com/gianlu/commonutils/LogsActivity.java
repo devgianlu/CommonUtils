@@ -7,16 +7,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.gianlu.commonutils.CasualViews.RecyclerViewLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.gianlu.commonutils.CasualViews.RecyclerMessageView;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 
 import java.io.IOException;
 import java.util.List;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class LogsActivity extends ActivityWithDialog {
     @Override
@@ -29,9 +27,9 @@ public class LogsActivity extends ActivityWithDialog {
         if (bar != null) bar.setDisplayHomeAsUpEnabled(true);
 
         final Spinner spinner = findViewById(R.id.logs_spinner);
-        final RecyclerViewLayout layout = findViewById(R.id.logs_recyclerViewLayout);
-        layout.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        layout.getList().addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        final RecyclerMessageView layout = findViewById(R.id.logs_recyclerViewLayout);
+        layout.linearLayoutManager(RecyclerView.VERTICAL, false);
+        layout.dividerDecoration(RecyclerView.VERTICAL);
         final List<Logging.LogFile> logFiles = Logging.listLogFiles(this);
 
         if (logFiles.isEmpty()) {

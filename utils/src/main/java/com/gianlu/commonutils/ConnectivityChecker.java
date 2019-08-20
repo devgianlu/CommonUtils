@@ -3,36 +3,35 @@ package com.gianlu.commonutils;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-public class ConnectivityChecker {
+public final class ConnectivityChecker {
     private static URLProvider provider;
-    private static String userAgent = "@devgianlu connectivity test script";
+    private static String userAgent = "Android (ConnectivityChecker; devgianlu)";
 
-    public static void setProvider(URLProvider provider) {
+    public static void setProvider(@NonNull URLProvider provider) {
         ConnectivityChecker.provider = provider;
     }
 
-    public static void setUserAgent(String userAgent) {
+    public static void setUserAgent(@NonNull String userAgent) {
         ConnectivityChecker.userAgent = userAgent;
     }
 
-    public static void checkAsync(final OnCheck listener) {
+    public static void checkAsync(@NonNull OnCheck listener) {
         if (provider == null) throw new RuntimeException("God damn developer!");
 
-        final Handler handler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler(Looper.getMainLooper());
         new Thread() {
             @Override
             public void run() {
-                if (checkInternal(false)) {
-                    handler.post(listener::goodToGo);
-                } else {
-                    handler.post(listener::offline);
-                }
+                if (checkInternal(false)) handler.post(listener::goodToGo);
+                else handler.post(listener::offline);
             }
         }.start();
     }
@@ -64,16 +63,18 @@ public class ConnectivityChecker {
     public interface URLProvider {
         URL getUrl(boolean useDotCom) throws MalformedURLException;
 
-        boolean validateResponse(HttpURLConnection connection) throws IOException;
+        boolean validateResponse(@NonNull HttpURLConnection connection) throws IOException;
     }
 
     public static class GoogleURLProvider implements URLProvider {
 
+        @NonNull
         private String pickCountryURL(boolean useDotCom) {
             String country = Locale.getDefault().getCountry();
             if (useDotCom || country.isEmpty() || country.length() >= 3)
                 return "http://www.google.com/generate_204";
-            else return "http://www.google." + country.toLowerCase() + "/generate_204";
+            else
+                return "http://www.google." + country.toLowerCase() + "/generate_204";
         }
 
         @Override
@@ -82,7 +83,7 @@ public class ConnectivityChecker {
         }
 
         @Override
-        public boolean validateResponse(HttpURLConnection conn) throws IOException {
+        public boolean validateResponse(@NonNull HttpURLConnection conn) throws IOException {
             return conn.getResponseCode() == 204 && conn.getContentLength() == 0;
         }
     }

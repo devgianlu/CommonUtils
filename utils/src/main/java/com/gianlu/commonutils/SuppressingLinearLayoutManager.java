@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SuppressingLinearLayoutManager extends LinearLayoutManager {
+public final class SuppressingLinearLayoutManager extends LinearLayoutManager {
     public SuppressingLinearLayoutManager(Context context) {
         super(context);
     }

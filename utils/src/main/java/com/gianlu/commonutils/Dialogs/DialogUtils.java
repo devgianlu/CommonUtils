@@ -7,9 +7,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.gianlu.commonutils.Logging;
-import com.gianlu.commonutils.Toaster;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -19,9 +16,15 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.gianlu.commonutils.Logging;
+import com.gianlu.commonutils.Toaster;
 
-public class DialogUtils {
+
+public final class DialogUtils {
     private static final Handler handler = new Handler(Looper.getMainLooper());
+
+    private DialogUtils() {
+    }
 
     public static void showDialog(@Nullable Activity activity, @NonNull AlertDialog.Builder builder) {
         if (activity == null) return;

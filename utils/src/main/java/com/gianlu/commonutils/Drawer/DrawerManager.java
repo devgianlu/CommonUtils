@@ -9,14 +9,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.gianlu.commonutils.CommonUtils;
-import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.SelectiveDividerItemDecoration;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -25,6 +17,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.gianlu.commonutils.CommonUtils;
+import com.gianlu.commonutils.R;
+import com.gianlu.commonutils.SelectiveDividerItemDecoration;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> implements MenuItemsAdapter.Listener<E> {
     private final Context context;
@@ -115,7 +115,7 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
         menuItemsAdapter = new MenuItemsAdapter<>(context, config.menuItems, this);
         mMenuItemsList.setAdapter(menuItemsAdapter);
         mMenuItemsList.removeItemDecoration(menuItemsDecoration);
-        menuItemsDecoration = new SelectiveDividerItemDecoration(context, SelectiveDividerItemDecoration.VERTICAL, config.menuSeparators);
+        menuItemsDecoration = new SelectiveDividerItemDecoration(context, RecyclerView.VERTICAL, config.menuSeparators);
         mMenuItemsList.addItemDecoration(menuItemsDecoration);
     }
 

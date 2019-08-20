@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.gianlu.commonutils.Dialogs.DialogUtils;
-
-import java.util.concurrent.ThreadLocalRandom;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -16,7 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-public class AskPermission {
+import com.gianlu.commonutils.Dialogs.DialogUtils;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+public final class AskPermission {
     private static final String PHANTOM_TAG = PhantomFragment.class.getName();
 
     public static void ask(@NonNull final FragmentActivity activity, @NonNull final String permission, @NonNull final Listener listener) {

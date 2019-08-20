@@ -6,17 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.LinearLayout;
-
-import java.util.Collection;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SelectiveDividerItemDecoration extends RecyclerView.ItemDecoration {
-    public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
-    public static final int VERTICAL = LinearLayout.VERTICAL;
+import java.util.Collection;
+
+public final class SelectiveDividerItemDecoration extends RecyclerView.ItemDecoration {
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
     private final Collection<Integer> positions;
     private final Rect mBounds = new Rect();
@@ -28,9 +25,9 @@ public class SelectiveDividerItemDecoration extends RecyclerView.ItemDecoration 
      * {@link LinearLayoutManager}.
      *
      * @param context     Current context, it will be used to access resources.
-     * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
+     * @param orientation Divider orientation. Should be {@link RecyclerView#HORIZONTAL} or {@link RecyclerView#VERTICAL}.
      */
-    public SelectiveDividerItemDecoration(@NonNull Context context, int orientation, @NonNull Collection<Integer> positions) {
+    public SelectiveDividerItemDecoration(@NonNull Context context, @RecyclerView.Orientation int orientation, @NonNull Collection<Integer> positions) {
         this.positions = positions;
         this.mOrientation = orientation;
 
@@ -45,7 +42,7 @@ public class SelectiveDividerItemDecoration extends RecyclerView.ItemDecoration 
     @Override
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         if (parent.getLayoutManager() == null || mDivider == null) return;
-        if (mOrientation == VERTICAL) drawVertical(c, parent);
+        if (mOrientation == RecyclerView.VERTICAL) drawVertical(c, parent);
         else drawHorizontal(c, parent);
     }
 
@@ -123,7 +120,8 @@ public class SelectiveDividerItemDecoration extends RecyclerView.ItemDecoration 
 
         int pos = parent.indexOfChild(view);
         if (pos != -1 && isDecorated(pos)) {
-            if (mOrientation == VERTICAL) outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+            if (mOrientation == RecyclerView.VERTICAL)
+                outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
             else outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }
     }

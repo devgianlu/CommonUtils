@@ -6,14 +6,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.TypedValue;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FontsManager;
 import com.gianlu.commonutils.R;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
-public class DrawingHelper {
+public final class DrawingHelper {
     private static final float REDUCE_FACTOR_NO_CIRCLE = 0.8f; // Reduce by 20%
     private static final float REDUCE_FACTOR_CIRCLE = 0.6f; // Reduce by 40%
     private static final int SHADOW_RADIUS = 4;
@@ -22,7 +22,7 @@ public class DrawingHelper {
     private final Rect lettersBounds = new Rect();
     private final Paint shapePaint;
 
-    public DrawingHelper(Context context) {
+    public DrawingHelper(@NonNull Context context) {
         lettersPaintWithCircle = new Paint();
         lettersPaintWithCircle.setAntiAlias(true);
         FontsManager.set(context, lettersPaintWithCircle, FontsManager.ROBOTO_LIGHT);

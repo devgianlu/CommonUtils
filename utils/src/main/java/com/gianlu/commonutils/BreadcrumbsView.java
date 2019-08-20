@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 
 @UiThread
-public class BreadcrumbsView extends LinearLayout implements View.OnClickListener {
+public final class BreadcrumbsView extends LinearLayout implements View.OnClickListener {
     private final LayoutInflater inflater;
     private final int arrowRes;
     private Listener listener;
