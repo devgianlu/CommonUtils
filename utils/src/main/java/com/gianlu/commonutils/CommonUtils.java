@@ -615,12 +615,16 @@ public final class CommonUtils {
         view.setText(view.getContext().getResources().getQuantityString(res, num, args));
     }
 
-    public static void setText(TextView view, @StringRes int res, Object... args) {
+    public static void setText(@NonNull TextView view, @StringRes int res, Object... args) {
         view.setText(view.getContext().getResources().getString(res, args));
     }
 
-    public static void setImageTintColor(ImageView view, @ColorRes int res) {
+    public static void setImageTintColor(@NonNull ImageView view, @ColorRes int res) {
         view.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), res)));
+    }
+
+    public static void setBackground(@NonNull View view, @AttrRes int attr) {
+        view.setBackground(resolveAttrAsDrawable(view.getContext(), attr));
     }
 
     public interface ToString<T> {
