@@ -15,6 +15,7 @@
         <item name="colorAccentRef">@color/colorAccent</item>
         <item name="colorPrimaryRef">@color/colorPrimary</item>
         <item name="colorPrimaryDarkRef">@color/colorPrimaryDark</item>
+        <item name="colorSecondary">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="dialogTheme">@style/DialogFix</item>
         <item name="colorBackgroundFloatingRef">?android:attr/colorBackgroundFloating</item>
