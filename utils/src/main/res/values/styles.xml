@@ -20,6 +20,15 @@
         <item name="colorBackgroundFloatingRef">?android:attr/colorBackgroundFloating</item>
     </style>
 
+    <!-- Transparent BottomSheet -->
+    <style name="TransparentBottomSheetTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/TransparentBottomSheet</item>
+    </style>
+
+    <style name="TransparentBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <!-- No action bar theme -->
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>

@@ -6,7 +6,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -16,8 +20,13 @@ import androidx.core.content.ContextCompat;
 
 import com.gianlu.commonutils.R;
 
+import org.jetbrains.annotations.Contract;
+
 public class ModalBottomSheetHeaderView extends FrameLayout {
     private final GradientDrawable bgDrawable;
+    private boolean toolbarInflated = false;
+    private TextView title;
+    private ImageButton close;
 
     public ModalBottomSheetHeaderView(@NonNull Context context) {
         this(context, null, 0);
@@ -36,11 +45,6 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
     }
 
     @Override
-    public void setBackground(Drawable background) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void setBackgroundColor(@ColorInt int color) {
         bgDrawable.setColor(color);
     }
@@ -50,17 +54,55 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
     }
 
     @Override
+    @Contract("_ -> fail")
+    public void setBackground(Drawable background) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @Contract("_ -> fail")
     public void setBackgroundResource(int resid) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Contract("_ -> fail")
     public void setBackgroundTintList(@Nullable ColorStateList tint) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Contract("_ -> fail")
     public void setBackgroundTintMode(@Nullable PorterDuff.Mode tintMode) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        if (toolbarInflated) throw new IllegalStateException();
+        super.addView(child, index, params);
+    }
+
+    private void inflateToolbar() {
+        if (toolbarInflated) return;
+
+        inflate(getContext(), R.layout.sheet_toolbar_header, this);
+        toolbarInflated = true;
+
+        close = findViewById(R.id.sheetToolbar_close);
+        title = findViewById(R.id.sheetToolbar_title);
+    }
+
+    public void setTitle(@NonNull String str) {
+        inflateToolbar();
+        title.setText(str);
+    }
+
+    public void showClose() {
+        close.setVisibility(VISIBLE);
+    }
+
+    public void hideClose() {
+        close.setVisibility(GONE);
     }
 }
