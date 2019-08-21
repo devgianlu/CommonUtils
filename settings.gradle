@@ -1,2 +1,1 @@
-include ':utils', ':MaterialPreferences'
-project(':MaterialPreferences').projectDir = new File('./MaterialPreferences/library')
+include ':utils'
