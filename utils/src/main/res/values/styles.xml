@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <attr name="colorAccentRef" format="reference|color" />
-    <attr name="colorPrimaryRef" format="reference|color" />
-    <attr name="colorPrimaryDarkRef" format="reference|color" />
-    <attr name="colorBackgroundFloatingRef" format="reference|color" />
-
     <!-- App theme -->
     <style name="AppTheme" />
 
@@ -12,13 +7,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorAccentRef">@color/colorAccent</item>
-        <item name="colorPrimaryRef">@color/colorPrimary</item>
-        <item name="colorPrimaryDarkRef">@color/colorPrimaryDark</item>
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="dialogTheme">@style/DialogFix</item>
-        <item name="colorBackgroundFloatingRef">?android:attr/colorBackgroundFloating</item>
     </style>
 
     <!-- Transparent BottomSheet -->
@@ -42,38 +32,13 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <!-- Dialog fix -->
-    <style name="DialogFixCommon" parent="Theme.MaterialComponents.DayNight.Dialog.Bridge">
-        <item name="android:windowNoTitle">false</item>
-        <item name="colorAccent">?attr/colorAccentRef</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="buttonStyle">@style/DialogFixButton</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="DialogFix" parent="DialogFixCommon">
-        <item name="android:background">?android:attr/colorBackgroundFloating</item>
-    </style>
-
-    <style name="DialogFixButton" parent="@android:style/Widget.Material.Light.Button">
-        <item name="android:textColor">?attr/colorAccentRef</item>
-    </style>
-
-    <!-- Material About default -->
+    <!-- Material About theme -->
     <style name="MaterialAbout.Default" parent="MaterialAbout.Light" />
-
-    <!-- Material About Light -->
     <style name="MaterialAbout.Light" parent="Theme.Mal.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <!-- Material About Dark -->
-    <style name="MaterialAbout.Dark" parent="Theme.Mal.Dark">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="mal_card_background">?colorSurface</item>
     </style>
 
     <!-- Fullscreen stuff -->
