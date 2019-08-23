@@ -5,6 +5,10 @@
     <color name="colorPrimary" />
     <color name="colorPrimaryDark" />
 
+    <color name="logLevel_info">@android:color/black</color>
+    <color name="logLevel_warn">@color/amber</color>
+    <color name="logLevel_error">@color/red</color>
+
     <color name="white">#FFFFFF</color>
     <color name="red">#f44336</color>
     <color name="pink">#e91e63</color>
