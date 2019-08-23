@@ -26,8 +26,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.jetbrains.annotations.NotNull;
-
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
     private FloatingActionButton action;
     private ModalBottomSheetHeaderView header;
@@ -41,7 +39,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     private BottomSheetBehavior behavior;
     private View bottomSheet;
 
-    @NotNull
+    @NonNull
     public Setup getSetupPayload() {
         return payload;
     }

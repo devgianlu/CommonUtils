@@ -20,8 +20,6 @@ import androidx.core.content.ContextCompat;
 
 import com.gianlu.commonutils.R;
 
-import org.jetbrains.annotations.Contract;
-
 public class ModalBottomSheetHeaderView extends FrameLayout {
     private final GradientDrawable bgDrawable;
     private boolean toolbarInflated = false;
@@ -54,25 +52,21 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
     }
 
     @Override
-    @Contract("_ -> fail")
     public void setBackground(Drawable background) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Contract("_ -> fail")
     public void setBackgroundResource(int resid) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Contract("_ -> fail")
     public void setBackgroundTintList(@Nullable ColorStateList tint) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Contract("_ -> fail")
     public void setBackgroundTintMode(@Nullable PorterDuff.Mode tintMode) {
         throw new UnsupportedOperationException();
     }

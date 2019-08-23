@@ -7,6 +7,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+
 import com.danielstone.materialaboutlibrary.MaterialAboutFragment;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem;
 import com.danielstone.materialaboutlibrary.items.MaterialAboutItem;
@@ -22,18 +29,10 @@ import com.gianlu.commonutils.LogsActivity;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.Toaster;
 import com.gianlu.commonutils.Tutorial.TutorialManager;
-import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import androidx.annotation.CallSuper;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
 
 public abstract class BasePreferenceActivity extends ActivityWithDialog implements MaterialAboutPreferenceItem.Listener, PreferencesBillingHelper.Listener {
     private PreferencesBillingHelper billingHelper;
@@ -83,7 +82,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
     @CallSuper
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
@@ -153,7 +152,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         }
 
         @Override
-        public void onAttach(Context context) {
+        public void onAttach(@NonNull Context context) {
             super.onAttach(context);
 
             parent = (BasePreferenceActivity) context;
@@ -168,24 +167,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                             .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
                     .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, () -> openLink(context, "https://gianlu.xyz")))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> Logging.sendEmail(context, null)))
-                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, () -> {
-                        LibsBuilder libsBuilder = new LibsBuilder()
-                                .withVersionShown(true)
-                                .withActivityTitle(context.getString(R.string.third_part));
-
-                        List<String> toExclude = new ArrayList<>();
-
-                        if (!FossUtils.hasFabric())
-                            toExclude.add("Crashlytics");
-
-                        if (!FossUtils.hasGoogleBilling())
-                            toExclude.add("GooglePlayServices");
-
-                        libsBuilder
-                                .withExcludedLibraries(toExclude.toArray(new String[0]))
-                                .start(context);
-                    }));
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> Logging.sendEmail(context, null)));
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {
