@@ -38,7 +38,7 @@ dependencies {
     standardApi 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     standardApi 'com.crashlytics.sdk.android:answers:1.4.7'
 
-    api 'com.github.devgianlu.MaterialPreferences:library:master-SNAPSHOT'
+    api 'com.github.devgianlu.MaterialPreferences:library:b0d322a322'
 
     api 'com.google.android.material:material:1.1.0-alpha09'
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
