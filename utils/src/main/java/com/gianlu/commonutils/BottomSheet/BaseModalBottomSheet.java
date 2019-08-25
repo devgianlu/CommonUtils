@@ -115,9 +115,11 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     private void heightChanged() {
         if (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED && isFullscreen()) {
             header.showClose();
+            header.squared();
             restoreNotCollapsed();
         } else {
             header.hideClose();
+            header.rounded();
         }
     }
 

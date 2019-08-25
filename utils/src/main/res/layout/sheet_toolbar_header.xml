@@ -7,10 +7,11 @@
 
     <ImageButton
         android:id="@+id/sheetToolbar_close"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/mal_close"
+        android:background="?selectableItemBackgroundBorderless"
         android:src="@drawable/baseline_clear_24"
         android:tint="?colorOnPrimary"
         android:visibility="gone" />

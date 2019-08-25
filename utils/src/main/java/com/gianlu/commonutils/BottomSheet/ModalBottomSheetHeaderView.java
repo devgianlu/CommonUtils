@@ -3,6 +3,7 @@ package com.gianlu.commonutils.BottomSheet;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -21,10 +22,12 @@ import androidx.core.content.ContextCompat;
 import com.gianlu.commonutils.R;
 
 public class ModalBottomSheetHeaderView extends FrameLayout {
-    private final GradientDrawable bgDrawable;
+    private final GradientDrawable roundedBg;
+    private final ColorDrawable squaredBg;
     private boolean toolbarInflated = false;
     private TextView title;
     private ImageButton close;
+    private int color;
 
     public ModalBottomSheetHeaderView(@NonNull Context context) {
         this(context, null, 0);
@@ -37,14 +40,26 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
     public ModalBottomSheetHeaderView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        bgDrawable = (GradientDrawable) context.getDrawable(R.drawable.modal_bottom_sheet_header_background);
-        if (bgDrawable == null) throw new RuntimeException();
-        super.setBackground(bgDrawable);
+        roundedBg = (GradientDrawable) getContext().getDrawable(R.drawable.modal_bottom_sheet_header_background);
+        if (roundedBg == null) throw new RuntimeException();
+
+        squaredBg = new ColorDrawable();
+
+        rounded();
+    }
+
+    public void rounded() {
+        super.setBackground(roundedBg);
+    }
+
+    public void squared() {
+        super.setBackground(squaredBg);
     }
 
     @Override
     public void setBackgroundColor(@ColorInt int color) {
-        bgDrawable.setColor(color);
+        roundedBg.setColor(color);
+        squaredBg.setColor(color);
     }
 
     public void setBackgroundColorRes(@ColorRes int color) {
