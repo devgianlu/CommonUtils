@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent" />
-    <color name="colorAccent_translucent" />
     <color name="colorPrimary" />
-    <color name="colorPrimaryDark" />
+    <color name="colorPrimaryVariant" />
+    <color name="colorOnPrimary" />
+    <color name="colorSecondary" />
+    <color name="colorSecondaryVariant" />
+    <color name="colorOnSecondary" />
+
+    <!-- {@deprecated Use `@color/colorSecondary` instead.} -->
+    <color name="colorAccent">@color/colorSecondary</color>
+    <!-- {@deprecated Use `@color/colorPrimaryVariant` instead.} -->
+    <color name="colorPrimaryDark">@color/colorPrimaryVariant</color>
+
+    <!-- Not required by the Material Theme -->
+    <color name="colorPrimaryTranslucent" />
+    <color name="colorSecondaryTranslucent" />
 
     <color name="logLevel_info">@android:color/black</color>
     <color name="logLevel_warn">@color/amber</color>
@@ -27,7 +38,4 @@
     <color name="orange">#ff9800</color>
     <color name="deepOrange">#ff5722</color>
     <color name="brown">#795548</color>
-
-    <color name="dim_foreground_dark">#bebebe</color>
-    <color name="bright_foreground_dark">#ffffff</color>
 </resources>

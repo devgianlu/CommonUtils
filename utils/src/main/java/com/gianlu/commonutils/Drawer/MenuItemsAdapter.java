@@ -33,7 +33,7 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
         this.items = items;
         this.listener = listener;
         this.colorTextPrimary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
-        this.colorAccent = ContextCompat.getColor(context, R.color.colorAccent);
+        this.colorAccent = ContextCompat.getColor(context, R.color.colorSecondary);
         this.selectableItemBackground = CommonUtils.resolveAttrAsDrawable(context, android.R.attr.selectableItemBackground);
     }
 

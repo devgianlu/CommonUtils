@@ -189,7 +189,7 @@ public class FakeLoadingWithLogoView extends FrameLayout {
             super(context, attrs, defStyleAttr);
             setWillNotDraw(false);
 
-            int accent = ContextCompat.getColor(context, R.color.colorAccent);
+            int accent = ContextCompat.getColor(context, R.color.colorSecondary);
 
             paint = new Paint();
             paint.setColor(accent);
