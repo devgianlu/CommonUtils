@@ -158,6 +158,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         bodyNoScroll.setVisibility(hasNoScroll ? View.VISIBLE : View.GONE);
 
         invalidateAction();
+        header.setCloseOnClickListener(v -> dismiss());
 
         return layout;
     }

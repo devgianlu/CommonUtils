@@ -107,6 +107,10 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
         title.setText(str);
     }
 
+    public void setCloseOnClickListener(View.OnClickListener listener) {
+        if (close != null) close.setOnClickListener(listener);
+    }
+
     public void showClose() {
         close.setVisibility(VISIBLE);
     }
