@@ -25,7 +25,8 @@
         <!-- Offline activity -->
         <activity
             android:name=".OfflineActivity"
-            android:configChanges="uiMode" />
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
+            android:theme="@style/FullscreenTheme"  />
 
         <meta-data
             android:name="io.fabric.ApiKey"

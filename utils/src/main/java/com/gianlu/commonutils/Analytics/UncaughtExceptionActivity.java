@@ -6,19 +6,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 
-import androidx.appcompat.app.ActionBar;
-
 public class UncaughtExceptionActivity extends ActivityWithDialog {
-    public static void startActivity(Context context, Throwable ex) {
-        if (context != null) {
-            context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
-                    .putExtra("exception", ex)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-        }
+    public static void startActivity(@NonNull Context context, @Nullable Throwable ex) {
+        context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
+                .putExtra("exception", ex)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
     @Override
@@ -37,6 +37,6 @@ public class UncaughtExceptionActivity extends ActivityWithDialog {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         Button email = findViewById(R.id.uncaughtException_email);
-        email.setOnClickListener(v -> Logging.sendEmail(UncaughtExceptionActivity.this, (Throwable) getIntent().getSerializableExtra("exception")));
+        email.setOnClickListener(v -> Logging.sendEmail(this, (Throwable) getIntent().getSerializableExtra("exception")));
     }
 }
