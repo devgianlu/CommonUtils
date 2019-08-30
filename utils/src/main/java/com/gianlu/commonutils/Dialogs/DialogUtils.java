@@ -64,14 +64,14 @@ public final class DialogUtils {
         return context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
     }
 
-    public static void showDialogValid(@NonNull final Context context, @NonNull final Dialog dialog) {
+    public static void showDialogValid(@NonNull Context context, @NonNull Dialog dialog) {
         handler.post(() -> {
             if (!isContextValid(context)) return;
             dialog.show();
         });
     }
 
-    public static void showDialogValid(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final OnDialogCreatedListener listener) {
+    public static void showDialogValid(@NonNull Context context, @NonNull AlertDialog.Builder builder, OnDialogCreatedListener listener) {
         handler.post(() -> {
             if (!isContextValid(context)) return;
             Dialog dialog = builder.create();

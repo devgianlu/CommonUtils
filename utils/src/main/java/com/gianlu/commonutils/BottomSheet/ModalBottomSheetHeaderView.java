@@ -27,7 +27,6 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
     private boolean toolbarInflated = false;
     private TextView title;
     private ImageButton close;
-    private int color;
 
     public ModalBottomSheetHeaderView(@NonNull Context context) {
         this(context, null, 0);
@@ -108,6 +107,7 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
     }
 
     public void setCloseOnClickListener(View.OnClickListener listener) {
+        if (close == null) close = findViewById(R.id.bottomSheetHeader_close);
         if (close != null) close.setOnClickListener(listener);
     }
 

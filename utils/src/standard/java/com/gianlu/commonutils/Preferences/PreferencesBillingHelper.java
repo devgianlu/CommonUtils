@@ -28,6 +28,7 @@ import com.gianlu.commonutils.Dialogs.DialogUtils;
 import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.Toaster;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -89,7 +90,7 @@ public class PreferencesBillingHelper {
             listener.dismissDialog();
         }));
 
-        listener.showDialog(new AlertDialog.Builder(activity)
+        listener.showDialog(new MaterialAlertDialogBuilder(activity)
                 .setTitle(activity.getString(R.string.donate))
                 .setNegativeButton(android.R.string.cancel, null)
                 .setView(list));
