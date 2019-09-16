@@ -36,12 +36,12 @@ public final class DialogUtils {
         activityWithDialog(activity).showDialog(dialog);
     }
 
-    public static void showDialog(@Nullable FragmentActivity activity, @NonNull DialogFragment dialog) {
+    public static void showDialog(@Nullable FragmentActivity activity, @NonNull DialogFragment dialog, @Nullable String tag) {
         if (activity == null) return;
 
         FragmentManager manager = activity.getSupportFragmentManager();
         try {
-            dialog.show(manager, null);
+            dialog.show(manager, tag);
         } catch (IllegalStateException ex) {
             Logging.log(ex); // We can't do nothing
         }

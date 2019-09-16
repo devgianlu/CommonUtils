@@ -4,6 +4,7 @@ import android.app.Dialog;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -25,8 +26,12 @@ public abstract class ActivityWithDialog extends NightlyActivity {
     }
 
     public final void showDialog(@NonNull DialogFragment dialog) {
+        showDialog(dialog, null);
+    }
+
+    public final void showDialog(@NonNull DialogFragment dialog, @Nullable String tag) {
         FragmentManager manager = getSupportFragmentManager();
-        dialog.show(manager, null);
+        dialog.show(manager, tag);
         mDialog = dialog.getDialog();
     }
 

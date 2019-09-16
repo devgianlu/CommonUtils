@@ -185,7 +185,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         if (activity == null) return;
 
         this.payload = payload;
-        DialogUtils.showDialog(activity, this);
+        DialogUtils.showDialog(activity, this, null);
     }
 
     public void isLoading(boolean set) {

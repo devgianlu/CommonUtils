@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -39,13 +40,17 @@ public abstract class FragmentWithDialog extends Fragment {
         DialogUtils.showDialog(getActivity(), dialog);
     }
 
-    public final void showDialog(@NonNull DialogFragment dialog) {
-        DialogUtils.showDialog(getActivity(), dialog);
-    }
-
     public final void showToast(@NonNull Toaster toaster) {
         if (getContext() == null) return;
         toaster.show(getContext());
+    }
+
+    public final void showDialog(@NonNull DialogFragment dialog) {
+        showDialog(dialog, null);
+    }
+
+    public final void showDialog(@NonNull DialogFragment fragment, @Nullable String tag) {
+        DialogUtils.showDialog(getActivity(), fragment, tag);
     }
 
     public final void showProgress(@StringRes int res) {
