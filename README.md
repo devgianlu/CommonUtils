@@ -1,4 +1,7 @@
 # CommonUtils
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2567f5fc0fe946cabc73519bd2ac9324)](https://www.codacy.com/manual/devgianlu/CommonUtils?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=devgianlu/CommonUtils&amp;utm_campaign=Badge_Grade)
+
 This is a library I use inside many of my Android projects (almost all of them). It includes many useful classes to comply Material Design standards and more.
 
 ## Issues
