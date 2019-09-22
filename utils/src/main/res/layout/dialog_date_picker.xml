@@ -7,7 +7,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/datePicker_title"
         android:layout_width="match_parent"
-        android:background="@color/colorSecondary"
+        android:background="@color/materialDatePickerDialog_background"
         android:layout_height="wrap_content"
         android:textColor="?colorOnSecondary"
         android:paddingStart="12dp"

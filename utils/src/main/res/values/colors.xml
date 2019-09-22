@@ -20,6 +20,9 @@
     <color name="logLevel_warn">@color/amber</color>
     <color name="logLevel_error">@color/red</color>
 
+    <!-- MaterialDatePickerDialog -->
+    <color name="materialDatePickerDialog_background">@color/colorSecondary</color>
+
     <color name="white">#FFFFFF</color>
     <color name="red">#f44336</color>
     <color name="pink">#e91e63</color>
