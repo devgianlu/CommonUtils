@@ -18,7 +18,7 @@
 
         <view
             android:id="@+id/fakeLoadingWithLogo_bar"
-            class="com.gianlu.commonutils.CasualViews.FakeLoadingWithLogoView$ProgressBar"
+            class="com.gianlu.commonutils.misc.FakeLoadingWithLogoView$ProgressBar"
             android:layout_width="156dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />

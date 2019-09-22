@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.gianlu.commonutils.BottomSheet.ModalBottomSheetHeaderView
+        <com.gianlu.commonutils.bottomsheet.ModalBottomSheetHeaderView
             android:id="@+id/modalBottomSheet_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

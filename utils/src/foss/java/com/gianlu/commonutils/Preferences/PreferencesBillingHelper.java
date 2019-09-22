@@ -1,4 +1,4 @@
-package com.gianlu.commonutils.Preferences;
+package com.gianlu.commonutils.preferences;
 
 public class PreferencesBillingHelper {
     PreferencesBillingHelper(Object obj, Object... objs) {

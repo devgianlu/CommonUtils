@@ -1,4 +1,4 @@
-package com.gianlu.commonutils.Analytics;
+package com.gianlu.commonutils.analytics;
 
 import android.os.Bundle;
 
@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.gianlu.commonutils.CommonPK;
 import com.gianlu.commonutils.Logging;
-import com.gianlu.commonutils.Preferences.Prefs;
+import com.gianlu.commonutils.preferences.Prefs;
 
 public abstract class AnalyticsApplication extends BaseCommonApplication {
 
