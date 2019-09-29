@@ -10,8 +10,8 @@ import android.widget.Spinner;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gianlu.commonutils.CasualViews.RecyclerMessageView;
 import com.gianlu.commonutils.Dialogs.ActivityWithDialog;
+import com.gianlu.commonutils.misc.RecyclerMessageView;
 
 import java.io.IOException;
 import java.util.List;

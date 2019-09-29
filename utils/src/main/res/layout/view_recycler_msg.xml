@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.gianlu.commonutils.CasualViews.MessageView
+            <com.gianlu.commonutils.misc.MessageView
                 android:id="@+id/recyclerViewLayout_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="48dp" />
 
-            <com.gianlu.commonutils.CasualViews.InfiniteRecyclerView
+            <com.gianlu.commonutils.misc.InfiniteRecyclerView
                 android:id="@+id/recyclerViewLayout_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

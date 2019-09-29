@@ -1,4 +1,4 @@
-package com.gianlu.commonutils.CasualViews;
+package com.gianlu.commonutils.misc;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -8,7 +8,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp" />
 
-    <com.gianlu.commonutils.CasualViews.SuperTextView
+    <com.gianlu.commonutils.misc.SuperTextView
         android:id="@+id/messageView_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
