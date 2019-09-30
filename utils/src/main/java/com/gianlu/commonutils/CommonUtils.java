@@ -581,6 +581,11 @@ public final class CommonUtils {
         return randomString(length, random, LOT_OF_CHARS);
     }
 
+    @NonNull
+    public static String randomString(int length) {
+        return randomString(length, ThreadLocalRandom.current(), LOT_OF_CHARS);
+    }
+
     public static int countOccurrences(@NonNull String str, char c) {
         int count = 0;
         for (int i = 0; i < str.length(); i++) if (str.charAt(i) == c) count++;
