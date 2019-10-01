@@ -6,59 +6,28 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.typography.FontsManager;
 
 public class SuperTextView extends AppCompatTextView {
     private boolean isCompact;
 
-    public SuperTextView(@NonNull Context context, @NonNull String fullText, @NonNull String compatText, @ColorInt int textColor) {
-        super(context);
-        setCompactedText(fullText, compatText);
-        setTextColor(textColor);
+    public SuperTextView(Context context) {
+        this(context, null, 0);
     }
 
-    public SuperTextView(@NonNull Context context, @NonNull String fullText, @NonNull String compatText) {
-        super(context);
-        setCompactedText(fullText, compatText);
+    public SuperTextView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public SuperTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public SuperTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SuperTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    public SuperTextView(@NonNull Context context, @StringRes int str) {
-        super(context);
-        setHtml(str);
-    }
-
-    public SuperTextView(@NonNull Context context, @NonNull String str) {
-        this(context, str, -1);
-    }
-
-    public SuperTextView(@NonNull Context context, @StringRes int str, Object... args) {
-        super(context, null);
-        setHtml(str, args);
-    }
-
-    public SuperTextView(@NonNull Context context, @StringRes int str, @ColorInt int color) {
-        super(context, null);
-        setHtml(str);
-        setTextColor(color);
-    }
-
-    public SuperTextView(@NonNull Context context, @NonNull String str, @ColorInt int textColor) {
-        super(context);
-        setHtml(str);
-        if (textColor != 0) setTextColor(textColor);
     }
 
     @NonNull
@@ -66,16 +35,41 @@ public class SuperTextView extends AppCompatTextView {
         return "<b>" + str + "</b>";
     }
 
+    public static SuperTextView text(@NonNull Context context, String text) {
+        return new Builder(context).text(text).build();
+    }
+
+    public static SuperTextView text(@NonNull Context context, @StringRes int textRes) {
+        return new Builder(context).text(textRes).build();
+    }
+
+    public static SuperTextView html(@NonNull Context context, String html) {
+        return new Builder(context).html(html).build();
+    }
+
+    public static SuperTextView html(@NonNull Context context, @StringRes int textRes, Object... args) {
+        return new Builder(context).html(textRes, args).build();
+    }
+
+    public static SuperTextView compactable(@NonNull Context context, String fullText, String compactText) {
+        return new Builder(context).compactable(fullText, compactText).build();
+    }
+
+    @NonNull
+    public static Builder builder(@NonNull Context context) {
+        return new Builder(context);
+    }
+
     public void setHtml(@Nullable String html) {
         if (html == null) setText(null);
         else setText(Html.fromHtml(html));
     }
 
-    public void setHtml(@StringRes int html, Object... args) {
-        setHtml(getContext().getString(html, args));
+    public void setHtml(@StringRes int textRes, Object... args) {
+        setHtml(getContext().getString(textRes, args));
     }
 
-    public void setCompactedText(@NonNull String fullText, @NonNull String compatText) {
+    public void setCompactableText(@NonNull String fullText, @NonNull String compatText) {
         isCompact = true;
         setHtml(compatText);
         setEllipsize(TextUtils.TruncateAt.END);
@@ -97,5 +91,58 @@ public class SuperTextView extends AppCompatTextView {
 
     public void setTypeface(@NonNull @FontsManager.Font String path) {
         FontsManager.set(path, this);
+    }
+
+    public static class Builder {
+        private final SuperTextView view;
+
+        private Builder(@NonNull Context context) {
+            this.view = new SuperTextView(context);
+        }
+
+        @NonNull
+        public SuperTextView build() {
+            return view;
+        }
+
+        public Builder text(@StringRes int textRes) {
+            view.setText(textRes);
+            return this;
+        }
+
+        public Builder text(String text) {
+            view.setText(text);
+            return this;
+        }
+
+        public Builder color(@ColorInt int color) {
+            view.setTextColor(color);
+            return this;
+        }
+
+        public Builder colorRes(@ColorRes int colorRes) {
+            CommonUtils.setTextColor(view, colorRes);
+            return this;
+        }
+
+        public Builder compactable(@NonNull String fullText, @NonNull String compatText) {
+            view.setCompactableText(fullText, compatText);
+            return this;
+        }
+
+        public Builder typeface(@NonNull @FontsManager.Font String path) {
+            view.setTypeface(path);
+            return this;
+        }
+
+        public Builder html(@StringRes int textRes, Object... args) {
+            view.setHtml(textRes, args);
+            return this;
+        }
+
+        public Builder html(String text) {
+            view.setHtml(text);
+            return this;
+        }
     }
 }
