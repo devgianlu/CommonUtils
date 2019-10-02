@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.gianlu.commonutils.FontsManager;
+import com.gianlu.commonutils.typhography.FontsManager;
 
 public class SuperTextView extends AppCompatTextView {
     private boolean isCompact;

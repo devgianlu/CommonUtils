@@ -17,8 +17,8 @@ import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gianlu.commonutils.CommonUtils;
-import com.gianlu.commonutils.Logging;
 import com.gianlu.commonutils.R;
+import com.gianlu.commonutils.logging.Logging;
 
 import java.util.ArrayList;
 import java.util.Collection;
