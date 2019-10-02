@@ -2,7 +2,6 @@ package com.gianlu.commonutils.drawer;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +19,13 @@ import com.gianlu.commonutils.typography.FontsManager;
 
 import java.util.List;
 
-public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuItemsAdapter.ViewHolder> {
+public final class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuItemsAdapter.ViewHolder> implements View.OnLayoutChangeListener {
     private final LayoutInflater inflater;
     private final List<BaseDrawerItem<E>> items;
     private final Listener<E> listener;
     private final int colorTextPrimary;
     private final int colorAccent;
-    private final Drawable selectableItemBackground;
+    private int width = 0;
 
     MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem<E>> items, Listener<E> listener) {
         this.inflater = LayoutInflater.from(context);
@@ -34,13 +33,22 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
         this.listener = listener;
         this.colorTextPrimary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
         this.colorAccent = ContextCompat.getColor(context, R.color.colorSecondary);
-        this.selectableItemBackground = CommonUtils.resolveAttrAsDrawable(context, android.R.attr.selectableItemBackground);
     }
 
     @Override
     @NonNull
     public MenuItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(parent);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        recyclerView.removeOnLayoutChangeListener(this);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        recyclerView.addOnLayoutChangeListener(this);
     }
 
     @Override
@@ -67,8 +75,13 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
             holder.icon.setImageTintList(ColorStateList.valueOf(colorAccent));
         } else {
             holder.name.setTextColor(colorTextPrimary);
-            holder.itemView.setBackground(selectableItemBackground);
             holder.icon.setImageTintList(ColorStateList.valueOf(colorTextPrimary));
+            CommonUtils.setBackground(holder.itemView, android.R.attr.selectableItemBackground);
+        }
+
+        if (width > 0) {
+            holder.itemView.getLayoutParams().width = width;
+            holder.itemView.requestLayout();
         }
     }
 
@@ -108,6 +121,12 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
                 notifyItemChanged(pos);
             }
         }
+    }
+
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+        width = right - left;
+        notifyDataSetChanged();
     }
 
     public interface Listener<E extends Enum> {

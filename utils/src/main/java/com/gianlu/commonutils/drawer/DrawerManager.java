@@ -36,9 +36,9 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
     private final ImageButton mAction;
     private final RecyclerView mProfilesMenuItemsList;
     private final LinearLayout mProfilesContainer;
-    private MenuItemsAdapter<E> menuItemsAdapter;
+    private MenuItemsAdapter<E> mMenuItemsAdapter;
     private ProfilesAdapter<P, ?> profilesAdapter;
-    private SelectiveDividerItemDecoration menuItemsDecoration;
+    private SelectiveDividerItemDecoration mMenuItemsDecoration;
 
     private DrawerManager(@NonNull Config<P, E> config, @NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar) {
         this.config = config;
@@ -52,6 +52,9 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
+                mMenuItemsList.requestLayout();
+                mProfilesList.requestLayout();
+                mProfilesMenuItemsList.requestLayout();
             }
 
             @Override
@@ -112,11 +115,11 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
     }
 
     private void setupMenuItems() {
-        menuItemsAdapter = new MenuItemsAdapter<>(context, config.menuItems, this);
-        mMenuItemsList.setAdapter(menuItemsAdapter);
-        mMenuItemsList.removeItemDecoration(menuItemsDecoration);
-        menuItemsDecoration = new SelectiveDividerItemDecoration(context, RecyclerView.VERTICAL, config.menuSeparators);
-        mMenuItemsList.addItemDecoration(menuItemsDecoration);
+        mMenuItemsAdapter = new MenuItemsAdapter<>(context, config.menuItems, this);
+        mMenuItemsList.setAdapter(mMenuItemsAdapter);
+        mMenuItemsList.removeItemDecoration(mMenuItemsDecoration);
+        mMenuItemsDecoration = new SelectiveDividerItemDecoration(context, RecyclerView.VERTICAL, config.menuSeparators);
+        mMenuItemsList.addItemDecoration(mMenuItemsDecoration);
     }
 
     public void refreshProfiles(List<P> newProfiles) {
@@ -246,11 +249,11 @@ public final class DrawerManager<P extends BaseDrawerProfile, E extends Enum> im
     }
 
     public void updateBadge(@NonNull E which, int badgeNumber) {
-        if (menuItemsAdapter != null) menuItemsAdapter.updateBadge(which, badgeNumber);
+        if (mMenuItemsAdapter != null) mMenuItemsAdapter.updateBadge(which, badgeNumber);
     }
 
     public void setActiveItem(@NonNull E which) {
-        if (menuItemsAdapter != null) menuItemsAdapter.setActiveItem(which);
+        if (mMenuItemsAdapter != null) mMenuItemsAdapter.setActiveItem(which);
     }
 
     public void setDrawerState(boolean open, boolean animate) {
