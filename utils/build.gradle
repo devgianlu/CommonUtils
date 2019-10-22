@@ -34,15 +34,15 @@ android {
 }
 
 dependencies {
-    standardApi 'com.android.billingclient:billing:2.0.1'
+    standardApi 'com.android.billingclient:billing:2.0.3'
     standardApi 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     standardApi 'com.crashlytics.sdk.android:answers:1.4.7'
 
     api 'com.github.devgianlu.MaterialPreferences:library:b0d322a322'
 
-    api 'com.google.android.material:material:1.1.0-alpha09'
+    api 'com.google.android.material:material:1.2.0-alpha01'
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-    api 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
+    api 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
     api 'com.github.daniel-stoneuk:material-about-library:2.4.2'
     api('com.mikepenz:aboutlibraries:7.0.2') {
         exclude group: 'com.mikepenz', module: 'iconics-core'
