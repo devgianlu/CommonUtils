@@ -68,6 +68,7 @@
     <!-- BreadcrumbsView styleable -->
     <declare-styleable name="BreadcrumbsView">
         <attr name="arrowRes" format="reference" />
+        <attr name="color" format="color" />
     </declare-styleable>
 
     <!-- MessageView styleable -->
