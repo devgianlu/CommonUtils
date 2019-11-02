@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -445,6 +446,18 @@ public final class CommonUtils {
     }
 
     @NonNull
+    public static String join(@NonNull JSONArray array, @NonNull String separator) throws JSONException {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < array.length(); i++) {
+            if (i > 0) builder.append(separator);
+            builder.append(array.getString(i));
+        }
+
+        return builder.toString();
+    }
+
+
+    @NonNull
     public static String join(@NonNull Collection<?> objs, @NonNull String separator) {
         return join(objs, separator, null);
     }
@@ -561,6 +574,19 @@ public final class CommonUtils {
 
     public static void setImageTintColor(ImageView view, @ColorRes int res) {
         view.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), res)));
+    }
+
+    @NonNull
+    public static String readEntirely(@NonNull InputStream stream) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int count;
+        try {
+            while ((count = stream.read(buffer)) != -1) out.write(buffer, 0, count);
+            return new String(out.toByteArray());
+        } finally {
+            stream.close();
+        }
     }
 
     public interface ToString<T> {
