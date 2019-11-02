@@ -69,6 +69,12 @@ public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
+    @Nullable
+    public static String optString(@NonNull JSONObject obj, @NonNull String key) {
+        String val = obj.optString(key);
+        return val.isEmpty() ? null : val;
+    }
+
     private static float calculateLuminescenceRgb(@ColorInt int c) {
         double result = c / 255f;
         if (result <= 0.03928f) result /= 12.92f;

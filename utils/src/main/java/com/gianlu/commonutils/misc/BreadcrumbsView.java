@@ -1,7 +1,9 @@
 package com.gianlu.commonutils.misc;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -24,6 +26,7 @@ public final class BreadcrumbsView extends LinearLayout implements View.OnClickL
     private final int arrowRes;
     private Listener listener;
     private HorizontalScrollView parent;
+    private int mColor = Color.BLACK;
 
     public BreadcrumbsView(Context context) {
         this(context, null, 0);
@@ -40,7 +43,8 @@ public final class BreadcrumbsView extends LinearLayout implements View.OnClickL
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BreadcrumbsView, defStyleAttr, 0);
 
         try {
-            arrowRes = a.getResourceId(0, 0);
+            mColor = a.getColor(a.getIndex(R.styleable.BreadcrumbsView_color), Color.BLACK);
+            arrowRes = a.getResourceId(a.getIndex(R.styleable.BreadcrumbsView_arrowRes), 0);
             if (arrowRes == 0)
                 throw new IllegalArgumentException("Must specify a resource for the arrow!");
         } finally {
@@ -105,12 +109,14 @@ public final class BreadcrumbsView extends LinearLayout implements View.OnClickL
     private ImageView createArrow() {
         ImageView arrow = (ImageView) inflater.inflate(R.layout.breadcrumbs_arrow, this, false);
         arrow.setImageResource(arrowRes);
+        arrow.setImageTintList(ColorStateList.valueOf(mColor));
         return arrow;
     }
 
     @NonNull
     private TextView createButton(@NonNull Item item) {
         TextView button = (TextView) inflater.inflate(R.layout.breadcrumbs_button, this, false);
+        button.setTextColor(mColor);
         button.setText(item.text);
         button.setTag(item);
         button.setOnClickListener(this);
