@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    standardApi 'com.android.billingclient:billing:2.0.1'
+    standardApi 'com.android.billingclient:billing:2.0.3'
     standardApi 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     standardApi 'com.crashlytics.sdk.android:answers:1.4.7'
 

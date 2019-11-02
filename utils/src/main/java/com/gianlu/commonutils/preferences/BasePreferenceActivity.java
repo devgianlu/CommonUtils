@@ -29,6 +29,7 @@ import com.gianlu.commonutils.logging.Logging;
 import com.gianlu.commonutils.logging.LogsActivity;
 import com.gianlu.commonutils.tutorial.TutorialManager;
 import com.gianlu.commonutils.ui.Toaster;
+import com.yarolegovich.mp.MaterialStandardPreference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -137,6 +138,25 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
     protected abstract boolean disableOtherDonationsOnGooglePlay();
 
+    public static class TranslatorsFragment extends BasePreferenceFragment {
+
+        @Override
+        protected void buildPreferences(@NonNull Context context) {
+            for (Translators.Item item : Translators.load(context)) {
+                MaterialStandardPreference pref = new MaterialStandardPreference(context);
+                pref.setTitle(item.name);
+                pref.setSummary(item.languages);
+                pref.setOnClickListener(v -> openLink(context, item.link));
+                addPreference(pref);
+            }
+        }
+
+        @Override
+        public int getTitleRes() {
+            return R.string.translators;
+        }
+    }
+
     public static class MainFragment extends MaterialAboutFragment {
         private BasePreferenceActivity parent;
         private MaterialAboutPreferenceItem.Listener listener;
@@ -171,12 +191,18 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {
-                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, R.drawable.baseline_bug_report_24, () -> openLink(context, openSourceUrl)));
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.openSource, R.string.openSource_desc, R.drawable.baseline_bug_report_24,
+                        () -> openLink(context, openSourceUrl)));
             }
 
             if (FossUtils.hasFabric()) {
-                developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, () -> AnalyticsPreferenceDialog.get()
-                        .show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG)));
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, () ->
+                        AnalyticsPreferenceDialog.get().show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG)));
+            }
+
+            if (!Translators.load(context).isEmpty()) {
+                developerBuilder.addItem(new MaterialAboutActionItem(R.string.translators, 0, R.drawable.baseline_translate_24,
+                        () -> parent.onPreferenceSelected(TranslatorsFragment.class)));
             }
 
             MaterialAboutCard.Builder preferencesBuilder = null;
