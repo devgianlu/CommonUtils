@@ -2,4 +2,5 @@
 <resources>
     <item name="niceBottomSheet_mask" type="id" />
     <item name="niceBottomSheet_action" type="id" />
+    <item name="translators" type="raw" />
 </resources>

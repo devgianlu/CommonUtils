@@ -7,7 +7,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -38,14 +37,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,23 +66,6 @@ import java.util.zip.ZipOutputStream;
 public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
-
-    @NonNull
-    public static String decodeUrl(@NonNull String url) {
-        try {
-            return URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public static boolean isARM() {
-        for (String abi : Build.SUPPORTED_ABIS)
-            if (abi.contains("arm"))
-                return true;
-
-        return false;
-    }
 
     public static boolean isNightModeOn(@NonNull Context context, boolean fallback) {
         int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -465,6 +446,18 @@ public final class CommonUtils {
     }
 
     @NonNull
+    public static String join(@NonNull JSONArray array, @NonNull String separator) throws JSONException {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < array.length(); i++) {
+            if (i > 0) builder.append(separator);
+            builder.append(array.getString(i));
+        }
+
+        return builder.toString();
+    }
+
+
+    @NonNull
     public static String join(@NonNull Collection<?> objs, @NonNull String separator) {
         return join(objs, separator, null);
     }
@@ -581,6 +574,19 @@ public final class CommonUtils {
 
     public static void setImageTintColor(ImageView view, @ColorRes int res) {
         view.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), res)));
+    }
+
+    @NonNull
+    public static String readEntirely(@NonNull InputStream stream) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int count;
+        try {
+            while ((count = stream.read(buffer)) != -1) out.write(buffer, 0, count);
+            return new String(out.toByteArray());
+        } finally {
+            stream.close();
+        }
     }
 
     public interface ToString<T> {
