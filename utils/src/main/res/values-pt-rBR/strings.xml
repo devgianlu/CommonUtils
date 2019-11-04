@@ -50,5 +50,5 @@
     <string name="prefs_developer">Desenvolvedor</string>
     <string name="missingWebBrowser">Seu dispositivo parece estar faltando um navegador web.</string>
     <string name="exportLogFiles">Exportar arquivos de registro</string>
-    <string name="translators">Tradutores:</string>
+    <string name="translators">Tradutores</string>
 </resources>
