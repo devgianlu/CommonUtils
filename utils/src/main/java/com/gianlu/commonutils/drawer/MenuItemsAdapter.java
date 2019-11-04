@@ -2,7 +2,6 @@ package com.gianlu.commonutils.drawer;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
     private final Listener<E> listener;
     private final int colorTextPrimary;
     private final int colorAccent;
-    private final Drawable selectableItemBackground;
 
     MenuItemsAdapter(@NonNull Context context, List<BaseDrawerItem<E>> items, Listener<E> listener) {
         this.inflater = LayoutInflater.from(context);
@@ -34,7 +32,6 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
         this.listener = listener;
         this.colorTextPrimary = CommonUtils.resolveAttrAsColor(context, android.R.attr.textColorPrimary);
         this.colorAccent = ContextCompat.getColor(context, R.color.colorAccent);
-        this.selectableItemBackground = CommonUtils.resolveAttrAsDrawable(context, android.R.attr.selectableItemBackground);
     }
 
     @Override
@@ -67,7 +64,7 @@ public class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter<MenuI
             holder.icon.setImageTintList(ColorStateList.valueOf(colorAccent));
         } else {
             holder.name.setTextColor(colorTextPrimary);
-            holder.itemView.setBackground(selectableItemBackground);
+            holder.itemView.setBackground(CommonUtils.resolveAttrAsDrawable(holder.itemView.getContext(), android.R.attr.selectableItemBackground));
             holder.icon.setImageTintList(ColorStateList.valueOf(colorTextPrimary));
         }
     }
