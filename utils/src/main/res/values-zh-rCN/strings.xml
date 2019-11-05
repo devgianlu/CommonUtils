@@ -50,5 +50,5 @@
     <string name="prefs_developer">开发者</string>
     <string name="missingWebBrowser">似乎您的设备没有安装网页浏览器。</string>
     <string name="exportLogFiles">导出日志文件</string>
-    <string name="translators">Translators</string>
+    <string name="translators">翻译者名单</string>
 </resources>
