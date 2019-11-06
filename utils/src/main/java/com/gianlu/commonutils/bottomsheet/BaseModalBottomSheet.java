@@ -104,7 +104,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
     @UiThread
     public final void update(@NonNull Update payload) {
-        if (getDialog().isShowing() && DialogUtils.isContextValid(getContext()))
+        if (getDialog() != null && getDialog().isShowing() && DialogUtils.isContextValid(getContext()))
             onReceivedUpdate(payload);
     }
 
