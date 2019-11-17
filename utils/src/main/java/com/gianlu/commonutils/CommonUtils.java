@@ -515,7 +515,8 @@ public final class CommonUtils {
 
     public static <T> boolean contains(T[] elements, T element) {
         for (T element1 : elements)
-            if (element1 == element) return true;
+            if (Objects.equals(element1, element))
+                return true;
 
         return false;
     }
