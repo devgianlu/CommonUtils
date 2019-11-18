@@ -1,11 +1,13 @@
 package com.gianlu.commonutils.drawer;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.gianlu.commonutils.R;
 
@@ -23,7 +25,13 @@ public final class StatusBarPadding extends View {
     public StatusBarPadding(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        setBackgroundResource(R.color.colorPrimaryDark);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StatusBarPadding, 0, 0);
+        try {
+            int color = a.getColor(R.styleable.StatusBarPadding_colorRes, ContextCompat.getColor(context, R.color.colorPrimaryVariant));
+            setBackgroundColor(color);
+        } finally {
+            a.recycle();
+        }
 
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0)
