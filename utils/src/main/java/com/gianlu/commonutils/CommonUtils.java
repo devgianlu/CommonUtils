@@ -70,6 +70,31 @@ public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
+    @Nullable
+    public static String optString(@NonNull JSONObject obj, @NonNull String key) {
+        String val = obj.optString(key);
+        return val.isEmpty() ? null : val;
+    }
+
+    private static float calculateLuminescenceRgb(@ColorInt int c) {
+        double result = c / 255f;
+        if (result <= 0.03928f) result /= 12.92f;
+        else result = Math.pow((result + 0.055f) / 1.055f, 2.4f);
+        return (float) result;
+    }
+
+    public static float calculateLuminescence(@ColorInt int color) {
+        return 0.2126f * calculateLuminescenceRgb(Color.red(color))
+                + 0.7152f * calculateLuminescenceRgb(Color.green(color))
+                + 0.0722f * calculateLuminescenceRgb(Color.blue(color));
+    }
+
+    @ColorInt
+    public static int blackOrWhiteText(@ColorInt int bg) {
+        if (calculateLuminescence(bg) > 0.179) return Color.BLACK;
+        else return Color.WHITE;
+    }
+
     @NonNull
     public static String decodeUrl(@NonNull String url) {
         try {
@@ -490,7 +515,8 @@ public final class CommonUtils {
 
     public static <T> boolean contains(T[] elements, T element) {
         for (T element1 : elements)
-            if (element1 == element) return true;
+            if (Objects.equals(element1, element))
+                return true;
 
         return false;
     }

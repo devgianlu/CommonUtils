@@ -13,8 +13,8 @@
         <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
 
         <!-- Backward compatibility -->
-        <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
-        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="colorPrimaryDark">?colorPrimaryVariant</item>
+        <item name="colorAccent">?colorSecondary</item>
     </style>
 
     <!-- Transparent BottomSheet -->
@@ -82,10 +82,8 @@
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
 
-    <!-- LabeledSpinner styleable -->
-    <declare-styleable name="LabeledSpinner">
-        <attr name="labelText" format="string" />
-        <attr name="textColor" format="color" />
-        <attr name="dropdownTextColor" format="color" />
+    <!-- StatusBarPadding styleable -->
+    <declare-styleable name="StatusBarPadding">
+        <attr name="colorRes" format="color" />
     </declare-styleable>
 </resources>
