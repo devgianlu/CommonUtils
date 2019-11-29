@@ -9,4 +9,5 @@
     android:layout_marginBottom="6dp"
     android:background="?android:selectableItemBackgroundBorderless"
     android:clickable="true"
-    android:focusable="true" />
+    android:focusable="true"
+    android:minWidth="16dp" />
