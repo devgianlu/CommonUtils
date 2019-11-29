@@ -10,12 +10,12 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.typography.FontsManager;
+import com.google.android.material.textview.MaterialTextView;
 
-public class SuperTextView extends AppCompatTextView {
+public class SuperTextView extends MaterialTextView {
     private boolean isCompact;
 
     public SuperTextView(Context context) {
