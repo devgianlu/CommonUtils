@@ -49,4 +49,5 @@
     <string name="prefs_developer">Developer</string>
     <string name="missingWebBrowser">Your device seems to be missing a web browser.</string>
     <string name="exportLogFiles">Export log files</string>
+    <string name="translators">Translators</string>
 </resources>
