@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp">
@@ -15,47 +14,43 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="@string/offline"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceHeadline2" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:paddingEnd="16dp"
+        android:textAlignment="center"
         android:paddingStart="16dp"
         android:text="@string/offline_message"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textAppearance="?attr/textAppearanceHeadline5" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:paddingEnd="16dp"
-        android:paddingStart="16dp"
         android:text="@string/emailMeLong"
-        android:textSize="16sp" />
+        android:paddingStart="16dp"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceCaption" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/offline_email"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
+            android:layout_marginEnd="16dp"
             android:layout_height="wrap_content"
             android:text="@string/send_email" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/offline_retry"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/retry" />

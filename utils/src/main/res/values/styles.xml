@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <attr name="colorAccentRef" format="reference|color" />
-    <attr name="colorPrimaryRef" format="reference|color" />
-    <attr name="colorPrimaryDarkRef" format="reference|color" />
-    <attr name="colorBackgroundFloatingRef" format="reference|color" />
-
     <!-- App theme -->
-    <style name="AppTheme" />
+    <style name="AppTheme" parent="BaseAppTheme" />
 
-    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorAccentRef">@color/colorAccent</item>
-        <item name="colorPrimaryRef">@color/colorPrimary</item>
-        <item name="colorPrimaryDarkRef">@color/colorPrimaryDark</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="dialogTheme">@style/DialogFix</item>
-        <item name="colorBackgroundFloatingRef">?android:attr/colorBackgroundFloating</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
+
+        <!-- Backward compatibility -->
+        <item name="colorPrimaryDark">?colorPrimaryVariant</item>
+        <item name="colorAccent">?colorSecondary</item>
+    </style>
+
+    <!-- Transparent BottomSheet -->
+    <style name="TransparentBottomSheetTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/TransparentBottomSheet</item>
+    </style>
+
+    <style name="TransparentBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <!-- No action bar theme -->
@@ -32,38 +38,14 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <!-- Dialog fix -->
-    <style name="DialogFixCommon" parent="Theme.MaterialComponents.DayNight.Dialog.Bridge">
-        <item name="android:windowNoTitle">false</item>
-        <item name="colorAccent">?attr/colorAccentRef</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="buttonStyle">@style/DialogFixButton</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="DialogFix" parent="DialogFixCommon">
-        <item name="android:background">?android:attr/colorBackgroundFloating</item>
-    </style>
-
-    <style name="DialogFixButton" parent="@android:style/Widget.Material.Light.Button">
-        <item name="android:textColor">?attr/colorAccentRef</item>
-    </style>
-
-    <!-- Material About default -->
+    <!-- Material About theme -->
     <style name="MaterialAbout.Default" parent="MaterialAbout.Light" />
 
-    <!-- Material About Light -->
     <style name="MaterialAbout.Light" parent="Theme.Mal.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <!-- Material About Dark -->
-    <style name="MaterialAbout.Dark" parent="Theme.Mal.Dark">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="mal_card_background">?colorSurface</item>
     </style>
 
     <!-- Fullscreen stuff -->
@@ -73,7 +55,6 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
@@ -87,6 +68,7 @@
     <!-- BreadcrumbsView styleable -->
     <declare-styleable name="BreadcrumbsView">
         <attr name="arrowRes" format="reference" />
+        <attr name="color" format="color" />
     </declare-styleable>
 
     <!-- MessageView styleable -->
@@ -100,10 +82,8 @@
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
 
-    <!-- LabeledSpinner styleable -->
-    <declare-styleable name="LabeledSpinner">
-        <attr name="labelText" format="string" />
-        <attr name="textColor" format="color" />
-        <attr name="dropdownTextColor" format="color" />
+    <!-- StatusBarPadding styleable -->
+    <declare-styleable name="StatusBarPadding">
+        <attr name="colorRes" format="color" />
     </declare-styleable>
 </resources>

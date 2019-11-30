@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.UiThread;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentActivity;
 
@@ -26,40 +26,31 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.jetbrains.annotations.NotNull;
-
 public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDialogFragment {
     private FloatingActionButton action;
     private ModalBottomSheetHeaderView header;
     private FrameLayout body;
     private FrameLayout bodyNoScroll;
     private ProgressBar loading;
-    private Toolbar toolbar;
     private boolean hasNoScroll = false;
-    private boolean onlyToolbar = false;
     private Setup payload;
     private int lastHeaderEndPadding = -1;
     private CoordinatorLayout layout;
     private BottomSheetBehavior behavior;
     private View bottomSheet;
 
-    @NotNull
+    @NonNull
     public Setup getSetupPayload() {
         return payload;
     }
 
-    /**
-     * @return Whether the implementation provides a layout for the header
-     */
-    protected abstract boolean onCreateHeader(@NonNull LayoutInflater inflater, @NonNull ModalBottomSheetHeaderView header, @NonNull Setup payload);
+    protected abstract void onCreateHeader(@NonNull LayoutInflater inflater, @NonNull ModalBottomSheetHeaderView header, @NonNull Setup payload);
 
     protected abstract void onCreateBody(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Setup payload);
 
     protected boolean onCreateNoScrollBody(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull Setup payload) {
         return false;
     }
-
-    protected abstract void onCustomizeToolbar(@NonNull Toolbar toolbar, @NonNull Setup payload);
 
     /**
      * @return Whether the implementation provides an action
@@ -111,28 +102,36 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         prepareCollapsed();
     }
 
+    @UiThread
     public final void update(@NonNull Update payload) {
         if (getDialog() != null && getDialog().isShowing() && DialogUtils.isContextValid(getContext()))
-            onRequestedUpdate(payload);
+            onReceivedUpdate(payload);
     }
 
-    protected void onRequestedUpdate(@NonNull Update payload) {
+    @UiThread
+    protected void onReceivedUpdate(@NonNull Update payload) {
+    }
+
+    protected void onExpandedStateChanged(@NonNull ModalBottomSheetHeaderView header, boolean expanded) {
     }
 
     private void heightChanged() {
         if (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED && isFullscreen()) {
-            displayClose();
+            header.showClose();
+            header.squared();
             restoreNotCollapsed();
+            onExpandedStateChanged(header, true);
         } else {
-            hideClose();
+            header.hideClose();
+            header.rounded();
+            onExpandedStateChanged(header, false);
         }
+    }
 
-        if (!onlyToolbar) {
-            if (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED && isFullscreen())
-                showToolbar();
-            else
-                showHeader();
-        }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.TransparentBottomSheetTheme);
     }
 
     @Override
@@ -151,24 +150,20 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
             if ((oldTop != top || oldBottom != bottom) && behavior != null) heightChanged();
         });
 
-        toolbar = layout.findViewById(R.id.modalBottomSheet_toolbar);
         header = layout.findViewById(R.id.modalBottomSheet_header);
         body = layout.findViewById(R.id.modalBottomSheet_body);
         bodyNoScroll = layout.findViewById(R.id.modalBottomSheet_bodyNoScroll);
         loading = layout.findViewById(R.id.modalBottomSheet_loading);
         action = layout.findViewById(R.id.modalBottomSheet_action);
 
-        onCustomizeToolbar(toolbar, payload);
-        onlyToolbar = !onCreateHeader(inflater, header, payload);
+        onCreateHeader(inflater, header, payload);
         onCreateBody(inflater, body, payload);
 
         hasNoScroll = onCreateNoScrollBody(inflater, bodyNoScroll, payload);
         bodyNoScroll.setVisibility(hasNoScroll ? View.VISIBLE : View.GONE);
 
         invalidateAction();
-
-        if (onlyToolbar) showToolbar();
-        else showHeader();
+        header.setCloseOnClickListener(v -> dismiss());
 
         return layout;
     }
@@ -190,27 +185,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         if (activity == null) return;
 
         this.payload = payload;
-        DialogUtils.showDialog(activity, this);
-    }
-
-    private void displayClose() {
-        toolbar.setNavigationIcon(R.drawable.baseline_clear_24);
-        toolbar.setNavigationOnClickListener(v -> dismissAllowingStateLoss());
-    }
-
-    private void hideClose() {
-        toolbar.setNavigationIcon(null);
-        toolbar.setNavigationOnClickListener(null);
-    }
-
-    private void showToolbar() {
-        toolbar.setVisibility(View.VISIBLE);
-        header.setVisibility(View.GONE);
-    }
-
-    private void showHeader() {
-        toolbar.setVisibility(View.GONE);
-        header.setVisibility(View.VISIBLE);
+        DialogUtils.showDialog(activity, this, null);
     }
 
     public void isLoading(boolean set) {

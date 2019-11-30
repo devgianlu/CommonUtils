@@ -44,6 +44,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,9 +65,44 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+@SuppressWarnings("unused")
 public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
+
+    @Nullable
+    public static String optString(@NonNull JSONObject obj, @NonNull String key) {
+        String val = obj.optString(key);
+        return val.isEmpty() ? null : val;
+    }
+
+    private static float calculateLuminescenceRgb(@ColorInt int c) {
+        double result = c / 255f;
+        if (result <= 0.03928f) result /= 12.92f;
+        else result = Math.pow((result + 0.055f) / 1.055f, 2.4f);
+        return (float) result;
+    }
+
+    public static float calculateLuminescence(@ColorInt int color) {
+        return 0.2126f * calculateLuminescenceRgb(Color.red(color))
+                + 0.7152f * calculateLuminescenceRgb(Color.green(color))
+                + 0.0722f * calculateLuminescenceRgb(Color.blue(color));
+    }
+
+    @ColorInt
+    public static int blackOrWhiteText(@ColorInt int bg) {
+        if (calculateLuminescence(bg) > 0.179) return Color.BLACK;
+        else return Color.WHITE;
+    }
+
+    @NonNull
+    public static String decodeUrl(@NonNull String url) {
+        try {
+            return URLDecoder.decode(url, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
 
     public static boolean isNightModeOn(@NonNull Context context, boolean fallback) {
         int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -478,7 +515,8 @@ public final class CommonUtils {
 
     public static <T> boolean contains(T[] elements, T element) {
         for (T element1 : elements)
-            if (element1 == element) return true;
+            if (Objects.equals(element1, element))
+                return true;
 
         return false;
     }
@@ -527,9 +565,11 @@ public final class CommonUtils {
     }
 
     @Nullable
-    public static String getStupidString(JSONObject obj, String key) {
-        String val = obj.optString(key, null);
-        return val == null || val.equals("null") ? null : val;
+    public static String getStupidString(JSONObject obj, String key) throws JSONException {
+        if (!obj.has(key)) return null;
+
+        String val = obj.getString(key);
+        return "null".equals(val) ? null : val;
     }
 
     public static boolean isStupidNull(JSONObject obj, String key) throws JSONException {
@@ -568,12 +608,16 @@ public final class CommonUtils {
         view.setText(view.getContext().getResources().getQuantityString(res, num, args));
     }
 
-    public static void setText(TextView view, @StringRes int res, Object... args) {
+    public static void setText(@NonNull TextView view, @StringRes int res, Object... args) {
         view.setText(view.getContext().getResources().getString(res, args));
     }
 
-    public static void setImageTintColor(ImageView view, @ColorRes int res) {
+    public static void setImageTintColor(@NonNull ImageView view, @ColorRes int res) {
         view.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(view.getContext(), res)));
+    }
+
+    public static void setBackground(@NonNull View view, @AttrRes int attr) {
+        view.setBackground(resolveAttrAsDrawable(view.getContext(), attr));
     }
 
     @NonNull

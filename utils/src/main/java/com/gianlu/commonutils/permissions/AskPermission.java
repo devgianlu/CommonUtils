@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.gianlu.commonutils.dialogs.DialogUtils;
 import com.gianlu.commonutils.logging.Logging;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,7 +31,7 @@ public final class AskPermission {
             listener.permissionGranted(permission);
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
                 listener.askRationale(builder);
                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> request(activity, permission, listener));
 
@@ -78,7 +79,7 @@ public final class AskPermission {
         }
 
         @Override
-        public void onAttach(Context context) {
+        public void onAttach(@NonNull Context context) {
             super.onAttach(context);
 
             requestPermissions(new String[]{permission}, code);

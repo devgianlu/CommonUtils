@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.typhography.FontsManager;
+import com.gianlu.commonutils.typography.FontsManager;
 
 public final class DrawingHelper {
     private static final float REDUCE_FACTOR_NO_CIRCLE = 0.8f; // Reduce by 20%

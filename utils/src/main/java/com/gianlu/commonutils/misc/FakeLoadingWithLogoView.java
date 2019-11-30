@@ -25,8 +25,8 @@ import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
 
 public class FakeLoadingWithLogoView extends FrameLayout {
-    private ImageView logo;
-    private ProgressBar bar;
+    private final ImageView logo;
+    private final ProgressBar bar;
     private int fastLoadDuration = 5000;
     private float fastLoadPercent = 70;
     private int slowLoadDuration = 10000;
@@ -189,7 +189,7 @@ public class FakeLoadingWithLogoView extends FrameLayout {
             super(context, attrs, defStyleAttr);
             setWillNotDraw(false);
 
-            int accent = ContextCompat.getColor(context, R.color.colorAccent);
+            int accent = ContextCompat.getColor(context, R.color.colorSecondary);
 
             paint = new Paint();
             paint.setColor(accent);

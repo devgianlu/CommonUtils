@@ -10,6 +10,8 @@ import com.gianlu.commonutils.logging.Logging;
 import com.gianlu.commonutils.preferences.CommonPK;
 import com.gianlu.commonutils.preferences.Prefs;
 
+import java.util.Locale;
+
 public abstract class AnalyticsApplication extends BaseCommonApplication {
 
     public static void sendAnalytics(String event, @Nullable Bundle bundle) {
@@ -25,7 +27,7 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setCrashlyticsInt(@NonNull String key, int val) {
-        Logging.log(String.format("(key: %s, value: %d)", key, val), false);
+        Logging.log(String.format(Locale.getDefault(), "(key: %s, value: %d)", key, val), false);
     }
 
     public static void setCrashlyticsBool(@NonNull String key, boolean val) {
@@ -33,7 +35,7 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setCrashlyticsLong(@NonNull String key, long val) {
-        Logging.log(String.format("(key: %s, value: %d)", key, val), false);
+        Logging.log(String.format(Locale.getDefault(), "(key: %s, value: %d)", key, val), false);
     }
 
     public static void crashlyticsLog(@NonNull String msg) {

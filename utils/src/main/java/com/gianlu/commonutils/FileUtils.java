@@ -87,7 +87,7 @@ public final class FileUtils {
         else return null;
     }
 
-    @Nullable
+    @NonNull
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static String getDocumentPathFromTreeUri(@NonNull Uri treeUri) {
         final String docId = DocumentsContract.getTreeDocumentId(treeUri);

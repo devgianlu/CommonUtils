@@ -62,7 +62,7 @@ public class RecyclerMessageView extends FrameLayout {
         message.hide();
     }
 
-    public void showError(@NonNull String text) {
+    public void showError(String text) {
         hideList();
         message.error(text);
     }

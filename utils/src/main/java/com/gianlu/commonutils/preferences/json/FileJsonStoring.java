@@ -1,7 +1,6 @@
 package com.gianlu.commonutils.preferences.json;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.gianlu.commonutils.logging.Logging;
 
@@ -50,13 +49,11 @@ final class FileJsonStoring extends JsonStoring {
         }
     }
 
-    @Nullable
     @Override
     public JSONObject getJsonObject(@NonNull String key) throws JSONException {
         return obj.getJSONObject(key);
     }
 
-    @Nullable
     @Override
     public JSONArray getJsonArray(@NonNull String key) throws JSONException {
         return obj.getJSONArray(key);

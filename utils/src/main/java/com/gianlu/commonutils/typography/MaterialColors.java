@@ -1,4 +1,4 @@
-package com.gianlu.commonutils.typhography;
+package com.gianlu.commonutils.typography;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -30,12 +30,8 @@ public final class MaterialColors {
     }
 
     @ColorRes
-    public int getColor(int pos) {
-        int i = pos;
-        while (i >= colors.length)
-            i = i - colors.length;
-
-        return colors[i];
+    public int getColor(int i) {
+        return colors[i % colors.length];
     }
 
     @ColorRes
@@ -44,6 +40,7 @@ public final class MaterialColors {
     }
 
     public void shuffle() {
+        if (index != 0) throw new IllegalStateException();
         CommonUtils.shuffleArray(colors);
     }
 

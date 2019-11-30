@@ -38,7 +38,7 @@ class Translators extends ArrayList<Translators.Item> {
         try {
             JSONArray array = new JSONArray(CommonUtils.readEntirely(context.getResources().openRawResource(R.raw.translators)));
             return instance = new Translators(array);
-        } catch (JSONException | IOException ex) {
+        } catch (JSONException | IOException | RuntimeException ex) {
             Logging.log("Failed parsing translators!", ex);
             return new Translators();
         }

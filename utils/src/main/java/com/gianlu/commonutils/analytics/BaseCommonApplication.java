@@ -3,6 +3,7 @@ package com.gianlu.commonutils.analytics;
 import android.app.Application;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.logging.Logging;
@@ -27,7 +28,7 @@ public abstract class BaseCommonApplication extends Application implements Threa
      * Never called in debug.
      */
     @Override
-    public final void uncaughtException(Thread thread, Throwable throwable) {
+    public final void uncaughtException(@NonNull Thread thread, @NonNull Throwable throwable) {
         Logging.log(throwable);
 
         if (uncaughtNotDebug(thread, throwable))

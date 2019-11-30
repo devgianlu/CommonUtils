@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/actionBarSize"
+    android:gravity="center_vertical|start"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/sheetToolbar_close"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/mal_close"
+        android:background="?selectableItemBackgroundBorderless"
+        android:src="@drawable/baseline_clear_24"
+        android:tint="?colorOnPrimary"
+        android:visibility="gone" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/sheetToolbar_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?colorOnPrimary" />
+
+</LinearLayout>

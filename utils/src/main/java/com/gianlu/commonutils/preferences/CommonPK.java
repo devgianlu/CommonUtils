@@ -1,6 +1,6 @@
 package com.gianlu.commonutils.preferences;
 
-public class CommonPK {
+public abstract class CommonPK {
     public static final Prefs.KeyWithDefault<Boolean> NIGHT_MODE = new Prefs.KeyWithDefault<>("nightModeEnabled", false);
     public static final Prefs.KeyWithDefault<Boolean> TRACKING_ENABLED = new Prefs.KeyWithDefault<>("trackingEnabled", true);
     public static final Prefs.KeyWithDefault<Boolean> CRASH_REPORT_ENABLED = new Prefs.KeyWithDefault<>("crashReportEnabled", true);

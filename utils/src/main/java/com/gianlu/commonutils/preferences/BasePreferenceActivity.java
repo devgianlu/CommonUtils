@@ -29,7 +29,6 @@ import com.gianlu.commonutils.logging.Logging;
 import com.gianlu.commonutils.logging.LogsActivity;
 import com.gianlu.commonutils.tutorial.TutorialManager;
 import com.gianlu.commonutils.ui.Toaster;
-import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.yarolegovich.mp.MaterialStandardPreference;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
     @CallSuper
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
@@ -188,23 +187,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                             .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
                     .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, () -> openLink(context, "https://gianlu.xyz")))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> Logging.sendEmail(context, null)))
-                    .addItem(new MaterialAboutActionItem(R.string.third_part, 0, R.drawable.baseline_extension_24, () -> {
-                        LibsBuilder libsBuilder = new LibsBuilder()
-                                .withVersionShown(true)
-                                .withActivityTitle(context.getString(R.string.third_part));
-
-                        List<String> toExclude = new ArrayList<>();
-
-                        if (!FossUtils.hasFabric())
-                            toExclude.add("Crashlytics");
-
-                        if (!FossUtils.hasGoogleBilling())
-                            toExclude.add("GooglePlayServices");
-
-                        libsBuilder.withExcludedLibraries(toExclude.toArray(new String[0]))
-                                .start(context);
-                    }));
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> Logging.sendEmail(context, null)));
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {

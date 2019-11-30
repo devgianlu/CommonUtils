@@ -1,4 +1,4 @@
-package com.gianlu.commonutils.typhography;
+package com.gianlu.commonutils.typography;
 
 import android.content.Context;
 import android.graphics.Paint;

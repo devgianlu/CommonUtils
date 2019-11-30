@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -409,20 +408,20 @@ public final class Logging {
         private final List<LogLine> logs;
         private final LayoutInflater inflater;
 
-        public LogLineAdapter(Context context, List<LogLine> logs) {
+        public LogLineAdapter(@NonNull Context context, List<LogLine> logs) {
             this.inflater = LayoutInflater.from(context);
             this.logs = logs;
         }
 
         @NonNull
-        public static View createLogLineView(LayoutInflater inflater, ViewGroup parent, LogLine line) {
+        public static View createLogLineView(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull LogLine line) {
             ViewHolder holder = new ViewHolder(inflater, parent);
-            setupLoglineHolder(holder, line);
+            setupLogLineHolder(holder, line);
             return holder.itemView;
         }
 
         @SuppressLint("SetTextI18n")
-        public static void setupLoglineHolder(final ViewHolder holder, LogLine line) {
+        public static void setupLogLineHolder(@NonNull ViewHolder holder, @NonNull LogLine line) {
             holder.msg.setText(line.message);
             holder.msg.setSingleLine(true);
             holder.msg.setTag(true);
@@ -431,15 +430,15 @@ public final class Logging {
             switch (line.type) {
                 case INFO:
                     holder.level.setText("INFO: ");
-                    holder.level.setTextColor(Color.BLACK);
+                    CommonUtils.setTextColor(holder.level, R.color.logLevel_info);
                     break;
                 case WARNING:
                     holder.level.setText("WARNING: ");
-                    holder.level.setTextColor(Color.rgb(253, 216, 53));
+                    CommonUtils.setTextColor(holder.level, R.color.logLevel_warn);
                     break;
                 case ERROR:
                     holder.level.setText("ERROR: ");
-                    holder.level.setTextColor(Color.RED);
+                    CommonUtils.setTextColor(holder.level, R.color.logLevel_error);
                     break;
             }
 
@@ -473,7 +472,7 @@ public final class Logging {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             LogLine item = logs.get(position);
-            setupLoglineHolder(holder, item);
+            setupLogLineHolder(holder, item);
         }
 
         @Override

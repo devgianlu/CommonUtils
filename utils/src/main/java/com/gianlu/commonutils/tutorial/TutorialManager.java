@@ -5,7 +5,6 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 
-import com.getkeepsafe.taptargetview.TapTarget;
 import com.gianlu.commonutils.dialogs.DialogUtils;
 import com.gianlu.commonutils.preferences.CommonPK;
 import com.gianlu.commonutils.preferences.Prefs;
@@ -67,17 +66,9 @@ public final class TutorialManager implements BaseTutorial.Listener {
     }
 
     @Override
-    public void onSequenceFinish(@NonNull BaseTutorial tutorial) {
+    public void onComplete(@NonNull BaseTutorial tutorial) {
         isShowingTutorial = false;
         setShown(tutorial);
-    }
-
-    @Override
-    public void onSequenceStep(@NonNull BaseTutorial tutorial, @NonNull TapTarget lastTarget, boolean targetClicked) {
-    }
-
-    @Override
-    public void onSequenceCanceled(@NonNull BaseTutorial tutorial, @NonNull TapTarget lastTarget) {
     }
 
     public interface Discovery {

@@ -36,12 +36,12 @@ public final class DialogUtils {
         activityWithDialog(activity).showDialog(dialog);
     }
 
-    public static void showDialog(@Nullable FragmentActivity activity, @NonNull DialogFragment dialog) {
+    public static void showDialog(@Nullable FragmentActivity activity, @NonNull DialogFragment dialog, @Nullable String tag) {
         if (activity == null) return;
 
         FragmentManager manager = activity.getSupportFragmentManager();
         try {
-            dialog.show(manager, null);
+            dialog.show(manager, tag);
         } catch (IllegalStateException ex) {
             Logging.log(ex); // We can't do nothing
         }
@@ -64,14 +64,14 @@ public final class DialogUtils {
         return context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
     }
 
-    public static void showDialogValid(@NonNull final Context context, @NonNull final Dialog dialog) {
+    public static void showDialogValid(@NonNull Context context, @NonNull Dialog dialog) {
         handler.post(() -> {
             if (!isContextValid(context)) return;
             dialog.show();
         });
     }
 
-    public static void showDialogValid(@NonNull final Context context, @NonNull final AlertDialog.Builder builder, final OnDialogCreatedListener listener) {
+    public static void showDialogValid(@NonNull Context context, @NonNull AlertDialog.Builder builder, OnDialogCreatedListener listener) {
         handler.post(() -> {
             if (!isContextValid(context)) return;
             Dialog dialog = builder.create();
