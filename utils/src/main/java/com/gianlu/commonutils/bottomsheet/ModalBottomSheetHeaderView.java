@@ -40,7 +40,7 @@ public class ModalBottomSheetHeaderView extends FrameLayout {
         super(context, attrs, defStyleAttr);
 
         roundedBg = (GradientDrawable) getContext().getDrawable(R.drawable.modal_bottom_sheet_header_background);
-        if (roundedBg == null) throw new RuntimeException();
+        if (roundedBg == null) throw new IllegalArgumentException();
 
         squaredBg = new ColorDrawable();
 

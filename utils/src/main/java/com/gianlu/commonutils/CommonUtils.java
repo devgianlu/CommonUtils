@@ -100,7 +100,7 @@ public final class CommonUtils {
         try {
             return URLDecoder.decode(url, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
+            throw new IllegalArgumentException(ex);
         }
     }
 
@@ -569,7 +569,7 @@ public final class CommonUtils {
         if (!obj.has(key)) return null;
 
         String val = obj.getString(key);
-        return val.equals("null") ? null : val;
+        return "null".equals(val) ? null : val;
     }
 
     public static boolean isStupidNull(JSONObject obj, String key) throws JSONException {

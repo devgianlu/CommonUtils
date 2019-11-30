@@ -2,7 +2,6 @@ package com.gianlu.commonutils.tutorial;
 
 import android.app.Activity;
 import android.graphics.Rect;
-import android.text.Html;
 import android.view.View;
 
 import androidx.annotation.IdRes;
