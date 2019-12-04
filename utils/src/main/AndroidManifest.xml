@@ -27,9 +27,5 @@
             android:name=".ui.OfflineActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:theme="@style/FullscreenTheme"  />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="063c6b8c6ed0069bf5c2bc131f8a25a797014d2e" />
     </application>
 </manifest>
