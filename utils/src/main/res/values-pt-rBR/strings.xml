@@ -39,7 +39,7 @@
     <string name="donate_summary">Doar a partir do meu site: eu vou receber todo o dinheiro!</string>
     <!-- Prefs -->
     <string name="prefs_nightMode">Ativar modo noturno (tema escuro)</string>
-    <string name="prefs_nightMode_summary">Always enable night mode, regardless of the system default. You may want to restart the app.</string>
+    <string name="prefs_nightMode_summary">Sempre ativar o modo noturno, independentemente do padrão do sistema. Você pode querer reiniciar o aplicativo.</string>
     <string name="prefs_usageStatistics">Estatísticas de uso</string>
     <string name="prefs_usageStatisticsSummary">Alternar quais informações são enviadas para o desenvolvedor</string>
     <string name="prefs_usageStatisticsDialogLong">Eu (o desenvolvedor) recebo informações sobre o uso do aplicativo e os travamentos. Você pode alterná-los separadamente abaixo.</string>
