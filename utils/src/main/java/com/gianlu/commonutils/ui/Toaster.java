@@ -114,10 +114,15 @@ public final class Toaster {
         if (Looper.myLooper() == Looper.getMainLooper()) action.run();
         else handler.post(action);
 
-        Logging.log(msg + (extra != null ? (" Extra: " + extra) : ""), ex != null);
+        Logging.log(buildLogMessage(context), ex != null);
         if (ex != null) Logging.log(ex);
 
         shown = true;
+    }
+
+    @NonNull
+    private String buildLogMessage(@NonNull Context ctx) {
+        return "Toaster{context=" + ctx + ", msg='" + msg + "\', error=" + error + ", extra=" + extra + '}';
     }
 
     @Override
