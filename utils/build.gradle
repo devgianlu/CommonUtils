@@ -40,7 +40,7 @@ dependencies {
 
     api 'com.github.devgianlu.MaterialPreferences:library:b0d322a322'
 
-    api 'com.google.android.material:material:1.2.0-alpha02'
+    api 'com.google.android.material:material:1.2.0-alpha03'
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     api 'me.toptas.fancyshowcase:fancyshowcaseview:1.2.1'
