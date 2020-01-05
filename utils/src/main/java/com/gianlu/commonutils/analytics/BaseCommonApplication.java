@@ -55,6 +55,6 @@ public abstract class BaseCommonApplication extends Application implements Threa
 
         deprecatedBackwardCompatibility();
 
-        MaterialPreferences.instance().setStorageModule(new PrefsStorageModule.Factory());
+        MaterialPreferences.setStorageModule(new PrefsStorageModule.Factory());
     }
 }
