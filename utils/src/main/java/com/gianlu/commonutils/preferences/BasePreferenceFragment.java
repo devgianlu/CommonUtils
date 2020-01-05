@@ -51,6 +51,7 @@ public abstract class BasePreferenceFragment extends FragmentWithDialog {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         screen = new MaterialPreferenceScreen(requireContext());
+        screen.useLinearLayout();
         storageModule = MaterialPreferences.getStorageModule(requireContext());
         buildPreferences(requireContext());
         return screen;
