@@ -43,6 +43,15 @@ public abstract class BasePreferenceFragment extends FragmentWithDialog {
         else lastCategory.removeView(preference);
     }
 
+    protected final void clearPreferences() {
+        screen.useLinearLayout();
+    }
+
+    protected final void rebuildPreferences() {
+        clearPreferences();
+        buildPreferences(screen.getContext());
+    }
+
     protected final void addController(AbsMaterialCheckablePreference controller, boolean showWhenChecked, AbsMaterialPreference... dependent) {
         screen.setVisibilityController(controller, dependent, showWhenChecked);
     }

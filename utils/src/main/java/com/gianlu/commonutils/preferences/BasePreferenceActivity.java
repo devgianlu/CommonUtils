@@ -47,7 +47,8 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
     }
 
     @Override
-    protected final void onCreate(@Nullable Bundle savedInstanceState) {
+    @CallSuper
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_preference);
 
