@@ -46,7 +46,7 @@ public class PreferencesBillingHelper {
     }
 
     public void onStart(@NonNull Activity activity) {
-        billingClient = BillingClient.newBuilder(activity).setListener(new InternalListener()).build();
+        billingClient = BillingClient.newBuilder(activity).enablePendingPurchases().setListener(new InternalListener()).build();
         billingClient.startConnection(new BillingClientStateListener() {
             private boolean retried = false;
 
