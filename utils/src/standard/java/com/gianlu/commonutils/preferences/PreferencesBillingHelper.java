@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClient.BillingResponseCode;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -45,7 +46,7 @@ public class PreferencesBillingHelper {
     }
 
     public void onStart(@NonNull Activity activity) {
-        billingClient = BillingClient.newBuilder(activity).enablePendingPurchases().setListener(new InternalListener()).build();
+        billingClient = BillingClient.newBuilder(activity).setListener(new InternalListener()).build();
         billingClient.startConnection(new BillingClientStateListener() {
             private boolean retried = false;
 
@@ -246,11 +247,25 @@ public class PreferencesBillingHelper {
     private class InternalListener implements PurchasesUpdatedListener {
 
         @Override
-        public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-            if (billingResult.getResponseCode() == BillingResponseCode.OK)
+        public void onPurchasesUpdated(BillingResult br, @Nullable List<Purchase> purchases) {
+            if (br.getResponseCode() == BillingResponseCode.OK) {
                 listener.showToast(Toaster.build().message(R.string.thankYou).extra(purchases == null ? null : purchases.toString()));
-            else
-                handleBillingErrors(billingResult.getResponseCode());
+                if (purchases == null || purchases.isEmpty()) return;
+
+                for (Purchase p : purchases) {
+                    if (p.isAcknowledged()) continue;
+
+                    AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
+                            .setPurchaseToken(p.getPurchaseToken())
+                            .build();
+                    billingClient.acknowledgePurchase(params, br1 -> {
+                        if (br1.getResponseCode() != BillingResponseCode.OK)
+                            handleBillingErrors(br1.getResponseCode());
+                    });
+                }
+            } else {
+                handleBillingErrors(br.getResponseCode());
+            }
         }
     }
 }
