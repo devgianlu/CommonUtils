@@ -14,9 +14,18 @@ public final class FossUtils {
         }
     }
 
-    public static boolean hasFabric() {
+    public static boolean hasCrashlytics() {
         try {
-            Class.forName("io.fabric.sdk.android.Fabric");
+            Class.forName("com.crashlytics.android.Crashlytics");
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
+    }
+
+    public static boolean hasFirebaseAnalytics() {
+        try {
+            Class.forName("com.google.firebase.analytics.FirebaseAnalytics");
             return true;
         } catch (ClassNotFoundException ex) {
             return false;

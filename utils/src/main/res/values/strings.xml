@@ -46,7 +46,7 @@
     <string name="prefs_nightMode_summary">Always enable night mode, regardless of the system default. You may want to restart the app.</string>
     <string name="prefs_usageStatistics">Usage statistics</string>
     <string name="prefs_usageStatisticsSummary">Toggle which information is sent to the developer</string>
-    <string name="prefs_usageStatisticsDialogLong">I (the developer) receive information about the usage of the app and the crashes. You can toggle them separately down below.</string>
+    <string name="prefs_usageStatisticsDialogLong">We collect anonymous information about the app usage and about eventual crashes to improve the user experience. If you\'d like to opt out you can do so below.</string>
     <string name="prefs_usageTracking">Usage tracking</string>
     <string name="prefs_crashesTracking">Crashes tracking</string>
     <string name="prefs_tutorial">Tutorial</string>
