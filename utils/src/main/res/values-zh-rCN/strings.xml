@@ -42,7 +42,7 @@
     <string name="prefs_nightMode_summary">总是启用夜间模式，无视系统默认设置。您可能需要重新启动本应用。</string>
     <string name="prefs_usageStatistics">使用情况统计</string>
     <string name="prefs_usageStatisticsSummary">选择哪种信息会被发送给开发者。</string>
-    <string name="prefs_usageStatisticsDialogLong">我(开发者)接收关于本应用的使用情况和崩溃信息。您可以在下方单独选择是否发送它们。</string>
+    <string name="prefs_usageStatisticsDialogLong">We collect anonymous information about the app usage and about eventual crashes to improve the user experience. If you\'d like to opt out you can do so below.</string>
     <string name="prefs_usageTracking">使用情况跟踪</string>
     <string name="prefs_crashesTracking">崩溃情况跟踪</string>
     <string name="prefs_tutorial">教程</string>
