@@ -7,22 +7,11 @@ import androidx.annotation.NonNull;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.logging.Logging;
-import com.gianlu.commonutils.preferences.CommonPK;
 import com.gianlu.commonutils.preferences.Prefs;
 import com.gianlu.commonutils.preferences.PrefsStorageModule;
 import com.yarolegovich.mp.io.MaterialPreferences;
 
 public abstract class BaseCommonApplication extends Application implements Thread.UncaughtExceptionHandler {
-
-    @SuppressWarnings("deprecation")
-    private void deprecatedBackwardCompatibility() {
-        if (Prefs.has(CommonPK.TRACKING_DISABLE)) {
-            boolean old = Prefs.getBoolean(CommonPK.TRACKING_DISABLE, false);
-            Prefs.putBoolean(CommonPK.TRACKING_ENABLED, !old);
-            Prefs.putBoolean(CommonPK.CRASH_REPORT_ENABLED, !old);
-            Prefs.remove(CommonPK.TRACKING_DISABLE);
-        }
-    }
 
     /**
      * Never called in debug.
@@ -52,8 +41,6 @@ public abstract class BaseCommonApplication extends Application implements Threa
         Logging.init(this);
         Logging.clearLogs(this);
         if (!isDebug()) Thread.setDefaultUncaughtExceptionHandler(this);
-
-        deprecatedBackwardCompatibility();
 
         MaterialPreferences.setStorageModule(new PrefsStorageModule.Factory());
     }
