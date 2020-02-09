@@ -13,28 +13,33 @@ import androidx.fragment.app.FragmentManager;
 import com.gianlu.commonutils.ui.NightlyActivity;
 import com.gianlu.commonutils.ui.Toaster;
 
-public abstract class ActivityWithDialog extends NightlyActivity {
+public abstract class ActivityWithDialog extends NightlyActivity implements DialogUtils.ShowStuffInterface {
     private Dialog mDialog;
 
+    @Override
     public final void showDialog(@NonNull Dialog dialog) {
         mDialog = dialog;
         DialogUtils.showDialogValid(this, mDialog);
     }
 
+    @Override
     public final void showDialog(@NonNull AlertDialog.Builder dialog) {
         DialogUtils.showDialogValid(this, dialog, dialog1 -> mDialog = dialog1);
     }
 
+    @Override
     public final void showDialog(@NonNull DialogFragment dialog) {
         showDialog(dialog, null);
     }
 
+    @Override
     public final void showDialog(@NonNull DialogFragment dialog, @Nullable String tag) {
         FragmentManager manager = getSupportFragmentManager();
         dialog.show(manager, tag);
         mDialog = dialog.getDialog();
     }
 
+    @Override
     public final void showToast(@NonNull Toaster toaster) {
         toaster.show(this);
     }

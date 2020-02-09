@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.gianlu.commonutils.ui.Toaster;
 
-public abstract class FragmentWithDialog extends Fragment {
+public abstract class FragmentWithDialog extends Fragment implements DialogUtils.ShowStuffInterface {
 
     @Override
     @CallSuper
@@ -32,23 +32,28 @@ public abstract class FragmentWithDialog extends Fragment {
         return DialogUtils.hasVisibleDialog(getActivity());
     }
 
+    @Override
     public final void showDialog(@NonNull Dialog dialog) {
         DialogUtils.showDialog(getActivity(), dialog);
     }
 
+    @Override
     public final void showDialog(@NonNull AlertDialog.Builder dialog) {
         DialogUtils.showDialog(getActivity(), dialog);
     }
 
+    @Override
     public final void showToast(@NonNull Toaster toaster) {
         if (getContext() == null) return;
         toaster.show(getContext());
     }
 
+    @Override
     public final void showDialog(@NonNull DialogFragment dialog) {
         showDialog(dialog, null);
     }
 
+    @Override
     public final void showDialog(@NonNull DialogFragment fragment, @Nullable String tag) {
         DialogUtils.showDialog(getActivity(), fragment, tag);
     }

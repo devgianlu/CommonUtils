@@ -107,4 +107,16 @@ public final class DialogUtils {
         @UiThread
         void created(@NonNull Dialog dialog);
     }
+
+    public interface ShowStuffInterface {
+        void showDialog(@NonNull Dialog dialog);
+
+        void showDialog(@NonNull AlertDialog.Builder dialog);
+
+        void showDialog(@NonNull DialogFragment dialog);
+
+        void showDialog(@NonNull DialogFragment dialog, @Nullable String tag);
+
+        void showToast(@NonNull Toaster toaster);
+    }
 }
