@@ -44,11 +44,13 @@ public abstract class ActivityWithDialog extends NightlyActivity implements Dial
         toaster.show(this);
     }
 
+    @Override
     public final void dismissDialog() {
         if (mDialog != null) mDialog.dismiss();
         mDialog = null;
     }
 
+    @Override
     public final void showProgress(@StringRes int res) {
         showDialog(DialogUtils.progressDialog(this, res));
     }

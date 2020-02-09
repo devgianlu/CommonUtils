@@ -24,6 +24,7 @@ public abstract class FragmentWithDialog extends Fragment implements DialogUtils
             throw new IllegalStateException("Parent activity isn't instance of ActivityWithDialog!");
     }
 
+    @Override
     public final void dismissDialog() {
         DialogUtils.dismissDialog(getActivity());
     }
@@ -58,6 +59,7 @@ public abstract class FragmentWithDialog extends Fragment implements DialogUtils
         DialogUtils.showDialog(getActivity(), fragment, tag);
     }
 
+    @Override
     public final void showProgress(@StringRes int res) {
         if (getContext() == null) return;
         showDialog(DialogUtils.progressDialog(getContext(), res));

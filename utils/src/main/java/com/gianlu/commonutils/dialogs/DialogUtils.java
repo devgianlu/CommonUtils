@@ -118,5 +118,9 @@ public final class DialogUtils {
         void showDialog(@NonNull DialogFragment dialog, @Nullable String tag);
 
         void showToast(@NonNull Toaster toaster);
+
+        void showProgress(@StringRes int res);
+
+        void dismissDialog();
     }
 }
