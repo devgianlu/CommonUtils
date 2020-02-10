@@ -9,7 +9,8 @@
         android:id="@+id/loadableContent_scrim"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80ffffff"
+        android:alpha="0.56"
+        android:background="?colorSurface"
         android:clickable="true"
         android:focusable="true" />
 
