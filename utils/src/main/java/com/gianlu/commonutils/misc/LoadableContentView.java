@@ -21,6 +21,7 @@ public class LoadableContentView extends FrameLayout {
     private static final int DEFAULT_ANIMATION_DURATION = 500;
     private final ProgressBar loading;
     private final View scrim;
+    private final float initialAlpha;
     private volatile boolean inflating;
     private AlertDialog attachedDialog;
 
@@ -41,15 +42,16 @@ public class LoadableContentView extends FrameLayout {
 
         scrim = findViewById(R.id.loadableContent_scrim);
         loading = findViewById(R.id.loadableContent_loading);
+        initialAlpha = scrim.getAlpha();
         notLoading(false);
     }
 
-    private static void animate(@NonNull View view, boolean disappear) {
+    private static void animate(@NonNull View view, float initialAlpha, boolean disappear) {
         Animation animation;
         if (disappear) {
-            view.setAlpha(1f);
+            view.setAlpha(initialAlpha);
             view.setVisibility(VISIBLE);
-            animation = new AlphaAnimation(1f, 0f);
+            animation = new AlphaAnimation(initialAlpha, 0f);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -67,7 +69,7 @@ public class LoadableContentView extends FrameLayout {
         } else {
             view.setAlpha(0f);
             view.setVisibility(VISIBLE);
-            animation = new AlphaAnimation(0f, 1f);
+            animation = new AlphaAnimation(0f, initialAlpha);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -75,7 +77,7 @@ public class LoadableContentView extends FrameLayout {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    view.setAlpha(1f);
+                    view.setAlpha(initialAlpha);
                 }
 
                 @Override
@@ -129,8 +131,8 @@ public class LoadableContentView extends FrameLayout {
         if (attachedDialog != null) toggleButtons(attachedDialog, true);
 
         if (animate) {
-            animate(scrim, true);
-            animate(loading, true);
+            animate(scrim, initialAlpha, true);
+            animate(loading, 1, true);
         } else {
             scrim.setVisibility(GONE);
             loading.setVisibility(GONE);
@@ -141,8 +143,8 @@ public class LoadableContentView extends FrameLayout {
         if (attachedDialog != null) toggleButtons(attachedDialog, false);
 
         if (animate) {
-            animate(scrim, false);
-            animate(loading, false);
+            animate(scrim, initialAlpha, false);
+            animate(loading, 1, false);
         } else {
             scrim.setVisibility(VISIBLE);
             loading.setVisibility(VISIBLE);
