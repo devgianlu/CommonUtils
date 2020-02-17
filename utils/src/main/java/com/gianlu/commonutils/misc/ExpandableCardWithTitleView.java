@@ -16,7 +16,6 @@ import androidx.cardview.widget.CardView;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.typography.FontsManager;
 
 public class ExpandableCardWithTitleView extends CardView {
     private final LinearLayout layout;
@@ -44,8 +43,6 @@ public class ExpandableCardWithTitleView extends CardView {
         title = titleLayout.findViewById(R.id.expandableCardViewTitle_title);
         toggle = titleLayout.findViewById(R.id.expandableCardViewTitle_toggle);
         layout.addView(titleLayout);
-
-        FontsManager.set(FontsManager.ROBOTO_BOLD, title);
     }
 
     @Override

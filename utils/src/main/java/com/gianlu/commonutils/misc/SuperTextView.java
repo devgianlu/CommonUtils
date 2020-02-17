@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.FontRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -89,8 +90,8 @@ public class SuperTextView extends MaterialTextView {
         });
     }
 
-    public void setTypeface(@NonNull @FontsManager.Font String path) {
-        FontsManager.set(path, this);
+    public void setTypeface(@FontRes int res) {
+        FontsManager.set(res, this);
     }
 
     public static class Builder {
@@ -130,8 +131,8 @@ public class SuperTextView extends MaterialTextView {
             return this;
         }
 
-        public Builder typeface(@NonNull @FontsManager.Font String path) {
-            view.setTypeface(path);
+        public Builder typeface(@FontRes int res) {
+            view.setTypeface(res);
             return this;
         }
 

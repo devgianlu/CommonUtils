@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.typography.FontsManager;
 
 import java.util.List;
 
@@ -143,7 +142,6 @@ public final class MenuItemsAdapter<E extends Enum> extends RecyclerView.Adapter
 
             icon = itemView.findViewById(R.id.drawerItem_icon);
             name = itemView.findViewById(R.id.drawerItem_name);
-            FontsManager.set(FontsManager.ROBOTO_BOLD, name);
             badge = itemView.findViewById(R.id.drawerItem_badge);
         }
     }
