@@ -26,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +47,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -69,6 +74,56 @@ import java.util.zip.ZipOutputStream;
 public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
+
+    public static void setPaddingDip(@NonNull View view, @Nullable Integer left, @Nullable Integer top, @Nullable Integer right, @Nullable Integer bottom) {
+        int _left = left == null ? view.getPaddingLeft() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, left, view.getResources().getDisplayMetrics());
+        int _top = top == null ? view.getPaddingTop() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, top, view.getResources().getDisplayMetrics());
+        int _right = right == null ? view.getPaddingRight() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, right, view.getResources().getDisplayMetrics());
+        int _bottom = bottom == null ? view.getPaddingBottom() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, bottom, view.getResources().getDisplayMetrics());
+        view.setPadding(_left, _top, _right, _bottom);
+    }
+
+    public static void hideViewAndLabel(@NonNull View view) {
+        view.setVisibility(View.GONE);
+        View label = findLabel(view);
+        if (label != null) label.setVisibility(View.GONE);
+    }
+
+    public static void showViewAndLabel(@NonNull View view) {
+        view.setVisibility(View.VISIBLE);
+        View label = findLabel(view);
+        if (label != null) label.setVisibility(View.VISIBLE);
+    }
+
+    public static View findLabel(@NonNull View view) {
+        int viewId = view.getId();
+        if (!(view.getParent() instanceof ViewGroup)) return null;
+
+        ViewGroup parent = (ViewGroup) view.getParent();
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            if (parent.getChildAt(i).getLabelFor() == view.getId())
+                return parent.getChildAt(i);
+        }
+
+        return null;
+    }
+
+    public static void showPopupOffset(@NonNull PopupMenu menu, int xoff, int yoff) {
+        try {
+            Field field = menu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+
+            MenuPopupHelper helper = (MenuPopupHelper) field.get(menu);
+            if (helper == null) throw new IllegalStateException();
+
+            Method method = helper.getClass().getDeclaredMethod("show", int.class, int.class);
+            method.setAccessible(true);
+
+            method.invoke(helper, xoff, yoff);
+        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 
     @Nullable
     public static String optString(@NonNull JSONObject obj, @NonNull String key) {
