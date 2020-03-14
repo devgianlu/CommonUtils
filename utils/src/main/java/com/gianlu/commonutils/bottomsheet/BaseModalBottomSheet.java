@@ -86,7 +86,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         bottomSheet.setBackgroundColor(Color.TRANSPARENT);
 
         behavior = BottomSheetBehavior.from(bottomSheet);
-        behavior.setBottomSheetCallback(prepareCallback());
+        behavior.addBottomSheetCallback(prepareCallback());
         attachedBehavior(bottomSheet.getContext(), behavior);
     }
 
