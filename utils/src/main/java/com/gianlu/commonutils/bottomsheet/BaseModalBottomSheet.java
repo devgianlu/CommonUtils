@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.gianlu.commonutils.R;
@@ -186,6 +187,13 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
         this.payload = payload;
         DialogUtils.showDialog(activity, this, null);
+    }
+
+    public final void show(@Nullable Fragment fragment, @NonNull Setup payload) {
+        if (fragment == null) return;
+
+        this.payload = payload;
+        DialogUtils.showDialog(fragment, this, null);
     }
 
     public void isLoading(boolean set) {

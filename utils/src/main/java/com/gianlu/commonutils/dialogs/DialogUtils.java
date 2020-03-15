@@ -13,6 +13,7 @@ import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -40,6 +41,17 @@ public final class DialogUtils {
         if (activity == null) return;
 
         FragmentManager manager = activity.getSupportFragmentManager();
+        try {
+            dialog.show(manager, tag);
+        } catch (IllegalStateException ex) {
+            Logging.log(ex); // We can't do nothing
+        }
+    }
+
+    public static void showDialog(@Nullable Fragment fragment, @NonNull DialogFragment dialog, @Nullable String tag) {
+        if (fragment == null) return;
+
+        FragmentManager manager = fragment.getChildFragmentManager();
         try {
             dialog.show(manager, tag);
         } catch (IllegalStateException ex) {
