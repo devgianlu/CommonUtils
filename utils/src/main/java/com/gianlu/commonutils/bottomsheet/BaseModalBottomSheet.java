@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -31,9 +32,9 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     private FloatingActionButton action;
     private ModalBottomSheetHeaderView header;
     private FrameLayout body;
-    private FrameLayout bodyNoScroll;
     private ProgressBar loading;
     private boolean hasNoScroll = false;
+    private boolean hasBody = true;
     private Setup payload;
     private int lastHeaderEndPadding = -1;
     private CoordinatorLayout layout;
@@ -76,10 +77,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         Window window = getDialog().getWindow();
         if (window != null) {
             bottomSheet = window.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            if (bottomSheet == null)
-                window.getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new AttachCallbackTreeObserver());
-            else
-                attachCustomCallback(bottomSheet);
+            window.getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new AttachCallbackTreeObserver());
         }
     }
 
@@ -135,6 +133,14 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         setStyle(STYLE_NORMAL, R.style.TransparentBottomSheetTheme);
     }
 
+    protected void setHasBody(boolean hasBody) {
+        this.hasBody = hasBody;
+    }
+
+    protected void setDraggable(boolean draggable) {
+        if (behavior != null) behavior.setDraggable(draggable);
+    }
+
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (payload == null) {
@@ -153,15 +159,21 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
         header = layout.findViewById(R.id.modalBottomSheet_header);
         body = layout.findViewById(R.id.modalBottomSheet_body);
-        bodyNoScroll = layout.findViewById(R.id.modalBottomSheet_bodyNoScroll);
         loading = layout.findViewById(R.id.modalBottomSheet_loading);
         action = layout.findViewById(R.id.modalBottomSheet_action);
 
         onCreateHeader(inflater, header, payload);
         onCreateBody(inflater, body, payload);
 
+        NestedScrollView scrollable = layout.findViewById(R.id.modalBottomSheet_scrollable);
+        scrollable.setVisibility(hasBody ? View.VISIBLE : View.GONE);
+
+        FrameLayout bodyNoScroll = layout.findViewById(R.id.modalBottomSheet_bodyNoScroll);
         hasNoScroll = onCreateNoScrollBody(inflater, bodyNoScroll, payload);
         bodyNoScroll.setVisibility(hasNoScroll ? View.VISIBLE : View.GONE);
+
+        if (!hasBody && !hasNoScroll)
+            throw new IllegalStateException();
 
         invalidateAction();
         header.setCloseOnClickListener(v -> dismiss());
