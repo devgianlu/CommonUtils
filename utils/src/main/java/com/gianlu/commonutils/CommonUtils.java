@@ -116,12 +116,23 @@ public final class CommonUtils {
             MenuPopupHelper helper = (MenuPopupHelper) field.get(menu);
             if (helper == null) throw new IllegalStateException();
 
-            Method method = helper.getClass().getDeclaredMethod("show", int.class, int.class);
-            method.setAccessible(true);
+            Method method;
+            try {
+                method = helper.getClass().getDeclaredMethod("show", int.class, int.class);
+                method.setAccessible(true);
+            } catch (NoSuchMethodException ex) {
+                try {
+                    method = helper.getClass().getDeclaredMethod("tryShow", int.class, int.class);
+                    method.setAccessible(true);
+                } catch (NoSuchMethodException exx) {
+                    menu.show();
+                    return;
+                }
+            }
 
             method.invoke(helper, xoff, yoff);
-        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-            throw new IllegalStateException(ex);
+        } catch (NoSuchFieldException | IllegalAccessException | InvocationTargetException ignored) {
+            menu.show();
         }
     }
 
