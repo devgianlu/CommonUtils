@@ -80,8 +80,12 @@ public final class LogsHelper {
 
     public static boolean exportLogFiles(@NonNull Context context, @NonNull Intent intent) {
         try {
+            File parent = new File(context.getCacheDir(), "logs");
+            if (!parent.exists() && !parent.mkdir())
+                return false;
+
             Process process = Runtime.getRuntime().exec("logcat -d");
-            File file = new File(context.getCacheDir(), "logs-" + System.currentTimeMillis() + ".txt");
+            File file = new File(parent, "logs-" + System.currentTimeMillis() + ".txt");
             try (FileOutputStream out = new FileOutputStream(file, false)) {
                 CommonUtils.copy(process.getInputStream(), out);
             } finally {
@@ -91,7 +95,6 @@ public final class LogsHelper {
             Uri uri = FileProvider.getUriForFile(context, "com.gianlu.commonutils.logs", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
-            intent.setType("text/plain");
             return true;
         } catch (IllegalArgumentException | IOException ex) {
             Log.e(TAG, "Failed exporting logs.", ex);

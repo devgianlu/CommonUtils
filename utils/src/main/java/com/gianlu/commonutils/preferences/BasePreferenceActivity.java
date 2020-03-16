@@ -234,6 +234,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                                     return;
                                 }
 
+                                shareIntent.setType("text/plain");
                                 startActivity(Intent.createChooser(shareIntent, getString(R.string.exportLogFiles)));
                             })
                             .build())

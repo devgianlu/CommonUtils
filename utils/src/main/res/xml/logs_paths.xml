@@ -2,15 +2,7 @@
 <paths>
     <files-path
         name="logs"
-        path="." />
-
-    <files-path
-        name="logs"
         path="logs/" />
-
-    <cache-path
-        name="logs"
-        path="." />
 
     <cache-path
         name="logs"
