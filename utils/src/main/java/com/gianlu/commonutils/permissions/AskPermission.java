@@ -3,6 +3,7 @@ package com.gianlu.commonutils.permissions;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -13,7 +14,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.gianlu.commonutils.dialogs.DialogUtils;
-import com.gianlu.commonutils.logging.Logging;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -42,6 +42,8 @@ public final class AskPermission {
         }
     }
 
+    private static final String TAG = AskPermission.class.getSimpleName();
+
     private static void request(@NonNull FragmentActivity activity, @NonNull String permission, @NonNull Listener listener) {
         int code = ThreadLocalRandom.current().nextInt(32);
         PhantomFragment fragment = PhantomFragment.get(listener, permission, code);
@@ -52,7 +54,7 @@ public final class AskPermission {
                     .add(fragment, PHANTOM_TAG + code)
                     .commitNow();
         } catch (IllegalStateException ex) {
-            Logging.log(ex);
+            Log.w(TAG, ex);
         }
     }
 
@@ -105,7 +107,7 @@ public final class AskPermission {
                             .commitAllowingStateLoss();
                 }
             } catch (IllegalStateException ex) {
-                Logging.log(ex);
+                Log.w(TAG, ex);
             }
         }
     }

@@ -1,12 +1,12 @@
 package com.gianlu.commonutils.preferences;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.logging.Logging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +29,8 @@ class Translators extends ArrayList<Translators.Item> {
             add(new Item(array.getJSONObject(i)));
     }
 
+    private static final String TAG = Translators.class.getSimpleName();
+
     @NonNull
     public static Translators load(@NonNull Context context) {
         if (instance != null) return instance;
@@ -39,7 +41,7 @@ class Translators extends ArrayList<Translators.Item> {
             JSONArray array = new JSONArray(CommonUtils.readEntirely(context.getResources().openRawResource(R.raw.translators)));
             return instance = new Translators(array);
         } catch (JSONException | IOException | RuntimeException ex) {
-            Logging.log("Failed parsing translators!", ex);
+            Log.w(TAG, "Failed parsing translators!", ex);
             return new Translators();
         }
     }

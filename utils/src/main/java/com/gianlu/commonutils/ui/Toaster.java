@@ -3,6 +3,7 @@ package com.gianlu.commonutils.ui;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,16 +12,14 @@ import androidx.annotation.StringRes;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.dialogs.DialogUtils;
-import com.gianlu.commonutils.logging.Logging;
 
 public final class Toaster {
     private final static Handler handler = new Handler(Looper.getMainLooper());
+    private static final String TAG = Toaster.class.getSimpleName();
     private final Context context;
     private String msg;
     private int msgRes;
     private Object[] args;
-    private Throwable ex;
-    private boolean error;
     private Object extra;
     private boolean shown = false;
 
@@ -64,17 +63,6 @@ public final class Toaster {
         return this;
     }
 
-    public Toaster ex(Throwable ex) {
-        this.ex = ex;
-        this.error = true;
-        return this;
-    }
-
-    public Toaster error(boolean error) {
-        this.error = error;
-        return this;
-    }
-
     public void show() {
         if (context == null) throw new IllegalStateException("Missing context instance!");
         show(context);
@@ -103,7 +91,7 @@ public final class Toaster {
         }
 
         final int duration;
-        if (error || msg.length() > 48) duration = Toast.LENGTH_LONG;
+        if (msg.length() > 48) duration = Toast.LENGTH_LONG;
         else duration = Toast.LENGTH_SHORT;
 
         Runnable action = () -> {
@@ -114,15 +102,13 @@ public final class Toaster {
         if (Looper.myLooper() == Looper.getMainLooper()) action.run();
         else handler.post(action);
 
-        Logging.log(buildLogMessage(context), ex != null);
-        if (ex != null) Logging.log(ex);
-
+        Log.v(TAG, buildLogMessage(context));
         shown = true;
     }
 
     @NonNull
     private String buildLogMessage(@NonNull Context ctx) {
-        return "Toaster{context=" + ctx + ", msg='" + msg + "\', error=" + error + ", extra=" + extra + '}';
+        return "Toaster{context=" + ctx + ", msg='" + msg + "', extra=" + extra + '}';
     }
 
     @Override

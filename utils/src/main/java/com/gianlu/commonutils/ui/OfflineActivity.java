@@ -13,7 +13,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.dialogs.ActivityWithDialog;
-import com.gianlu.commonutils.logging.Logging;
+import com.gianlu.commonutils.logs.LogsHelper;
 
 public class OfflineActivity extends ActivityWithDialog {
 
@@ -39,7 +39,7 @@ public class OfflineActivity extends ActivityWithDialog {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         Button email = findViewById(R.id.offline_email);
-        email.setOnClickListener(v -> Logging.sendEmail(OfflineActivity.this, null));
+        email.setOnClickListener(v -> LogsHelper.sendEmail(this, null));
 
         Button offline = findViewById(R.id.offline_retry);
         final Class<?> retryClass = (Class) getIntent().getSerializableExtra("retry");

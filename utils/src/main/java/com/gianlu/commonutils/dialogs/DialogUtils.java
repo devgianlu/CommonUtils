@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +18,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.gianlu.commonutils.logging.Logging;
 import com.gianlu.commonutils.ui.Toaster;
 
 
 public final class DialogUtils {
     private static final Handler handler = new Handler(Looper.getMainLooper());
+    private static final String TAG = DialogUtils.class.getSimpleName();
 
     private DialogUtils() {
     }
@@ -44,7 +45,7 @@ public final class DialogUtils {
         try {
             dialog.show(manager, tag);
         } catch (IllegalStateException ex) {
-            Logging.log(ex); // We can't do nothing
+            Log.e(TAG, "Failed showing dialog.", ex); // We can't do nothing
         }
     }
 
@@ -55,7 +56,7 @@ public final class DialogUtils {
         try {
             dialog.show(manager, tag);
         } catch (IllegalStateException ex) {
-            Logging.log(ex); // We can't do nothing
+            Log.e(TAG, "Failed showing dialog.", ex); // We can't do nothing
         }
     }
 

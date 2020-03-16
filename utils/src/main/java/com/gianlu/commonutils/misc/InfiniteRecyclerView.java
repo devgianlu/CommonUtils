@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.R;
-import com.gianlu.commonutils.logging.Logging;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,6 +69,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         static final int ITEM_LOADING = 0;
         static final int ITEM_NORMAL = 1;
         static final int ITEM_SEPARATOR = 2;
+        private static final String TAG = InfiniteAdapter.class.getSimpleName();
         protected final LayoutInflater inflater;
         protected final List<ItemEnclosure<E>> items;
         private final Handler handler;
@@ -250,9 +251,9 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
 
                 @Override
                 public void onFailed(@NonNull Exception ex) {
+                    Log.d(TAG, "Failed loading more.", ex);
                     if (listener != null && config.maxPages != UNDETERMINED_PAGES)
                         listener.onFailedLoadingContent(ex);
-                    Logging.log(ex);
 
                     handler.post(() -> {
                         if (items.get(items.size() - 1) == null) {

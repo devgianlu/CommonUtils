@@ -10,12 +10,6 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application>
-
-        <!-- Logs activity -->
-        <activity
-            android:name=".logging.LogsActivity"
-            android:configChanges="uiMode" />
-
         <!-- Uncaught exception activity -->
         <activity
             android:name=".analytics.UncaughtExceptionActivity"
@@ -27,5 +21,16 @@
             android:name=".ui.OfflineActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
             android:theme="@style/FullscreenTheme"  />
+
+        <!-- Logs provider -->
+        <provider
+            android:name="com.gianlu.commonutils.logs.LogsFileProvider"
+            android:authorities="com.gianlu.commonutils.logs"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/logs_paths" />
+        </provider>
     </application>
 </manifest>

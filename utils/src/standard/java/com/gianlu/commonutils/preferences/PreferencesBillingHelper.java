@@ -3,6 +3,7 @@ package com.gianlu.commonutils.preferences;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,7 +28,6 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.dialogs.DialogUtils;
-import com.gianlu.commonutils.logging.Logging;
 import com.gianlu.commonutils.ui.Toaster;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PreferencesBillingHelper {
+    private static final String TAG = PreferencesBillingHelper.class.getSimpleName();
     private final Object billingReady = new Object();
     private final Listener listener;
     private final List<String> products;
@@ -121,7 +122,7 @@ public class PreferencesBillingHelper {
                             billingReady.wait();
                             donate(activity, true);
                         } catch (InterruptedException ex) {
-                            Logging.log(ex);
+                            Log.w(TAG, ex);
                         }
                     }
                 }

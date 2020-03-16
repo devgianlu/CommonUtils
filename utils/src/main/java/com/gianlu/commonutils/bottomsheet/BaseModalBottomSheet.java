@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.dialogs.DialogUtils;
-import com.gianlu.commonutils.logging.Logging;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -144,7 +143,6 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (payload == null) {
-            Logging.log(new NullPointerException("Payload is null!"));
             dismissAllowingStateLoss();
             return null;
         }

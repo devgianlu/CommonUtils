@@ -10,5 +10,9 @@
 
     <cache-path
         name="logs"
+        path="." />
+
+    <cache-path
+        name="logs"
         path="logs/" />
 </paths>

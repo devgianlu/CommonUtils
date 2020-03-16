@@ -1,8 +1,8 @@
 package com.gianlu.commonutils.preferences.json;
 
-import androidx.annotation.NonNull;
+import android.util.Log;
 
-import com.gianlu.commonutils.logging.Logging;
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 final class FileJsonStoring extends JsonStoring {
+    private static final String TAG = FileJsonStoring.class.getSimpleName();
     private final File file;
     private final JSONObject obj;
 
@@ -36,7 +37,7 @@ final class FileJsonStoring extends JsonStoring {
 
             return new JSONObject(builder.toString());
         } catch (IOException | JSONException ex) {
-            Logging.log(ex);
+            Log.e(TAG, "Failed loading JSON.", ex);
             return new JSONObject();
         }
     }
@@ -45,7 +46,7 @@ final class FileJsonStoring extends JsonStoring {
         try (FileOutputStream out = new FileOutputStream(file)) {
             out.write(obj.toString().getBytes());
         } catch (IOException ex) {
-            Logging.log(ex);
+            Log.e(TAG, "Failed saving JSON.", ex);
         }
     }
 

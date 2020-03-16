@@ -2,10 +2,9 @@ package com.gianlu.commonutils.network;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
-
-import com.gianlu.commonutils.logging.Logging;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,6 +13,7 @@ import java.net.URL;
 import java.util.Locale;
 
 public final class ConnectivityChecker {
+    private static final String TAG = ConnectivityChecker.class.getSimpleName();
     private static URLProvider provider;
     private static String userAgent = "Android (ConnectivityChecker; devgianlu)";
 
@@ -51,7 +51,7 @@ public final class ConnectivityChecker {
             conn.disconnect();
             return a;
         } catch (IOException ex) {
-            Logging.log(ex);
+            Log.w(TAG, ex);
             return !shouldTryDotCom && checkInternal(true);
         }
     }

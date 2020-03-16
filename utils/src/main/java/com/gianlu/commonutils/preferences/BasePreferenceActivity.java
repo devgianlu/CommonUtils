@@ -25,8 +25,7 @@ import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.analytics.AnalyticsPreferenceDialog;
 import com.gianlu.commonutils.dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.dialogs.DialogUtils;
-import com.gianlu.commonutils.logging.Logging;
-import com.gianlu.commonutils.logging.LogsActivity;
+import com.gianlu.commonutils.logs.LogsHelper;
 import com.gianlu.commonutils.tutorial.TutorialManager;
 import com.gianlu.commonutils.ui.Toaster;
 import com.yarolegovich.mp.MaterialStandardPreference;
@@ -42,7 +41,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         try {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri)));
         } catch (ActivityNotFoundException ex) {
-            Toaster.with(context).message(R.string.missingWebBrowser).ex(ex).show();
+            Toaster.with(context).message(R.string.missingWebBrowser).show();
         }
     }
 
@@ -188,7 +187,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                             .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
                     .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, () -> openLink(context, "https://gianlu.xyz")))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> Logging.sendEmail(context, null)));
+                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> LogsHelper.sendEmail(context, null)));
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {
@@ -221,30 +220,23 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             MaterialAboutCard logs = new MaterialAboutCard.Builder()
                     .title(R.string.logs)
                     .addItem(new MaterialAboutActionItem.Builder()
-                            .icon(R.drawable.baseline_announcement_24)
-                            .text(R.string.logs)
-                            .setOnClickAction(() -> startActivity(new Intent(context, LogsActivity.class))).build())
+                            .icon(R.drawable.baseline_mail_24)
+                            .text(R.string.send_email)
+                            .setOnClickAction(() -> LogsHelper.sendEmail(context, null))
+                            .build())
                     .addItem(new MaterialAboutActionItem.Builder()
                             .icon(R.drawable.baseline_share_24)
                             .text(R.string.exportLogFiles)
                             .setOnClickAction(() -> {
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                                if (!Logging.exportLogFiles(context, shareIntent)) {
+                                if (!LogsHelper.exportLogFiles(context, shareIntent)) {
                                     DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.noLogs));
                                     return;
                                 }
 
-                                shareIntent.setType("application/zip");
                                 startActivity(Intent.createChooser(shareIntent, getString(R.string.exportLogFiles)));
                             })
                             .build())
-                    .addItem(new MaterialAboutActionItem.Builder()
-                            .icon(R.drawable.baseline_delete_24)
-                            .text(R.string.deleteAllLogs)
-                            .setOnClickAction(() -> {
-                                Logging.deleteAllLogs(context);
-                                DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.logDeleted));
-                            }).build())
                     .build();
 
             MaterialAboutCard.Builder donateBuilder = new MaterialAboutCard.Builder()
