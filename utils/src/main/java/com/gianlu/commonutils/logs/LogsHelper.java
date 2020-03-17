@@ -92,7 +92,7 @@ public final class LogsHelper {
                 process.destroy();
             }
 
-            Uri uri = FileProvider.getUriForFile(context, "com.gianlu.commonutils.logs", file);
+            Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".logs", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             return true;
