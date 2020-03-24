@@ -108,6 +108,10 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     }
 
     public final void itemChangedOrAdded(@NonNull E payload) {
+        itemChangedOrAdded(payload, false);
+    }
+
+    private void itemChangedOrAdded(@NonNull E payload, boolean internal) {
         int posIntoOriginal = originalObjs.indexOf(payload);
         if (posIntoOriginal == -1) originalObjs.add(payload);
         else originalObjs.set(posIntoOriginal, payload);
@@ -127,6 +131,8 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
                 super.notifyItemRemoved(posIntoObjs);
             }
         }
+
+        if (!internal) shouldUpdateItemCount(objs.size());
     }
 
     public final void removeItem(E item) {
@@ -144,7 +150,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
             if (!items.contains(obj))
                 removeItem(obj);
 
-        for (E item : items) itemChangedOrAdded(item);
+        for (E item : items) itemChangedOrAdded(item, true);
 
         shouldUpdateItemCount(objs.size());
     }
