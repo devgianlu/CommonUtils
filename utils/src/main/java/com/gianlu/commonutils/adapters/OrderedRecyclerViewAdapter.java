@@ -145,14 +145,17 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         }
     }
 
+    public final void itemsAdded(List<E> items) {
+        for (E item : items) itemChangedOrAdded(item, true);
+        shouldUpdateItemCount(objs.size());
+    }
+
     public final void itemsChanged(List<E> items) {
         for (E obj : new ArrayList<>(originalObjs))
             if (!items.contains(obj))
                 removeItem(obj);
 
-        for (E item : items) itemChangedOrAdded(item, true);
-
-        shouldUpdateItemCount(objs.size());
+        itemsAdded(items);
     }
 
     public final void setFilters(@NonNull List<F> newFilters) {
