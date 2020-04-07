@@ -195,7 +195,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                         () -> openLink(context, openSourceUrl)));
             }
 
-            if (FossUtils.hasCrashlytics() || FossUtils.hasFirebaseAnalytics()) {
+            if (FossUtils.hasFirebaseAnalytics() || FossUtils.hasFirebaseAnalytics()) {
                 developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, () ->
                         AnalyticsPreferenceDialog.get().show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG)));
             }

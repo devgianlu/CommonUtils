@@ -14,9 +14,9 @@ public final class FossUtils {
         }
     }
 
-    public static boolean hasCrashlytics() {
+    public static boolean hasFirebaseCrashlytics() {
         try {
-            Class.forName("com.crashlytics.android.Crashlytics");
+            Class.forName("com.google.firebase.crashlytics.FirebaseCrashlytics");
             return true;
         } catch (ClassNotFoundException ex) {
             return false;

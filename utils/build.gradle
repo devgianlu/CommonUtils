@@ -36,7 +36,7 @@ android {
 dependencies {
     standardApi 'com.android.billingclient:billing:2.2.0'
     standardApi 'com.google.firebase:firebase-analytics:17.3.0'
-    standardApi 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    standardApi 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
 
     api 'com.github.devgianlu.MaterialPreferences:library:cd9afd9959'
     api 'me.toptas.fancyshowcase:fancyshowcaseview:1.2.1'

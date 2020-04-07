@@ -6,11 +6,11 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.crashlytics.android.Crashlytics;
 import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.preferences.CommonPK;
 import com.gianlu.commonutils.preferences.Prefs;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.UUID;
 
@@ -27,23 +27,23 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
-        if (CRASHLYTICS_ENABLED) Crashlytics.setString(key, val);
+        if (CRASHLYTICS_ENABLED) FirebaseCrashlytics.getInstance().setCustomKey(key, val);
     }
 
     public static void setCrashlyticsInt(@NonNull String key, int val) {
-        if (CRASHLYTICS_ENABLED) Crashlytics.setInt(key, val);
+        if (CRASHLYTICS_ENABLED) FirebaseCrashlytics.getInstance().setCustomKey(key, val);
     }
 
     public static void setCrashlyticsLong(@NonNull String key, long val) {
-        if (CRASHLYTICS_ENABLED) Crashlytics.setLong(key, val);
+        if (CRASHLYTICS_ENABLED) FirebaseCrashlytics.getInstance().setCustomKey(key, val);
     }
 
     public static void setCrashlyticsBool(@NonNull String key, boolean val) {
-        if (CRASHLYTICS_ENABLED) Crashlytics.setBool(key, val);
+        if (CRASHLYTICS_ENABLED) FirebaseCrashlytics.getInstance().setCustomKey(key, val);
     }
 
     public static void crashlyticsLog(@NonNull String msg) {
-        if (CRASHLYTICS_ENABLED) Crashlytics.log(msg);
+        if (CRASHLYTICS_ENABLED) FirebaseCrashlytics.getInstance().log(msg);
     }
 
     @Override
@@ -57,9 +57,9 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
             Prefs.putString(CommonPK.ANALYTICS_USER_ID, uuid);
         }
 
-        if (FossUtils.hasCrashlytics()) {
+        if (FossUtils.hasFirebaseCrashlytics()) {
             if (Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED)) {
-                Crashlytics.setUserIdentifier(uuid);
+                FirebaseCrashlytics.getInstance().setUserId(uuid);
                 CRASHLYTICS_ENABLED = true;
             } else {
                 CRASHLYTICS_ENABLED = false;
