@@ -167,11 +167,6 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         }
 
         @Override
-        protected int getTheme() {
-            return R.style.MaterialAbout_Default;
-        }
-
-        @Override
         public void onAttach(@NonNull Context context) {
             super.onAttach(context);
 
