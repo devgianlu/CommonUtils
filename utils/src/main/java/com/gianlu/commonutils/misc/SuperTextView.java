@@ -32,6 +32,11 @@ public class SuperTextView extends MaterialTextView {
     }
 
     @NonNull
+    public static String makeItalic(@NonNull String str) {
+        return "<i>" + str + "</i>";
+    }
+
+    @NonNull
     public static String makeBold(@NonNull String str) {
         return "<b>" + str + "</b>";
     }
