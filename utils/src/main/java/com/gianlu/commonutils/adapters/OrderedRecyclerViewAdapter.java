@@ -136,12 +136,17 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     }
 
     public final void removeItem(E item) {
+        removeItem(item, false);
+    }
+
+    private void removeItem(E item, boolean internal) {
         originalObjs.remove(item);
 
         int pos = objs.indexOf(item);
         if (pos != -1) {
             objs.remove(pos);
             super.notifyItemRemoved(pos);
+            if (!internal) shouldUpdateItemCount(objs.size());
         }
     }
 
@@ -153,7 +158,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     public final void itemsChanged(List<E> items) {
         for (E obj : new ArrayList<>(originalObjs))
             if (!items.contains(obj))
-                removeItem(obj);
+                removeItem(obj, true);
 
         itemsAdded(items);
     }
