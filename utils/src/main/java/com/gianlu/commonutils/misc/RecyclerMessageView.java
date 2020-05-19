@@ -143,4 +143,9 @@ public class RecyclerMessageView extends FrameLayout {
     public SwipeRefreshLayout swipeRefreshLayout() {
         return swipeRefresh;
     }
+
+    @NonNull
+    public MessageView message() {
+        return message;
+    }
 }

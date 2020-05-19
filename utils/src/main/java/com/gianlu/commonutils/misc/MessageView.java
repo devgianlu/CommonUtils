@@ -80,4 +80,14 @@ public class MessageView extends LinearLayout {
     public void error(@NonNull String text) {
         set(errorRes, text);
     }
+
+    @NonNull
+    public SuperTextView text() {
+        return text;
+    }
+
+    @NonNull
+    public ImageView image() {
+        return icon;
+    }
 }
