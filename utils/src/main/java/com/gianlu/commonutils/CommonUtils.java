@@ -660,6 +660,11 @@ public final class CommonUtils {
     }
 
     @NonNull
+    public static String randomString(int length, @NonNull String chars) {
+        return randomString(length, ThreadLocalRandom.current(), chars);
+    }
+
+    @NonNull
     public static String randomString(int length) {
         return randomString(length, ThreadLocalRandom.current(), LOT_OF_CHARS);
     }
