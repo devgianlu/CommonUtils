@@ -137,9 +137,15 @@ public final class CommonUtils {
     }
 
     @Nullable
-    public static String optString(@NonNull JSONObject obj, @NonNull String key) {
-        String val = obj.optString(key);
-        return val.isEmpty() ? null : val;
+    public static String optString(@NonNull JSONObject obj, @NonNull String key) throws JSONException {
+        if (!obj.has(key) || obj.isNull(key)) return null;
+        else return obj.getString(key);
+    }
+
+    @Nullable
+    public static Long optLong(@NonNull JSONObject obj, @NonNull String key) throws JSONException {
+        if (!obj.has(key) || obj.isNull(key)) return null;
+        else return obj.getLong(key);
     }
 
     private static float calculateLuminescenceRgb(@ColorInt int c) {
