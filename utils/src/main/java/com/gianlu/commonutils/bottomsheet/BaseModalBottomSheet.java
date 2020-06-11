@@ -100,6 +100,10 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
         prepareCollapsed();
     }
 
+    public final void postUpdate(@NonNull Update payload) {
+        if (getActivity() != null) getActivity().runOnUiThread(() -> update(payload));
+    }
+
     @UiThread
     public final void update(@NonNull Update payload) {
         if (getDialog() != null && getDialog().isShowing() && DialogUtils.isContextValid(getContext()))
