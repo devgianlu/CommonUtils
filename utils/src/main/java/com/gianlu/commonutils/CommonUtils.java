@@ -717,6 +717,13 @@ public final class CommonUtils {
         return obj;
     }
 
+    @NonNull
+    public static JSONObject singletonJsonObject(@NonNull String key, Number value) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put(key, value);
+        return obj;
+    }
+
     public interface ToString<T> {
         @NonNull
         String toString(@NonNull T obj);
