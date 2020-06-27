@@ -52,7 +52,7 @@ public class PreferencesBillingHelper {
             private boolean retried = false;
 
             @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingResponseCode.OK) {
                     synchronized (billingReady) {
                         billingReady.notifyAll();

@@ -45,10 +45,7 @@ public final class DrawingHelper {
     public void draw(@NonNull String letters, boolean circle, Canvas canvas) {
         int cx = canvas.getWidth() / 2;
         int cy = canvas.getHeight() / 2;
-
-        int r;
-        if (cx > cy) r = cy;
-        else r = cx;
+        int r = Math.min(cx, cy);
 
         float reduce;
         Paint lettersPaint;
