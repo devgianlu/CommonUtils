@@ -175,7 +175,10 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         }
 
         @Override
-        protected MaterialAboutList getMaterialAboutList(final Context context) {
+        @NonNull
+        protected MaterialAboutList getMaterialAboutList(Context context) {
+            if (context == null) return new MaterialAboutList();
+
             MaterialAboutCard.Builder developerBuilder = new MaterialAboutCard.Builder()
                     .title(R.string.about_app)
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
