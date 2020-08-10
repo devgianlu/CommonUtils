@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.CallSuper;
@@ -35,6 +36,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public abstract class BasePreferenceActivity extends ActivityWithDialog implements MaterialAboutPreferenceItem.Listener, PreferencesBillingHelper.Listener {
+    private static final String TAG = BasePreferenceActivity.class.getSimpleName();
     private PreferencesBillingHelper billingHelper;
 
     private static void openLink(@NonNull Context context, @NonNull String uri) {
@@ -227,8 +229,10 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                             .text(R.string.exportLogFiles)
                             .setOnClickAction(() -> {
                                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                                if (!LogsHelper.exportLogFiles(context, shareIntent)) {
+                                Exception logsException = LogsHelper.exportLogFiles(context, shareIntent);
+                                if (logsException != null) {
                                     DialogUtils.showToast(getActivity(), Toaster.build().message(R.string.noLogs));
+                                    Log.e(TAG, "Failed exporting log files.", logsException);
                                     return;
                                 }
 
