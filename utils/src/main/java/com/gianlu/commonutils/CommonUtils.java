@@ -611,9 +611,16 @@ public final class CommonUtils {
     }
 
     @NonNull
-    public static Integer[] toIntsList(String str, String separator) throws NumberFormatException {
+    public static long[] toLongsList(@NonNull JSONArray array) throws JSONException {
+        long[] longs = new long[array.length()];
+        for (int i = 0; i < array.length(); i++) longs[i] = array.getLong(i);
+        return longs;
+    }
+
+    @NonNull
+    public static int[] toIntsList(@NonNull String str, String separator) throws NumberFormatException {
         String[] split = str.split(separator);
-        Integer[] ints = new Integer[split.length];
+        int[] ints = new int[split.length];
         for (int i = 0; i < split.length; i++) ints[i] = Integer.parseInt(split[i].trim());
         return ints;
     }
