@@ -6,6 +6,7 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.FossUtils;
 import com.gianlu.commonutils.preferences.CommonPK;
 import com.gianlu.commonutils.preferences.Prefs;
@@ -58,7 +59,7 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
         }
 
         if (FossUtils.hasFirebaseCrashlytics()) {
-            if (Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED)) {
+            if (Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED) && !CommonUtils.isDebug()) {
                 FirebaseCrashlytics.getInstance().setUserId(uuid);
                 CRASHLYTICS_ENABLED = true;
             } else {
@@ -70,7 +71,7 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
 
         if (FossUtils.hasFirebaseAnalytics()) {
             ANALYTICS = FirebaseAnalytics.getInstance(this);
-            if (Prefs.getBoolean(CommonPK.TRACKING_ENABLED)) {
+            if (Prefs.getBoolean(CommonPK.TRACKING_ENABLED) && !CommonUtils.isDebug()) {
                 ANALYTICS.setUserId(uuid);
                 ANALYTICS.setAnalyticsCollectionEnabled(true);
             } else {
