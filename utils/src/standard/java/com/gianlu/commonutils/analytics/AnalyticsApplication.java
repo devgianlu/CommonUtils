@@ -60,9 +60,11 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
 
         if (FossUtils.hasFirebaseCrashlytics()) {
             if (Prefs.getBoolean(CommonPK.CRASH_REPORT_ENABLED) && !CommonUtils.isDebug()) {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
                 FirebaseCrashlytics.getInstance().setUserId(uuid);
                 CRASHLYTICS_ENABLED = true;
             } else {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
                 CRASHLYTICS_ENABLED = false;
             }
         } else {
