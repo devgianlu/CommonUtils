@@ -140,6 +140,10 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
 
     protected abstract boolean disableOtherDonationsOnGooglePlay();
 
+    protected boolean disableUsageStatisticsToggle() {
+        return false;
+    }
+
     public static class TranslatorsFragment extends BasePreferenceFragment {
 
         @Override
@@ -195,7 +199,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                         () -> openLink(context, openSourceUrl)));
             }
 
-            if (FossUtils.hasFirebaseAnalytics() || FossUtils.hasFirebaseAnalytics()) {
+            if ((FossUtils.hasFirebaseAnalytics() || FossUtils.hasFirebaseAnalytics()) && !parent.disableUsageStatisticsToggle()) {
                 developerBuilder.addItem(new MaterialAboutActionItem(R.string.prefs_usageStatistics, R.string.prefs_usageStatisticsSummary, R.drawable.baseline_track_changes_24, () ->
                         AnalyticsPreferenceDialog.get().show(parent.getSupportFragmentManager(), AnalyticsPreferenceDialog.TAG)));
             }
