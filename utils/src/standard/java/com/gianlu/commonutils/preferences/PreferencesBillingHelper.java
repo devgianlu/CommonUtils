@@ -1,7 +1,6 @@
 package com.gianlu.commonutils.preferences;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,11 +35,11 @@ import java.util.List;
 public class PreferencesBillingHelper {
     private static final String TAG = PreferencesBillingHelper.class.getSimpleName();
     private final Object billingReady = new Object();
-    private final Listener listener;
+    private final DialogUtils.ShowStuffInterface listener;
     private final List<String> products;
     private BillingClient billingClient;
 
-    PreferencesBillingHelper(@NonNull Listener listener, String... products) {
+    PreferencesBillingHelper(@NonNull DialogUtils.ShowStuffInterface listener, String... products) {
         this.listener = listener;
         this.products = Arrays.asList(products);
     }
@@ -152,16 +150,6 @@ public class PreferencesBillingHelper {
             case BillingResponseCode.OK:
                 break;
         }
-    }
-
-    public interface Listener {
-        void showToast(@NonNull Toaster toaster);
-
-        void showDialog(@NonNull AlertDialog.Builder builder);
-
-        void showDialog(@NonNull Dialog dialog);
-
-        void dismissDialog();
     }
 
     public static class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
