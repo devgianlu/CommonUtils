@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_vertical|start"
     android:orientation="horizontal">
 
@@ -13,7 +14,7 @@
         android:contentDescription="@string/mal_close"
         android:background="?selectableItemBackgroundBorderless"
         android:src="@drawable/baseline_clear_24"
-        android:tint="?colorOnPrimary"
+        app:tint="?colorOnPrimary"
         android:visibility="gone" />
 
     <com.google.android.material.textview.MaterialTextView
