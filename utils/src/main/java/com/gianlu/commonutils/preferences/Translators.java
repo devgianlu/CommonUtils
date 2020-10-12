@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-class Translators extends ArrayList<Translators.Item> {
+public class Translators extends ArrayList<Translators.Item> {
     private static Translators instance = null;
 
     private Translators() {
