@@ -75,6 +75,11 @@ public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
+    public static void setPaddingDip(@NonNull View view, int padding) {
+        int _padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, padding, view.getResources().getDisplayMetrics());
+        view.setPadding(_padding, _padding, _padding, _padding);
+    }
+
     public static void setPaddingDip(@NonNull View view, @Nullable Integer left, @Nullable Integer top, @Nullable Integer right, @Nullable Integer bottom) {
         int _left = left == null ? view.getPaddingLeft() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, left, view.getResources().getDisplayMetrics());
         int _top = top == null ? view.getPaddingTop() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, top, view.getResources().getDisplayMetrics());
@@ -729,6 +734,15 @@ public final class CommonUtils {
         JSONObject obj = new JSONObject();
         obj.put(key, value);
         return obj;
+    }
+
+    @SafeVarargs
+    public static <E> boolean containsAny(Collection<E> list, @NonNull E... items) {
+        for (E item : items)
+            if (list.contains(item))
+                return true;
+
+        return false;
     }
 
     public interface ToString<T> {

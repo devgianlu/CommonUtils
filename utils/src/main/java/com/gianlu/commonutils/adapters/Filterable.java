@@ -1,5 +1,8 @@
 package com.gianlu.commonutils.adapters;
 
+import androidx.annotation.Nullable;
+
 public interface Filterable<F> {
-    F getFilterable();
+    @Nullable
+    F[] getMatchingFilters();
 }

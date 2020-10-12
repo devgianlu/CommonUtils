@@ -9,17 +9,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gianlu.commonutils.CommonUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @UiThread
 public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, E extends Filterable<F>, S, F> extends RecyclerView.Adapter<VH> {
     protected final SortingArrayList objs;
-    protected final List<F> filters;
+    protected final Set<F> filters;
     protected final List<E> originalObjs;
     private final S defaultSorting;
     private String query;
@@ -29,7 +33,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         this.originalObjs = objs;
         this.objs = new SortingArrayList(objs);
         this.defaultSorting = defaultSorting;
-        this.filters = new ArrayList<>();
+        this.filters = new HashSet<>();
 
         sort(defaultSorting);
         shouldUpdateItemCount(objs.size());
@@ -60,9 +64,11 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     private void processQueryAndFilters() {
         objs.clear();
 
-        for (E obj : originalObjs)
-            if (!filters.contains(obj.getFilterable()) && (query == null || matchQuery(obj, query)))
+        for (E obj : originalObjs) {
+            F[] itemFilters = obj.getMatchingFilters();
+            if ((itemFilters == null || !CommonUtils.containsAny(filters, itemFilters)) && (query == null || matchQuery(obj, query)))
                 objs.add(obj);
+        }
 
         objs.resort();
 
@@ -116,7 +122,8 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         if (posIntoOriginal == -1) originalObjs.add(payload);
         else originalObjs.set(posIntoOriginal, payload);
 
-        if (!filters.contains(payload.getFilterable()) && matchQuery(payload, query)) {
+        F[] itemFilters = payload.getMatchingFilters();
+        if ((itemFilters == null || !CommonUtils.containsAny(filters, itemFilters)) && matchQuery(payload, query)) {
             Pair<Integer, Integer> res = objs.addAndSort(payload);
             if (res.first == -1)
                 super.notifyItemInserted(res.second);
@@ -163,10 +170,18 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         itemsAdded(items);
     }
 
+    public final void addFilter(@NonNull F newFilter) {
+        if (filters.add(newFilter)) processQueryAndFilters();
+    }
+
+    public final void removeFilter(@NonNull F newFilter) {
+        if (filters.remove(newFilter)) processQueryAndFilters();
+    }
+
     public final void setFilters(@NonNull List<F> newFilters) {
         filters.clear();
-        filters.addAll(newFilters);
-        processQueryAndFilters();
+        if (filters.addAll(newFilters))
+            processQueryAndFilters();
     }
 
     public final void filterWithQuery(String query) {
