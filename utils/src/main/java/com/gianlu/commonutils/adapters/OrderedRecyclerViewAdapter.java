@@ -56,11 +56,6 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         list = recyclerView;
     }
 
-    @SafeVarargs
-    public final void setFilters(@NonNull F... filters) {
-        setFilters(Arrays.asList(filters));
-    }
-
     private void processQueryAndFilters() {
         objs.clear();
 
@@ -113,8 +108,25 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         // Never called
     }
 
+    @Nullable
+    private E findFilter(Filter<E> filter) {
+        for (int i = 0; i < originalObjs.size(); i++) {
+            E item = originalObjs.get(i);
+            if (filter.accept(item))
+                return item;
+        }
+
+        return null;
+    }
+
+    //region Add/change
     public final void itemChangedOrAdded(@NonNull E payload) {
         itemChangedOrAdded(payload, false);
+    }
+
+    public final void itemChanged(@NonNull Filter<E> filter) {
+        E item = findFilter(filter);
+        if (item != null) itemChangedOrAdded(item);
     }
 
     private void itemChangedOrAdded(@NonNull E payload, boolean internal) {
@@ -142,11 +154,31 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         if (!internal) shouldUpdateItemCount(objs.size());
     }
 
-    public final void removeItem(E item) {
+    public final void itemsAdded(@NonNull List<E> items) {
+        for (E item : items) itemChangedOrAdded(item, true);
+        shouldUpdateItemCount(objs.size());
+    }
+
+    public final void itemsChanged(@NonNull List<E> items) {
+        for (E obj : new ArrayList<>(originalObjs))
+            if (!items.contains(obj))
+                removeItem(obj, true);
+
+        itemsAdded(items);
+    }
+    //endregion
+
+    //region Remove
+    public final void removeItem(@NonNull E item) {
         removeItem(item, false);
     }
 
-    private void removeItem(E item, boolean internal) {
+    public final void removeItem(@NonNull Filter<E> filter) {
+        E item = findFilter(filter);
+        if (item != null) removeItem(item);
+    }
+
+    private void removeItem(@NonNull E item, boolean internal) {
         originalObjs.remove(item);
 
         int pos = objs.indexOf(item);
@@ -156,18 +188,12 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
             if (!internal) shouldUpdateItemCount(objs.size());
         }
     }
+    //endregion
 
-    public final void itemsAdded(List<E> items) {
-        for (E item : items) itemChangedOrAdded(item, true);
-        shouldUpdateItemCount(objs.size());
-    }
-
-    public final void itemsChanged(List<E> items) {
-        for (E obj : new ArrayList<>(originalObjs))
-            if (!items.contains(obj))
-                removeItem(obj, true);
-
-        itemsAdded(items);
+    //region Filtering
+    @SafeVarargs
+    public final void setFilters(@NonNull F... filters) {
+        setFilters(Arrays.asList(filters));
     }
 
     public final void addFilter(@NonNull F newFilter) {
@@ -188,6 +214,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         this.query = query;
         processQueryAndFilters();
     }
+    //endregion
 
     @Override
     public final int getItemCount() {
@@ -197,12 +224,16 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     protected abstract void shouldUpdateItemCount(int count);
 
     @NonNull
-    public abstract Comparator<E> getComparatorFor(S sorting);
+    public abstract Comparator<E> getComparatorFor(@NonNull S sorting);
 
     public final void sort(S sorting) {
         objs.sort(sorting);
         super.notifyDataSetChanged();
         scrollToTop();
+    }
+
+    public interface Filter<E> {
+        boolean accept(@NonNull E elm);
     }
 
     public final class SortingArrayList extends BaseSortingArrayList<E, S> {
@@ -213,7 +244,7 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
 
         @NonNull
         @Override
-        public Comparator<E> getComparator(S sorting) {
+        public Comparator<E> getComparator(@NonNull S sorting) {
             return getComparatorFor(sorting);
         }
     }

@@ -113,6 +113,11 @@ public final class CommonUtils {
         return null;
     }
 
+    public static void showPopupOffsetDip(@NonNull Context context, @NonNull PopupMenu menu, int xoff, int yoff) {
+        showPopupOffset(menu, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, xoff, context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, yoff, context.getResources().getDisplayMetrics()));
+    }
+
     public static void showPopupOffset(@NonNull PopupMenu menu, int xoff, int yoff) {
         try {
             Field field = menu.getClass().getDeclaredField("mPopup");
