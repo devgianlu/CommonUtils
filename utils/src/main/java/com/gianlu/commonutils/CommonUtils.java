@@ -450,7 +450,7 @@ public final class CommonUtils {
 
     public static <T> int indexOf(T[] items, T item) {
         for (int i = 0; i < items.length; i++)
-            if (items[i] == item)
+            if (items[i].equals(item))
                 return i;
 
         return -1;
