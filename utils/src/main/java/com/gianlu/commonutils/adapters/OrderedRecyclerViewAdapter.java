@@ -108,6 +108,17 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
         // Never called
     }
 
+    @NonNull
+    private List<E> findFilterAll(Filter<E> filter) {
+        List<E> list = new ArrayList<>(originalObjs.size());
+        for (int i = 0; i < originalObjs.size(); i++) {
+            E item = originalObjs.get(i);
+            if (filter.accept(item)) list.add(item);
+        }
+
+        return list;
+    }
+
     @Nullable
     private E findFilter(Filter<E> filter) {
         for (int i = 0; i < originalObjs.size(); i++) {
@@ -169,6 +180,14 @@ public abstract class OrderedRecyclerViewAdapter<VH extends RecyclerView.ViewHol
     //endregion
 
     //region Remove
+    public final void removeItems(@NonNull Filter<E> filter) {
+        List<E> items = findFilterAll(filter);
+        if (!items.isEmpty()) {
+            for (E item : items) removeItem(item, true);
+            shouldUpdateItemCount(objs.size());
+        }
+    }
+
     public final void removeItem(@NonNull E item) {
         removeItem(item, false);
     }
