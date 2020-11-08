@@ -67,7 +67,8 @@ public abstract class ActivityWithDialog extends NightlyActivity implements Dial
     public final boolean hasVisibleDialog() {
         Iterator<Dialog> values = mDialogs.values().iterator();
         while (values.hasNext()) {
-            if (!values.next().isShowing())
+            Dialog dialog = values.next();
+            if (dialog == null || !dialog.isShowing())
                 values.remove();
         }
 
@@ -80,7 +81,7 @@ public abstract class ActivityWithDialog extends NightlyActivity implements Dial
         super.onDestroy();
 
         for (Dialog dialog : mDialogs.values())
-            dialog.dismiss();
+            if (dialog != null) dialog.dismiss();
 
         mDialogs.clear();
     }
