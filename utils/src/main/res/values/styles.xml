@@ -38,16 +38,6 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <!-- Material About theme -->
-    <style name="MaterialAbout.Default" parent="MaterialAbout.Light" />
-
-    <style name="MaterialAbout.Light" parent="Theme.Mal.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
-        <item name="colorAccent">@color/colorSecondary</item>
-        <item name="mal_card_background">?colorSurface</item>
-    </style>
-
     <!-- Fullscreen stuff -->
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>

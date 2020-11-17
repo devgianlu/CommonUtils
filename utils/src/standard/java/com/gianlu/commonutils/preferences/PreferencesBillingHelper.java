@@ -1,7 +1,6 @@
 package com.gianlu.commonutils.preferences;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,13 +33,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PreferencesBillingHelper {
+    public static final String[] DONATE_SKUS = new String[]{"donation.lemonade", "donation.coffee", "donation.hamburger", "donation.pizza", "donation.sushi", "donation.champagne"};
     private static final String TAG = PreferencesBillingHelper.class.getSimpleName();
     private final Object billingReady = new Object();
-    private final Listener listener;
+    private final DialogUtils.ShowStuffInterface listener;
     private final List<String> products;
     private BillingClient billingClient;
 
-    PreferencesBillingHelper(@NonNull Listener listener, String... products) {
+    public PreferencesBillingHelper(@NonNull DialogUtils.ShowStuffInterface listener, String... products) {
         this.listener = listener;
         this.products = Arrays.asList(products);
     }
@@ -52,7 +51,7 @@ public class PreferencesBillingHelper {
             private boolean retried = false;
 
             @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingResponseCode.OK) {
                     synchronized (billingReady) {
                         billingReady.notifyAll();
@@ -152,16 +151,6 @@ public class PreferencesBillingHelper {
             case BillingResponseCode.OK:
                 break;
         }
-    }
-
-    public interface Listener {
-        void showToast(@NonNull Toaster toaster);
-
-        void showDialog(@NonNull AlertDialog.Builder builder);
-
-        void showDialog(@NonNull Dialog dialog);
-
-        void dismissDialog();
     }
 
     public static class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {

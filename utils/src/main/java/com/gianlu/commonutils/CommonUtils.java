@@ -75,6 +75,11 @@ public final class CommonUtils {
     public static final String LOT_OF_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"£$%&/()=?^-_.:,;<>|\\*[]";
     private static boolean DEBUG = BuildConfig.DEBUG;
 
+    public static void setPaddingDip(@NonNull View view, int padding) {
+        int _padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, padding, view.getResources().getDisplayMetrics());
+        view.setPadding(_padding, _padding, _padding, _padding);
+    }
+
     public static void setPaddingDip(@NonNull View view, @Nullable Integer left, @Nullable Integer top, @Nullable Integer right, @Nullable Integer bottom) {
         int _left = left == null ? view.getPaddingLeft() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, left, view.getResources().getDisplayMetrics());
         int _top = top == null ? view.getPaddingTop() : (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, top, view.getResources().getDisplayMetrics());
@@ -108,6 +113,11 @@ public final class CommonUtils {
         return null;
     }
 
+    public static void showPopupOffsetDip(@NonNull Context context, @NonNull PopupMenu menu, int xoff, int yoff) {
+        showPopupOffset(menu, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, xoff, context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, yoff, context.getResources().getDisplayMetrics()));
+    }
+
     public static void showPopupOffset(@NonNull PopupMenu menu, int xoff, int yoff) {
         try {
             Field field = menu.getClass().getDeclaredField("mPopup");
@@ -137,9 +147,15 @@ public final class CommonUtils {
     }
 
     @Nullable
-    public static String optString(@NonNull JSONObject obj, @NonNull String key) {
-        String val = obj.optString(key);
-        return val.isEmpty() ? null : val;
+    public static String optString(@NonNull JSONObject obj, @NonNull String key) throws JSONException {
+        if (!obj.has(key) || obj.isNull(key)) return null;
+        else return obj.getString(key);
+    }
+
+    @Nullable
+    public static Long optLong(@NonNull JSONObject obj, @NonNull String key) throws JSONException {
+        if (!obj.has(key) || obj.isNull(key)) return null;
+        else return obj.getLong(key);
     }
 
     private static float calculateLuminescenceRgb(@ColorInt int c) {
@@ -434,7 +450,7 @@ public final class CommonUtils {
 
     public static <T> int indexOf(T[] items, T item) {
         for (int i = 0; i < items.length; i++)
-            if (items[i] == item)
+            if (items[i].equals(item))
                 return i;
 
         return -1;
@@ -605,9 +621,16 @@ public final class CommonUtils {
     }
 
     @NonNull
-    public static Integer[] toIntsList(String str, String separator) throws NumberFormatException {
+    public static long[] toLongsList(@NonNull JSONArray array) throws JSONException {
+        long[] longs = new long[array.length()];
+        for (int i = 0; i < array.length(); i++) longs[i] = array.getLong(i);
+        return longs;
+    }
+
+    @NonNull
+    public static int[] toIntsList(@NonNull String str, String separator) throws NumberFormatException {
         String[] split = str.split(separator);
-        Integer[] ints = new Integer[split.length];
+        int[] ints = new int[split.length];
         for (int i = 0; i < split.length; i++) ints[i] = Integer.parseInt(split[i].trim());
         return ints;
     }
@@ -660,6 +683,11 @@ public final class CommonUtils {
     }
 
     @NonNull
+    public static String randomString(int length, @NonNull String chars) {
+        return randomString(length, ThreadLocalRandom.current(), chars);
+    }
+
+    @NonNull
     public static String randomString(int length) {
         return randomString(length, ThreadLocalRandom.current(), LOT_OF_CHARS);
     }
@@ -697,6 +725,29 @@ public final class CommonUtils {
         } finally {
             stream.close();
         }
+    }
+
+    @NonNull
+    public static JSONObject singletonJsonObject(@NonNull String key, String value) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put(key, value);
+        return obj;
+    }
+
+    @NonNull
+    public static JSONObject singletonJsonObject(@NonNull String key, Number value) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put(key, value);
+        return obj;
+    }
+
+    @SafeVarargs
+    public static <E> boolean containsAny(Collection<E> list, @NonNull E... items) {
+        for (E item : items)
+            if (list.contains(item))
+                return true;
+
+        return false;
     }
 
     public interface ToString<T> {

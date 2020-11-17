@@ -8,7 +8,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 
 import com.gianlu.commonutils.BuildConfig;
 import com.gianlu.commonutils.CommonUtils;
@@ -37,6 +36,9 @@ public final class LogsHelper {
         return sw.toString();
     }
 
+    /**
+     * Sends a mail to the developer containing debug information.
+     */
     public static void sendEmail(@NonNull Context context, @Nullable Throwable sendEx) {
         String version;
         try {
@@ -65,11 +67,15 @@ public final class LogsHelper {
             emailBody += getStackTrace(sendEx);
         }
 
-        emailBody += "\r\n------------------------------------" + "\r\n\r\n\r\nProvide bug details\r\n";
+        Exception logsException = exportLogFiles(context, intent);
+        if (logsException != null) {
+            emailBody += "\r\n\r\nCouldn't export log files:\r\n";
+            emailBody += getStackTrace(logsException);
+        }
+
+        emailBody += "\r\n------------------------------------\r\n\r\n\r\nProvide bug details\r\n";
 
         intent.putExtra(Intent.EXTRA_TEXT, emailBody);
-
-        exportLogFiles(context, intent);
 
         try {
             context.startActivity(Intent.createChooser(intent, "Send mail..."));
@@ -78,11 +84,17 @@ public final class LogsHelper {
         }
     }
 
-    public static boolean exportLogFiles(@NonNull Context context, @NonNull Intent intent) {
+    /**
+     * Exports the log files with logcat and attaches them to {@param intent}.
+     *
+     * @return {@code null} if successful, the exception otherwise.
+     */
+    @Nullable
+    public static Exception exportLogFiles(@NonNull Context context, @NonNull Intent intent) {
         try {
             File parent = new File(context.getCacheDir(), "logs");
             if (!parent.exists() && !parent.mkdir())
-                return false;
+                return new IOException("Cannot create logs directory.");
 
             Process process = Runtime.getRuntime().exec("logcat -d");
             File file = new File(parent, "logs-" + System.currentTimeMillis() + ".txt");
@@ -92,14 +104,13 @@ public final class LogsHelper {
                 process.destroy();
             }
 
-            Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".logs", file);
+            Uri uri = LogsFileProvider.getLogFile(context, file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
-            return true;
+            return null;
         } catch (IllegalArgumentException | IOException ex) {
             Log.e(TAG, "Failed exporting logs.", ex);
+            return ex;
         }
-
-        return false;
     }
 }

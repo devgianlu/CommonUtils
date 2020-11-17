@@ -72,6 +72,10 @@ public final class BreadcrumbsView extends LinearLayout implements View.OnClickL
         this.listener = listener;
     }
 
+    public void clearListener() {
+        this.listener = null;
+    }
+
     @Override
     public void onClick(View v) {
         if (v instanceof TextView) {

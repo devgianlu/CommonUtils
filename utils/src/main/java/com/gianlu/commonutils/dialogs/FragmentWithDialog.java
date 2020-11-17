@@ -14,33 +14,48 @@ import androidx.fragment.app.Fragment;
 import com.gianlu.commonutils.ui.Toaster;
 
 public abstract class FragmentWithDialog extends Fragment implements DialogUtils.ShowStuffInterface {
+    private ActivityWithDialog activity;
 
     @Override
     @CallSuper
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if (!(context instanceof ActivityWithDialog))
+        if (context instanceof ActivityWithDialog)
+            activity = (ActivityWithDialog) context;
+        else
             throw new IllegalStateException("Parent activity isn't instance of ActivityWithDialog!");
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+
+        activity = null;
+    }
+
+    @Override
+    public final void dismissDialog(long handle) {
+        if (activity != null) activity.dismissDialog(handle);
+    }
+
+    @Override
     public final void dismissDialog() {
-        DialogUtils.dismissDialog(getActivity());
+        if (activity != null) activity.dismissDialog();
     }
 
     public final boolean hasVisibleDialog() {
-        return DialogUtils.hasVisibleDialog(getActivity());
+        return activity != null && activity.hasVisibleDialog();
     }
 
     @Override
-    public final void showDialog(@NonNull Dialog dialog) {
-        DialogUtils.showDialog(getActivity(), dialog);
+    public final long showDialog(@NonNull Dialog dialog) {
+        return activity == null ? -1 : activity.showDialog(dialog);
     }
 
     @Override
-    public final void showDialog(@NonNull AlertDialog.Builder dialog) {
-        DialogUtils.showDialog(getActivity(), dialog);
+    public final long showDialog(@NonNull AlertDialog.Builder dialog) {
+        return activity == null ? -1 : activity.showDialog(dialog);
     }
 
     @Override
@@ -50,19 +65,18 @@ public abstract class FragmentWithDialog extends Fragment implements DialogUtils
     }
 
     @Override
-    public final void showDialog(@NonNull DialogFragment dialog) {
-        showDialog(dialog, null);
+    public final long showDialog(@NonNull DialogFragment dialog) {
+        return activity == null ? -1 : activity.showDialog(dialog);
     }
 
     @Override
-    public final void showDialog(@NonNull DialogFragment fragment, @Nullable String tag) {
-        DialogUtils.showDialog(getActivity(), fragment, tag);
+    public final long showDialog(@NonNull DialogFragment fragment, @Nullable String tag) {
+        return activity == null ? -1 : activity.showDialog(fragment, tag);
     }
 
     @Override
-    public final void showProgress(@StringRes int res) {
-        if (getContext() == null) return;
-        showDialog(DialogUtils.progressDialog(getContext(), res));
+    public final long showProgress(@StringRes int res) {
+        return activity == null ? -1 : activity.showProgress(res);
     }
 
     public final void onBackPressed() {

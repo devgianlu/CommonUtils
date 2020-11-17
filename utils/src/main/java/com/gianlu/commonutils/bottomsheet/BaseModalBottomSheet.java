@@ -37,7 +37,7 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     private Setup payload;
     private int lastHeaderEndPadding = -1;
     private CoordinatorLayout layout;
-    private BottomSheetBehavior behavior;
+    private BottomSheetBehavior<?> behavior;
     private View bottomSheet;
 
     @NonNull
@@ -73,8 +73,8 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Window window = getDialog().getWindow();
-        if (window != null) {
+        Window window;
+        if (getDialog() != null && (window = getDialog().getWindow()) != null) {
             bottomSheet = window.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             window.getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new AttachCallbackTreeObserver());
         }
@@ -94,10 +94,14 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
     }
 
     @CallSuper
-    protected void attachedBehavior(@NonNull Context context, @NonNull BottomSheetBehavior behavior) {
+    protected void attachedBehavior(@NonNull Context context, @NonNull BottomSheetBehavior<?> behavior) {
         behavior.setPeekHeight(getPeekHeight());
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         prepareCollapsed();
+    }
+
+    public final void postUpdate(@NonNull Update payload) {
+        if (getActivity() != null) getActivity().runOnUiThread(() -> update(payload));
     }
 
     @UiThread
@@ -245,8 +249,8 @@ public abstract class BaseModalBottomSheet<Setup, Update> extends BottomSheetDia
 
         @Override
         public void onGlobalLayout() {
-            Window window = getDialog().getWindow();
-            if (window != null) {
+            Window window;
+            if (getDialog() != null && (window = getDialog().getWindow()) != null) {
                 bottomSheet = window.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 if (bottomSheet != null) {
                     attachCustomCallback(bottomSheet);

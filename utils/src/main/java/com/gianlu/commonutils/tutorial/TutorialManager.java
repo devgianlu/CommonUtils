@@ -45,24 +45,27 @@ public final class TutorialManager implements BaseTutorial.Listener {
     }
 
     @UiThread
-    public void tryShowingTutorials(final Activity activity) {
-        if (isShowingTutorial || !DialogUtils.isContextValid(activity)) return;
+    public boolean tryShowingTutorials(final Activity activity) {
+        if (isShowingTutorial || !DialogUtils.isContextValid(activity)) return false;
 
         for (BaseTutorial tutorial : tutorials) {
-            if (shouldShowFor(tutorial) && listener.canShow(tutorial)) {
-                show(activity, tutorial);
-                return;
-            }
+            if (shouldShowFor(tutorial) && listener.canShow(tutorial))
+                return show(activity, tutorial);
         }
+
+        return false;
     }
 
     @UiThread
-    private void show(@NonNull Activity activity, @NonNull final BaseTutorial tutorial) {
+    private boolean show(@NonNull Activity activity, @NonNull final BaseTutorial tutorial) {
         tutorial.newSequence(activity);
         if (listener.buildSequence(tutorial)) {
             isShowingTutorial = true;
             activity.runOnUiThread(() -> tutorial.show(TutorialManager.this));
+            return true;
         }
+
+        return false;
     }
 
     @Override

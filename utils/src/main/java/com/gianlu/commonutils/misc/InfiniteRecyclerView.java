@@ -52,7 +52,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         if (adapter != null) adapter.attachListener(listener);
     }
 
-    public void setAdapter(@NonNull InfiniteAdapter adapter) {
+    public void setAdapter(@NonNull InfiniteAdapter<?, ?> adapter) {
         super.setAdapter(adapter);
 
         if (listener != null)
@@ -73,7 +73,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
         protected final LayoutInflater inflater;
         protected final List<ItemEnclosure<E>> items;
         private final Handler handler;
-        private final Config config;
+        private final Config<E> config;
         int page = 1;
         long currDay = -1;
         private FailedLoadingContentListener listener;
@@ -146,7 +146,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
 
         private int indexOfSeparator(Date date) {
             for (int i = 0; i < items.size(); i++) {
-                ItemEnclosure item = items.get(i);
+                ItemEnclosure<E> item = items.get(i);
                 if (item.date == date && item.item == null) return i;
             }
 
@@ -196,7 +196,7 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
 
         private int findLastSeparator() {
             for (int i = items.size() - 1; i >= 0; i--) {
-                ItemEnclosure item = items.get(i);
+                ItemEnclosure<E> item = items.get(i);
                 if (item != null && item.item == null) return i;
             }
 
@@ -343,13 +343,13 @@ public class InfiniteRecyclerView extends MaximumHeightRecyclerView {
             }
         }
 
-        private class LoadingViewHolder extends ViewHolder {
+        private static class LoadingViewHolder extends ViewHolder {
             LoadingViewHolder(View itemView) {
                 super(itemView);
             }
         }
 
-        private class SeparatorViewHolder extends ViewHolder {
+        private static class SeparatorViewHolder extends ViewHolder {
             final TextView date;
             final View line;
 
