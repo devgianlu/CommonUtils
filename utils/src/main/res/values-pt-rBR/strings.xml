@@ -39,7 +39,6 @@
     <string name="prefs_nightMode_summary">Sempre ativar o modo noturno, independentemente do padrão do sistema. Você quer reiniciar o aplicativo.</string>
     <string name="prefs_usageStatistics">Estatísticas de uso</string>
     <string name="prefs_usageStatisticsSummary">Alternar quais informações são enviadas para o desenvolvedor</string>
-    <string name="prefs_usageStatisticsDialogLong">We collect anonymous information about the app usage and about eventual crashes to improve the user experience. If you\'d like to opt out you can do so below.</string>
     <string name="prefs_usageTracking">Rastreamento de uso</string>
     <string name="prefs_crashesTracking">Controle de falhas</string>
     <string name="prefs_tutorial">Tutoriais</string>

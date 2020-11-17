@@ -32,7 +32,6 @@
     <string name="openSource_desc">本应用是开源软件!</string>
     <string name="version">版本</string>
     <string name="rateDonate">评分/捐赠</string>
-    <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="donate_summary">通过我的网站捐赠：我可以拿到所有的钱！</string>
     <!-- Prefs -->
     <string name="prefs_nightMode">启用夜间模式(暗色主题)</string>
