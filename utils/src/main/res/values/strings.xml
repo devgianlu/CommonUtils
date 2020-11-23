@@ -19,7 +19,7 @@
     <string name="about_app">About this application</string>
     <string name="connectingBillingService">Connecting to the billing service. Please wait…</string>
     <string name="noMailClients">There are no email clients installed!</string>
-    <string name="offline">You\'re offline!</string>
+    <string name="youAreOffline">You\'re offline!</string>
     <string name="copiedToClipboard">Copied to clipboard!</string>
     <string name="userCancelled">You cancelled the operation.</string>
     <string name="thankYou">Thank you!</string>

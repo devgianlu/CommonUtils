@@ -17,7 +17,7 @@
     <string name="about_app">Sobre o aplicativo</string>
     <string name="connectingBillingService">Conectando ao serviço de cobrança. Por favor, aguarde…</string>
     <string name="noMailClients">Não há aplicativos de e-mail instalados!</string>
-    <string name="offline">Você está offline!</string>
+    <string name="youAreOffline">Você está offline!</string>
     <string name="copiedToClipboard">Copiado para a área de transferência!</string>
     <string name="userCancelled">Você cancelou a operação.</string>
     <string name="thankYou">Obrigado!</string>
