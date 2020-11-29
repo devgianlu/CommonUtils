@@ -741,6 +741,13 @@ public final class CommonUtils {
         return obj;
     }
 
+    @NonNull
+    public static JSONObject singletonJsonObject(@NonNull String key, Boolean value) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put(key, value);
+        return obj;
+    }
+
     @SafeVarargs
     public static <E> boolean containsAny(Collection<E> list, @NonNull E... items) {
         for (E item : items)

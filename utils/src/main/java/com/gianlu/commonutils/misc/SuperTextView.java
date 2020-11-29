@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -148,6 +149,16 @@ public class SuperTextView extends MaterialTextView {
 
         public Builder html(String text) {
             view.setHtml(text);
+            return this;
+        }
+
+        public Builder sizeSp(int sp) {
+            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
+            return this;
+        }
+
+        public Builder paddingDp(@Nullable Integer left, @Nullable Integer top, @Nullable Integer right, @Nullable Integer bottom) {
+            CommonUtils.setPaddingDip(view, left, top, right, bottom);
             return this;
         }
     }
