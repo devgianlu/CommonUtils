@@ -1,6 +1,7 @@
 package com.gianlu.commonutils.analytics;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.util.UUID;
 
 public abstract class AnalyticsApplication extends BaseCommonApplication {
+    private static final String TAG = AnalyticsApplication.class.getSimpleName();
     private static FirebaseAnalytics ANALYTICS;
     private static boolean CRASHLYTICS_ENABLED = false;
 
@@ -25,6 +27,19 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
 
     public static void sendAnalytics(@NonNull String eventName, @Nullable Bundle bundle) {
         if (ANALYTICS != null) ANALYTICS.logEvent(eventName, bundle);
+    }
+
+    public static void setUserProperty(@NonNull String key, boolean value) {
+        setUserProperty(key, String.valueOf(value));
+    }
+
+    public static void setUserProperty(@NonNull String key, @Nullable String value) {
+        if (key.isEmpty() || key.length() > 24 || (value != null && value.length() > 36)) {
+            Log.w(TAG, "Cannot set user property " + key + ": " + value);
+            return;
+        }
+
+        if (ANALYTICS != null) ANALYTICS.setUserProperty(key, value);
     }
 
     public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {

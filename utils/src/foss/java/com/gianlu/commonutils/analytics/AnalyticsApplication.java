@@ -23,6 +23,14 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
         sendAnalytics(event, null);
     }
 
+    public static void setUserProperty(@NonNull String key, boolean value) {
+        setUserProperty(key, String.valueOf(value));
+    }
+
+    public static void setUserProperty(@NonNull String key, @Nullable String value) {
+        Log.d(TAG, String.format("User property (key: %s, value: %s)", key, val));
+    }
+
     public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
         Log.d(TAG, String.format("(key: %s, value: %s)", key, val));
     }
