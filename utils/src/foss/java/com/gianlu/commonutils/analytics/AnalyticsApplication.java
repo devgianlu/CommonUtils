@@ -28,7 +28,7 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     public static void setUserProperty(@NonNull String key, @Nullable String value) {
-        Log.d(TAG, String.format("User property (key: %s, value: %s)", key, val));
+        Log.d(TAG, String.format("User property (key: %s, value: %s)", key, value));
     }
 
     public static void setCrashlyticsString(@NonNull String key, @NonNull String val) {
