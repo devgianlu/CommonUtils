@@ -22,14 +22,14 @@ public final class FileUtils {
         if (treeUri == null)
             return null;
 
-        String volumePath = FileUtils.getVolumePath(FileUtils.getVolumeIdFromTreeUri(treeUri), con);
+        String volumePath = getVolumePath(getVolumeIdFromTreeUri(treeUri), con);
         if (volumePath == null)
             return File.separator;
 
         if (volumePath.endsWith(File.separator))
             volumePath = volumePath.substring(0, volumePath.length() - 1);
 
-        String documentPath = FileUtils.getDocumentPathFromTreeUri(treeUri);
+        String documentPath = getDocumentPathFromTreeUri(treeUri);
         if (documentPath != null && documentPath.endsWith(File.separator))
             documentPath = documentPath.substring(0, documentPath.length() - 1);
 

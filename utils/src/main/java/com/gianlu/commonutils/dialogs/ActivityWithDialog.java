@@ -80,9 +80,11 @@ public abstract class ActivityWithDialog extends NightlyActivity implements Dial
     protected void onDestroy() {
         super.onDestroy();
 
-        for (Dialog dialog : mDialogs.values())
+        Iterator<Dialog> values = mDialogs.values().iterator();
+        while (values.hasNext()) {
+            Dialog dialog = values.next();
             if (dialog != null) dialog.dismiss();
-
-        mDialogs.clear();
+            values.remove();
+        }
     }
 }
