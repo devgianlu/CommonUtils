@@ -39,6 +39,7 @@ public class PreferencesBillingHelper {
     private final DialogUtils.ShowStuffInterface listener;
     private final List<String> products;
     private BillingClient billingClient;
+    private boolean destroyed = false;
 
     public PreferencesBillingHelper(@NonNull DialogUtils.ShowStuffInterface listener, String... products) {
         this.listener = listener;
@@ -46,6 +47,8 @@ public class PreferencesBillingHelper {
     }
 
     public void onStart(@NonNull Activity activity) {
+        if (destroyed) throw new IllegalStateException();
+
         billingClient = BillingClient.newBuilder(activity).enablePendingPurchases().setListener(new InternalListener()).build();
         billingClient.startConnection(new BillingClientStateListener() {
             private boolean retried = false;
@@ -57,7 +60,7 @@ public class PreferencesBillingHelper {
                         billingReady.notifyAll();
                     }
                 } else {
-                    handleBillingErrors(billingResult.getResponseCode());
+                    if (!destroyed) handleBillingErrors(billingResult.getResponseCode());
                 }
             }
 
@@ -67,10 +70,16 @@ public class PreferencesBillingHelper {
                     retried = true;
                     billingClient.startConnection(this);
                 } else {
-                    listener.showToast(Toaster.build().message(R.string.failedBillingConnection));
+                    if (!destroyed)
+                        listener.showToast(Toaster.build().message(R.string.failedBillingConnection));
                 }
             }
         });
+    }
+
+    public void onDestroy() {
+        destroyed = true;
+        if (billingClient != null) billingClient.endConnection();
     }
 
     private void buyProduct(@NonNull Activity activity, @NonNull SkuDetails product) {
@@ -119,6 +128,8 @@ public class PreferencesBillingHelper {
                     synchronized (billingReady) {
                         try {
                             billingReady.wait();
+                            if (destroyed) return;
+
                             donate(activity, true);
                         } catch (InterruptedException ex) {
                             Log.w(TAG, ex);
