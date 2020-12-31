@@ -63,6 +63,12 @@ public abstract class AnalyticsApplication extends BaseCommonApplication {
     }
 
     @Override
+    protected boolean uncaughtNotDebug(Thread thread, Throwable throwable) {
+        if (CRASHLYTICS_ENABLED) FirebaseCrashlytics.getInstance().recordException(throwable);
+        return true;
+    }
+
+    @Override
     @CallSuper
     public void onCreate() {
         super.onCreate();

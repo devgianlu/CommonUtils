@@ -25,6 +25,13 @@ public abstract class BaseCommonApplication extends Application implements Threa
             UncaughtExceptionActivity.startActivity(this, throwable);
     }
 
+    /**
+     * Handle an uncaught exception in a non-debug environment.
+     *
+     * @param thread    The thread the exception happened on
+     * @param throwable The exception
+     * @return Whether the {@link UncaughtExceptionActivity} should be shown
+     */
     protected boolean uncaughtNotDebug(Thread thread, Throwable throwable) {
         return true;
     }
@@ -35,12 +42,13 @@ public abstract class BaseCommonApplication extends Application implements Threa
     @CallSuper
     public void onCreate() {
         super.onCreate();
-
-        Prefs.init(this);
-
         CommonUtils.setDebug(isDebug());
+
+        // Set custom uncaught exception handler
         if (!isDebug()) Thread.setDefaultUncaughtExceptionHandler(this);
 
+        // Init prefs
+        Prefs.init(this);
         MaterialPreferences.setStorageModule(new PrefsStorageModule.Factory());
     }
 }
