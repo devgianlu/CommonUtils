@@ -80,6 +80,10 @@ public class PreferencesBillingHelper {
     public void onDestroy() {
         destroyed = true;
         if (billingClient != null) billingClient.endConnection();
+
+        synchronized (billingReady) {
+            billingReady.notifyAll();
+        }
     }
 
     private void buyProduct(@NonNull Activity activity, @NonNull SkuDetails product) {
@@ -128,7 +132,10 @@ public class PreferencesBillingHelper {
                     synchronized (billingReady) {
                         try {
                             billingReady.wait();
-                            if (destroyed) return;
+                            if (destroyed) {
+                                listener.dismissDialog();
+                                return;
+                            }
 
                             donate(activity, true);
                         } catch (InterruptedException ex) {
