@@ -26,7 +26,7 @@ public final class BreadcrumbsView extends LinearLayout implements View.OnClickL
     private final int arrowRes;
     private Listener listener;
     private HorizontalScrollView parent;
-    private int mColor;
+    private final int mColor;
 
     public BreadcrumbsView(Context context) {
         this(context, null, 0);
