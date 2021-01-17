@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.FontRes;
@@ -124,6 +125,11 @@ public class SuperTextView extends MaterialTextView {
 
         public Builder color(@ColorInt int color) {
             view.setTextColor(color);
+            return this;
+        }
+
+        public Builder colorAttr(@AttrRes int color) {
+            view.setTextColor(CommonUtils.resolveAttrAsColor(view.getContext(), color));
             return this;
         }
 
