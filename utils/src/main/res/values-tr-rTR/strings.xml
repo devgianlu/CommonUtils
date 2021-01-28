@@ -32,5 +32,19 @@
     <string name="version">Sürüm</string>
     <string name="rateDonate">Oy ver/bağış yap</string>
     <string name="devgianluCopyright" tools:ignore="PluralsCandidate">🄯 %d devgianlu</string>
+    <string name="donate_summary">Web sitemden bağış yapın: Tüm para bana ulaşır!</string>
     <!-- Prefs -->
+    <string name="prefs_nightMode">Gece modunu etkinleştir (koyu tema)</string>
+    <string name="prefs_nightMode_summary">Sistem varsayılanına bakılmaksızın her zaman gece modunu etkinleştirir. Uygulamayı yeniden başlatmak gerekebilir.</string>
+    <string name="prefs_usageStatistics">Kullanım istatistikleri</string>
+    <string name="prefs_usageStatisticsSummary">Geliştiriciye gönderilecek bilgileri düzenle</string>
+    <string name="prefs_usageStatisticsDialogLong">Kullanıcı deneyimini iyileştirmek için uygulama kullanımı ve olası çökmeler hakkında anonim bilgiler toplarız. Devre dışı bırakmak isterseniz, bunu aşağıda yapabilirsiniz.</string>
+    <string name="prefs_usageTracking">Kullanım takibi</string>
+    <string name="prefs_crashesTracking">Çökme takibi</string>
+    <string name="prefs_tutorial">Öğretici</string>
+    <string name="prefs_restartTutorial">Öğreticiyi yeniden başlat</string>
+    <string name="prefs_developer">Geliştirici</string>
+    <string name="missingWebBrowser">Cihazınızda bir web tarayıcısı yok gibi görünüyor.</string>
+    <string name="exportLogFiles">Günlük dosyasını dışa aktar</string>
+    <string name="translators">Çevirmenler</string>
 </resources>
