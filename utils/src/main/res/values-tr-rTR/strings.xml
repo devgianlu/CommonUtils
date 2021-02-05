@@ -4,6 +4,7 @@
     <string name="unknown">Bilinmeyen</string>
     <string name="somethingWentWrong">Bir şeyler yanlış gitti! Geliştiriciye bir rapor gönderildi.</string>
     <string name="emailMeLong">Ne olduğuna dair fikrinizi beyan etmek isterseniz, lütfen aşağıdaki düğmeyi tıklayarak altomanigianluca@gmail.com adresinden bana e-posta gönderin.</string>
+    <string name="emailMe">Bana e-posta gönder</string>
     <string name="send_email">E-posta gönder</string>
     <string name="openDrawer">Çekmeceyi aç</string>
     <string name="donate">Bağış</string>
