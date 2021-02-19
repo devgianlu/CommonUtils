@@ -714,13 +714,22 @@ public final class CommonUtils {
         view.setBackground(resolveAttrAsDrawable(view.getContext(), attr));
     }
 
-    @NonNull
     public static String readEntirely(@NonNull InputStream stream) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        return readEntirely(stream, -1);
+    }
+
+    @NonNull
+    public static String readEntirely(@NonNull InputStream stream, int maxSize) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream(maxSize == -1 ? 1024 : maxSize);
         byte[] buffer = new byte[4096];
         int count;
         try {
-            while ((count = stream.read(buffer)) != -1) out.write(buffer, 0, count);
+            while ((count = stream.read(buffer)) != -1) {
+                out.write(buffer, 0, count);
+                if (out.size() > maxSize)
+                    throw new IOException("Reading over limit: " + out.size() + "/" + maxSize);
+            }
+
             return new String(out.toByteArray());
         } finally {
             stream.close();
