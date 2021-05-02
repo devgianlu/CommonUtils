@@ -15,7 +15,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Translators extends ArrayList<Translators.Item> {
+public final class Translators extends ArrayList<Translators.Item> {
+    private static final String TAG = Translators.class.getSimpleName();
     private static Translators instance = null;
 
     private Translators() {
@@ -28,8 +29,6 @@ public class Translators extends ArrayList<Translators.Item> {
         for (int i = 0; i < array.length(); i++)
             add(new Item(array.getJSONObject(i)));
     }
-
-    private static final String TAG = Translators.class.getSimpleName();
 
     @NonNull
     public static Translators load(@NonNull Context context) {

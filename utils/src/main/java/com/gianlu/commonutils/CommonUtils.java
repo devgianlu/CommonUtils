@@ -720,13 +720,13 @@ public final class CommonUtils {
 
     @NonNull
     public static String readEntirely(@NonNull InputStream stream, int maxSize) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(maxSize == -1 ? 1024 : maxSize);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(maxSize == -1 ? 4096 : maxSize);
         byte[] buffer = new byte[4096];
         int count;
         try {
             while ((count = stream.read(buffer)) != -1) {
                 out.write(buffer, 0, count);
-                if (out.size() > maxSize)
+                if (maxSize != -1 && out.size() > maxSize)
                     throw new IOException("Reading over limit: " + out.size() + "/" + maxSize);
             }
 
