@@ -730,7 +730,7 @@ public final class CommonUtils {
                     throw new IOException("Reading over limit: " + out.size() + "/" + maxSize);
             }
 
-            return new String(out.toByteArray());
+            return out.toString();
         } finally {
             stream.close();
         }
