@@ -558,7 +558,7 @@ public final class CommonUtils {
         for (T obj : objs) {
             if (!first) builder.append(separator);
             first = false;
-            builder.append(func == null ? obj.toString() : func.toString(obj));
+            builder.append(func == null ? Objects.toString(obj) : func.toString(obj));
         }
 
         return builder.toString();
