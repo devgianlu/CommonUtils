@@ -46,7 +46,7 @@ android {
 
 dependencies {
     standardApi 'com.android.billingclient:billing:4.0.0'
-    standardApi 'com.google.firebase:firebase-analytics:20.0.2'
+    standardApi 'com.google.firebase:firebase-analytics:20.1.0'
     standardApi 'com.google.firebase:firebase-crashlytics:18.2.6'
     standardApi 'com.google.android.gms:play-services-basement:18.0.0'
 
