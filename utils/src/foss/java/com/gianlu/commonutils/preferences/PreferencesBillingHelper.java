@@ -7,6 +7,9 @@ public class PreferencesBillingHelper {
     public void donate(Object obj, boolean b) {
     }
 
+    public void onDestroy() {
+    }
+
     public void onStart(Object obj) {
     }
 

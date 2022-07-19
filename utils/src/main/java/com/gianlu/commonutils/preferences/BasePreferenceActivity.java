@@ -73,14 +73,18 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
         super.onStart();
 
         if (billingHelper == null && FossUtils.hasGoogleBilling()) {
-            billingHelper = new PreferencesBillingHelper(this, "donation.lemonade",
-                    "donation.coffee",
-                    "donation.hamburger",
-                    "donation.pizza",
-                    "donation.sushi",
-                    "donation.champagne");
+            billingHelper = new PreferencesBillingHelper(this, "donation.lemonade", "donation.coffee", "donation.hamburger", "donation.pizza", "donation.sushi", "donation.champagne");
             billingHelper.onStart(this);
         }
+    }
+
+    @Override
+    @CallSuper
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (billingHelper != null)
+            billingHelper.onDestroy();
     }
 
     @CallSuper

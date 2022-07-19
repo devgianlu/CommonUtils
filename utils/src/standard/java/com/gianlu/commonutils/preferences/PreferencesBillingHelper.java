@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PreferencesBillingHelper {
-    public static final String[] DONATE_SKUS = new String[]{"donation.lemonade", "donation.coffee", "donation.hamburger", "donation.pizza", "donation.sushi", "donation.champagne"};
     private static final String TAG = PreferencesBillingHelper.class.getSimpleName();
     private final Object billingReady = new Object();
     private final DialogUtils.ShowStuffInterface listener;
