@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="log_activity_title">記錄</string>
+    <string name="unknown">未知</string>
+    <string name="somethingWentWrong">出現錯誤！已向開發人員回報錯誤。</string>
+    <string name="emailMe">向我傳送電子郵件</string>
+    <string name="send_email">傳送電子郵件</string>
+    <string name="openDrawer">開啟導覽匣</string>
+    <string name="donate">捐助</string>
+    <string name="logs">記錄檔</string>
+    <string name="preferences">偏好設定</string>
+    <string name="third_part">第三方專案</string>
+    <string name="closeDrawer">關閉導覽匣</string>
+    <string name="donateGoogle">透過 Google Play 捐助</string>
+    <string name="youAreOffline">您已離線！</string>
+    <string name="userCancelled">您取消了作業。</string>
+    <string name="thankYou">感謝您！</string>
+    <string name="failedBuying">無法購買此項目！</string>
+    <string name="failedBillingConnection">無法連線至帳單伺服器！</string>
+    <string name="noLogs">沒有任何記錄。</string>
+    <string name="rateApp">評價這個應用程式</string>
+    <string name="retry">重試</string>
+    <string name="openSource">開放原始碼</string>
+    <string name="openSource_desc">這個應用程式開放原始碼！</string>
+    <string name="version">版本</string>
+    <string name="rateDonate">評價/捐助</string>
+    <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
+    <string name="donate_summary">從我的網站捐助：我能拿到所有錢！</string>
     <!-- Prefs -->
+    <string name="prefs_nightMode">啟用夜間模式 (深色主題)</string>
+    <string name="prefs_nightMode_summary">總是啟用夜間模式，不論系統預設為何。你可能需要重新啟動應用程式。</string>
+    <string name="prefs_usageStatistics">使用量統計資料</string>
+    <string name="prefs_tutorial">教學課程</string>
+    <string name="prefs_restartTutorial">重啟教學課程</string>
+    <string name="prefs_developer">開發人員</string>
+    <string name="missingWebBrowser">您的裝置似乎並沒有安裝網頁瀏覽器。</string>
 </resources>
