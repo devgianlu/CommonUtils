@@ -15,15 +15,15 @@
     <string name="donateGoogle">透過 Google Play 捐贈</string>
     <string name="donateGoogleSummary">Google 將收取部分資金</string>
     <string name="about_app">關於這個應用程式</string>
-    <string name="connectingBillingService">正在連結至帳單伺服器。請稍候…</string>
-    <string name="noMailClients">沒有安裝電子郵件用戶端！</string>
+    <string name="connectingBillingService">正在連線至帳單伺服器，請稍候…</string>
+    <string name="noMailClients">尚未安裝電子郵件用戶端！</string>
     <string name="youAreOffline">您已離線！</string>
     <string name="copiedToClipboard">已複製到剪貼簿！</string>
     <string name="userCancelled">您取消了作業。</string>
     <string name="thankYou">感謝您！</string>
     <string name="failedBuying">無法購買此項目！</string>
     <string name="failedBillingConnection">無法連線至帳單伺服器！</string>
-    <string name="noLogs">沒有任何記錄。</string>
+    <string name="noLogs">沒有記錄。</string>
     <string name="rateApp">評價這個應用程式</string>
     <string name="leaveReview">在 Play 商店撰寫評論</string>
     <string name="offline_message">看起來您或是應用程式服務處於離線狀態。</string>
@@ -31,19 +31,19 @@
     <string name="openSource">開放原始碼</string>
     <string name="openSource_desc">這個應用程式開放原始碼！</string>
     <string name="version">版本</string>
-    <string name="rateDonate">評價/捐助</string>
+    <string name="rateDonate">評價/捐贈</string>
     <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="donate_summary">從我的網站捐助：我能拿到所有錢！</string>
     <!-- Prefs -->
     <string name="prefs_nightMode">啟用夜間模式 (深色主題)</string>
-    <string name="prefs_nightMode_summary">總是啟用夜間模式，不論系統預設為何。你可能需要重新啟動應用程式。</string>
+    <string name="prefs_nightMode_summary">一律啟用夜間模式，不論系統預設為何。你可能需要重新啟動應用程式。</string>
     <string name="prefs_usageStatistics">使用量統計資料</string>
     <string name="prefs_usageStatisticsSummary">切換哪些資訊會被傳送給開發人員</string>
     <string name="prefs_usageStatisticsDialogLong">我們收集有關應用程式使用記錄的匿名資訊和有關最終當機的資訊，以改善使用者體驗，你可以在下面這樣做。</string>
     <string name="prefs_usageTracking">使用記錄追蹤</string>
     <string name="prefs_crashesTracking">當機追蹤</string>
     <string name="prefs_tutorial">教學課程</string>
-    <string name="prefs_restartTutorial">重啟教學課程</string>
+    <string name="prefs_restartTutorial">重新啟動教學課程</string>
     <string name="prefs_developer">開發人員</string>
     <string name="missingWebBrowser">您的裝置似乎並沒有安裝網頁瀏覽器。</string>
     <string name="exportLogFiles">匯出記錄檔</string>
