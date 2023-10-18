@@ -37,9 +37,9 @@ public final class LogsHelper {
     }
 
     /**
-     * Sends a mail to the developer containing debug information.
+     * Open a GitHub issue containing debug information.
      */
-    public static void sendEmail(@NonNull Context context, @Nullable Throwable sendEx) {
+    public static void openGithubIssue(@NonNull Context context, @NonNull String projectName, @Nullable Throwable sendEx) {
         String version;
         try {
             version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
@@ -49,12 +49,7 @@ public final class LogsHelper {
 
         version += "-" + BuildConfig.FLAVOR;
 
-        Intent intent = new Intent(Intent.ACTION_SEND)
-                .setType("message/rfc822")
-                .putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.devgianluEmail)})
-                .putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
-
-        String emailBody = "-------- DO NOT EDIT --------" +
+        String body = "-------- DO NOT EDIT --------" +
                 "\r\nOS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")" +
                 "\r\nOS API Level: " + android.os.Build.VERSION.SDK_INT +
                 "\r\nDevice: " + android.os.Build.DEVICE +
@@ -63,25 +58,23 @@ public final class LogsHelper {
                 "\r\nCrashlytics UID: " + Prefs.getString(CommonPK.ANALYTICS_USER_ID, null);
 
         if (sendEx != null) {
-            emailBody += "\r\n\r\n";
-            emailBody += getStackTrace(sendEx);
+            body += "\r\n\r\n";
+            body += getStackTrace(sendEx);
         }
 
-        Exception logsException = exportLogFiles(context, intent);
-        if (logsException != null) {
-            emailBody += "\r\n\r\nCouldn't export log files:\r\n";
-            emailBody += getStackTrace(logsException);
-        }
+        body += "\r\n------------------------------------\r\n\r\n\r\nProvide bug details\r\n";
 
-        emailBody += "\r\n------------------------------------\r\n\r\n\r\nProvide bug details\r\n";
+        Uri.Builder uri = new Uri.Builder()
+                .scheme("https")
+                .authority("github.com")
+                .appendPath("devgianlu")
+                .appendPath(projectName)
+                .appendPath("issues")
+                .appendPath("new")
+                .appendQueryParameter("body", body);
 
-        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
-
-        try {
-            context.startActivity(Intent.createChooser(intent, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toaster.with(context).message(R.string.noMailClients).show();
-        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri.build());
+        context.startActivity(Intent.createChooser(intent, "Open link..."));
     }
 
     /**

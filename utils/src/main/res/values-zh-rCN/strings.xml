@@ -3,9 +3,6 @@
     <string name="log_activity_title">日志</string>
     <string name="unknown">未知</string>
     <string name="somethingWentWrong">发生错误！已向开发者发送报告信息。</string>
-    <string name="emailMeLong">如果您对已发生的情况有更多补充说明，请点击下方按钮，发邮件到我的电邮地址altomanigianluca@gmail.com</string>
-    <string name="emailMe">向我发送电邮</string>
-    <string name="send_email">发送邮件</string>
     <string name="openDrawer">打开抽屉菜单</string>
     <string name="donate">捐赠</string>
     <string name="logs">日志文件</string>
@@ -16,7 +13,6 @@
     <string name="donateGoogleSummary">Google将抽取其中部分资金</string>
     <string name="about_app">关于本应用</string>
     <string name="connectingBillingService">正连接到结算服务。请稍候…</string>
-    <string name="noMailClients">本机没有安装电子邮件客户端!</string>
     <string name="copiedToClipboard">已复制到剪贴板!</string>
     <string name="userCancelled">您已取消操作。</string>
     <string name="thankYou">谢谢您!</string>

@@ -33,13 +33,13 @@
         android:textAlignment="center"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:text="@string/emailMeLong"
+        android:text="@string/reportGithubLong"
         android:textAppearance="?attr/textAppearanceCaption"  />
 
     <Button
-        android:id="@+id/uncaughtException_email"
+        android:id="@+id/uncaughtException_openIssue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/send_email" />
+        android:text="@string/openIssue" />
 </LinearLayout>

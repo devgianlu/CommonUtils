@@ -3,9 +3,6 @@
     <string name="log_activity_title">Günlükler</string>
     <string name="unknown">Bilinmeyen</string>
     <string name="somethingWentWrong">Bir şeyler yanlış gitti! Geliştiriciye bir rapor gönderildi.</string>
-    <string name="emailMeLong">Ne olduğuna dair fikrinizi beyan etmek isterseniz, lütfen aşağıdaki düğmeyi tıklayarak altomanigianluca@gmail.com adresinden bana e-posta gönderin.</string>
-    <string name="emailMe">Bana e-posta gönder</string>
-    <string name="send_email">E-posta gönder</string>
     <string name="openDrawer">Çekmeceyi aç</string>
     <string name="donate">Bağış</string>
     <string name="logs">Günlük dosyaları</string>
@@ -16,7 +13,6 @@
     <string name="donateGoogleSummary">Paranın bir kısmı Google tarafından alınır</string>
     <string name="about_app">Uygulama hakkında</string>
     <string name="connectingBillingService">Ödeme hizmetine bağlanılıyor. Lütfen bekleyin…</string>
-    <string name="noMailClients">Yüklü bir e-posta istemcisi bulunamadı!</string>
     <string name="youAreOffline">Çevrimdışısınız!</string>
     <string name="copiedToClipboard">Panoya kopyalandı!</string>
     <string name="userCancelled">İşlemi iptal ettiniz.</string>

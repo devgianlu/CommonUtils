@@ -5,9 +5,8 @@
     <string name="unknown">Unknown</string>
     <string name="ooops" translatable="false">Ooops!</string>
     <string name="somethingWentWrong">Something went wrong! A report has already been sent to the developer.</string>
-    <string name="emailMeLong">If you want to add your opinion on what happen please email me at altomanigianluca@gmail.com by clicking the button below.</string>
-    <string name="emailMe">Email me</string>
-    <string name="send_email">Send email</string>
+    <string name="reportGithubLong">If you want to add more details on what happen please open an issue on the project repository on github.</string>
+    <string name="openIssue">Open issue</string>
     <string name="openDrawer">Open drawer</string>
     <string name="donate">Donate</string>
     <string name="logs">Log files</string>
@@ -18,7 +17,6 @@
     <string name="donateGoogleSummary">Part of the money will be subtracted by Google</string>
     <string name="about_app">About this application</string>
     <string name="connectingBillingService">Connecting to the billing service. Please wait…</string>
-    <string name="noMailClients">There are no email clients installed!</string>
     <string name="youAreOffline">You\'re offline!</string>
     <string name="copiedToClipboard">Copied to clipboard!</string>
     <string name="userCancelled">You cancelled the operation.</string>
@@ -36,7 +34,6 @@
     <string name="rateDonate">Rate/donate</string>
     <string name="devgianluCopyright" tools:ignore="PluralsCandidate">© %d devgianlu</string>
     <string name="devgianlu" translatable="false">devgianlu</string>
-    <string name="devgianluEmail" translatable="false">altomanigianluca@gmail.com</string>
     <string name="donate_summary">Donate from my website: I\'ll get all the money!</string>
 
     <!-- Prefs -->

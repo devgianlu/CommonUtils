@@ -36,7 +36,7 @@ public class UncaughtExceptionActivity extends ActivityWithDialog {
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        Button email = findViewById(R.id.uncaughtException_email);
-        email.setOnClickListener(v -> LogsHelper.sendEmail(this, (Throwable) getIntent().getSerializableExtra("exception")));
+        Button openIssue = findViewById(R.id.uncaughtException_openIssue);
+        openIssue.setOnClickListener(v -> LogsHelper.openGithubIssue(this, "Aria2App", (Throwable) getIntent().getSerializableExtra("exception")));
     }
 }

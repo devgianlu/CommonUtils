@@ -3,9 +3,6 @@
     <string name="log_activity_title">Registros</string>
     <string name="unknown">Desconhecido</string>
     <string name="somethingWentWrong">Algo deu errado! Um relatório já foi enviado ao desenvolvedor.</string>
-    <string name="emailMeLong">Se você quer adicionar sua opinião sobre o aplicativo, por favor me envie um e-mail para altomanigianluca@gmail.com clicando no botão abaixo.</string>
-    <string name="emailMe">Me envie email</string>
-    <string name="send_email">Enviar e-mail</string>
     <string name="openDrawer">Abrir gaveta</string>
     <string name="donate">Faça uma doação</string>
     <string name="logs">Arquivos de registro</string>
@@ -16,7 +13,6 @@
     <string name="donateGoogleSummary">Parte do dinheiro será subtraída pelo Google</string>
     <string name="about_app">Sobre o aplicativo</string>
     <string name="connectingBillingService">Conectando ao serviço de cobrança. Por favor, aguarde…</string>
-    <string name="noMailClients">Não há aplicativos de e-mail instalados!</string>
     <string name="copiedToClipboard">Copiado para a área de transferência!</string>
     <string name="userCancelled">Você cancelou a operação.</string>
     <string name="thankYou">Obrigado!</string>

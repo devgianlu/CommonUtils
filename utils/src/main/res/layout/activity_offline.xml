@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingEnd="16dp"
-        android:text="@string/emailMeLong"
+        android:text="@string/reportGithubLong"
         android:paddingStart="16dp"
         android:textAlignment="center"
         android:textAppearance="?attr/textAppearanceCaption" />
@@ -43,11 +43,11 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/offline_email"
+            android:id="@+id/offline_openIssue"
             android:layout_width="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_height="wrap_content"
-            android:text="@string/send_email" />
+            android:text="@string/openIssue" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/offline_retry"

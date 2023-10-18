@@ -194,8 +194,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                     .addItem(new MaterialAboutTitleItem(R.string.app_name, 0, parent.getAppIconRes())
                             .setDesc(context.getString(R.string.devgianluCopyright, Calendar.getInstance().get(Calendar.YEAR))))
                     .addItem(new MaterialAboutVersionItem(context))
-                    .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, () -> openLink(context, "https://gianlu.xyz")))
-                    .addItem(new MaterialAboutActionItem(R.string.emailMe, R.string.devgianluEmail, R.drawable.baseline_mail_24, () -> LogsHelper.sendEmail(context, null)));
+                    .addItem(new MaterialAboutActionItem(R.string.prefs_developer, R.string.devgianlu, R.drawable.baseline_person_24, () -> openLink(context, "https://gianlu.xyz")));
 
             final String openSourceUrl = parent.getOpenSourceUrl();
             if (openSourceUrl != null) {
@@ -228,9 +227,9 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             MaterialAboutCard logs = new MaterialAboutCard.Builder()
                     .title(R.string.logs)
                     .addItem(new MaterialAboutActionItem.Builder()
-                            .icon(R.drawable.baseline_mail_24)
-                            .text(R.string.send_email)
-                            .setOnClickAction(() -> LogsHelper.sendEmail(context, null))
+                            .icon(R.drawable.baseline_bug_report_24)
+                            .text(R.string.openIssue)
+                            .setOnClickAction(() -> LogsHelper.openGithubIssue(context, "Aria2App", null))
                             .build())
                     .addItem(new MaterialAboutActionItem.Builder()
                             .icon(R.drawable.baseline_share_24)
@@ -265,7 +264,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             }
 
             if (!FossUtils.hasGoogleBilling() || !parent.disableOtherDonationsOnGooglePlay()) {
-                donateBuilder.addItem(new MaterialAboutActionItem(R.string.donate, R.string.donate_summary, R.drawable.baseline_money_24, () -> openLink(context, "https://gianlu.xyz/donate/")));
+                donateBuilder.addItem(new MaterialAboutActionItem(R.string.donate, R.string.donate_summary, R.drawable.baseline_money_24, () -> openLink(context, "https://www.buymeacoffee.com/devgianlu")));
             }
 
             MaterialAboutCard.Builder tutorialBuilder = null;
