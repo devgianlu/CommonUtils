@@ -15,9 +15,10 @@ import com.gianlu.commonutils.dialogs.ActivityWithDialog;
 import com.gianlu.commonutils.logs.LogsHelper;
 
 public class UncaughtExceptionActivity extends ActivityWithDialog {
-    public static void startActivity(@NonNull Context context, @Nullable Throwable ex) {
+    public static void startActivity(@NonNull Context context, @Nullable String projectName, @Nullable Throwable ex) {
         context.startActivity(new Intent(context, UncaughtExceptionActivity.class)
                 .putExtra("exception", ex)
+                .putExtra("projectName", projectName)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
@@ -36,7 +37,13 @@ public class UncaughtExceptionActivity extends ActivityWithDialog {
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        Button openIssue = findViewById(R.id.uncaughtException_openIssue);
-        openIssue.setOnClickListener(v -> LogsHelper.openGithubIssue(this, "Aria2App", (Throwable) getIntent().getSerializableExtra("exception")));
+        String projectName = getIntent().getStringExtra("projectName");
+        if (projectName != null) {
+            Button openIssue = findViewById(R.id.uncaughtException_openIssueButton);
+            openIssue.setOnClickListener(v -> LogsHelper.openGithubIssue(this, projectName, (Throwable) getIntent().getSerializableExtra("exception")));
+        } else {
+            findViewById(R.id.uncaughtException_openIssue).setVisibility(View.GONE);
+            findViewById(R.id.uncaughtException_openIssueButton).setVisibility(View.GONE);
+        }
     }
 }

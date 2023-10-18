@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.gianlu.commonutils.CommonUtils;
 import com.gianlu.commonutils.preferences.Prefs;
@@ -22,7 +23,7 @@ public abstract class BaseCommonApplication extends Application implements Threa
         Log.wtf(TAG, throwable);
 
         if (uncaughtNotDebug(thread, throwable))
-            UncaughtExceptionActivity.startActivity(this, throwable);
+            UncaughtExceptionActivity.startActivity(this, getGithubProjectName(), throwable);
     }
 
     /**
@@ -37,6 +38,9 @@ public abstract class BaseCommonApplication extends Application implements Threa
     }
 
     protected abstract boolean isDebug();
+
+    @Nullable
+    protected abstract String getGithubProjectName();
 
     @Override
     @CallSuper

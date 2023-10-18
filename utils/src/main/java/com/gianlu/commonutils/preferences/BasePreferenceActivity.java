@@ -140,6 +140,9 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
     }
 
     @Nullable
+    protected abstract String getGithubProjectName();
+
+    @Nullable
     protected abstract String getOpenSourceUrl();
 
     protected abstract boolean disableOtherDonationsOnGooglePlay();
@@ -224,14 +227,19 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
                 }
             }
 
-            MaterialAboutCard logs = new MaterialAboutCard.Builder()
-                    .title(R.string.logs)
-                    .addItem(new MaterialAboutActionItem.Builder()
-                            .icon(R.drawable.baseline_bug_report_24)
-                            .text(R.string.openIssue)
-                            .setOnClickAction(() -> LogsHelper.openGithubIssue(context, "Aria2App", null))
-                            .build())
-                    .addItem(new MaterialAboutActionItem.Builder()
+            MaterialAboutCard.Builder logsBuilder = new MaterialAboutCard.Builder()
+                    .title(R.string.logs);
+
+            final String projectName = parent.getGithubProjectName();
+            if (projectName != null) {
+                logsBuilder.addItem(new MaterialAboutActionItem.Builder()
+                        .icon(R.drawable.baseline_bug_report_24)
+                        .text(R.string.openIssue)
+                        .setOnClickAction(() -> LogsHelper.openGithubIssue(context, projectName, null))
+                        .build());
+            }
+
+            logsBuilder.addItem(new MaterialAboutActionItem.Builder()
                             .icon(R.drawable.baseline_share_24)
                             .text(R.string.exportLogFiles)
                             .setOnClickAction(() -> {
@@ -287,7 +295,7 @@ public abstract class BasePreferenceActivity extends ActivityWithDialog implemen
             if (preferencesBuilder != null) listBuilder.addCard(preferencesBuilder.build());
             listBuilder.addCard(donateBuilder.build());
             if (tutorialBuilder != null) listBuilder.addCard(tutorialBuilder.build());
-            listBuilder.addCard(logs);
+            listBuilder.addCard(logsBuilder.build());
             return listBuilder.build();
         }
     }
