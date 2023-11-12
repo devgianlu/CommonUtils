@@ -3,6 +3,8 @@
     <string name="log_activity_title">記錄</string>
     <string name="unknown">未知</string>
     <string name="somethingWentWrong">出現錯誤！已向開發人員回報錯誤。</string>
+    <string name="reportGithubLong">如果您想新增有關所發生狀況的更多詳細資料，請在 Github 上的專案存放庫上開啟一個議題。</string>
+    <string name="openIssue">開啟議題</string>
     <string name="openDrawer">開啟導覽匣</string>
     <string name="donate">捐贈</string>
     <string name="logs">記錄檔</string>
