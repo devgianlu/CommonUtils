@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="log_activity_title">Registros</string>
+    <string name="unknown">Desconhecido</string>
+    <string name="somethingWentWrong">Algo deu errado! Um relatório já foi enviado ao desenvolvedor.</string>
+    <string name="openDrawer">Abrir gaveta</string>
+    <string name="donate">Faça uma doação</string>
+    <string name="logs">Arquivos de registro</string>
+    <string name="preferences">Preferências</string>
+    <string name="third_part">Projetos em terceira parte</string>
+    <string name="closeDrawer">Fechar gaveta</string>
+    <string name="donateGoogle">Doar através do Google Play</string>
+    <string name="donateGoogleSummary">Parte do dinheiro será subtraída pelo Google</string>
+    <string name="about_app">Sobre o aplicativo</string>
+    <string name="connectingBillingService">Conectando ao serviço de cobrança. Por favor, aguarde…</string>
+    <string name="copiedToClipboard">Copiado para a área de transferência!</string>
+    <string name="userCancelled">Você cancelou a operação.</string>
+    <string name="thankYou">Obrigado!</string>
+    <string name="failedBuying">Falha ao comprar este item!</string>
+    <string name="failedBillingConnection">Falha ao conectar com o serviço de cobrança!</string>
+    <string name="noLogs">Ainda não há registros.</string>
+    <string name="rateApp">Avalie esse App</string>
+    <string name="leaveReview">Deixe uma avaliação na Play Store</string>
+    <string name="offline_message">Parece que você ou o serviço do aplicativo estão offline.</string>
+    <string name="retry">Repetir</string>
+    <string name="openSource">Código aberto</string>
+    <string name="openSource_desc">Este app é de código aberto!</string>
+    <string name="version">Versão</string>
+    <string name="rateDonate">Avaliar/doar</string>
+    <string name="donate_summary">Doar a partir do meu site: eu vou receber todo o dinheiro!</string>
+    <!-- Prefs -->
+    <string name="prefs_nightMode">Ativar modo noturno (tema escuro)</string>
+    <string name="prefs_nightMode_summary">Sempre ativar o modo noturno, independentemente do padrão do sistema. Você quer reiniciar o aplicativo.</string>
+    <string name="prefs_usageStatistics">Estatísticas de uso</string>
+    <string name="prefs_usageStatisticsSummary">Alternar quais informações são enviadas para o desenvolvedor</string>
+    <string name="prefs_usageTracking">Rastreamento de uso</string>
+    <string name="prefs_crashesTracking">Controle de falhas</string>
+    <string name="prefs_tutorial">Tutoriais</string>
+    <string name="prefs_restartTutorial">Reiniciar tutorial</string>
+    <string name="prefs_developer">Desenvolvedor</string>
+    <string name="missingWebBrowser">Seu dispositivo parece estar faltando um navegador web.</string>
+    <string name="exportLogFiles">Exportar arquivos de registro</string>
+    <string name="translators">Tradutores</string>
+</resources>
