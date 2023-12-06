@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="log_activity_title">日志</string>
+    <string name="unknown">未知</string>
+    <string name="somethingWentWrong">发生错误！已向开发者发送报告信息。</string>
+    <string name="openDrawer">打开抽屉菜单</string>
+    <string name="donate">捐赠</string>
+    <string name="logs">日志文件</string>
+    <string name="preferences">首选项</string>
+    <string name="third_part">第三方项目</string>
+    <string name="closeDrawer">关闭抽屉菜单</string>
+    <string name="donateGoogle">通过Google Play捐赠</string>
+    <string name="donateGoogleSummary">Google将抽取其中部分资金</string>
+    <string name="about_app">关于本应用</string>
+    <string name="connectingBillingService">正连接到结算服务。请稍候…</string>
+    <string name="copiedToClipboard">已复制到剪贴板!</string>
+    <string name="userCancelled">您已取消操作。</string>
+    <string name="thankYou">谢谢您!</string>
+    <string name="failedBuying">无法购买此项!</string>
+    <string name="failedBillingConnection">不能连接到结算服务!</string>
+    <string name="noLogs">没有日志文件。</string>
+    <string name="rateApp">对本应用评分</string>
+    <string name="leaveReview">在Play Store里留下评价</string>
+    <string name="offline_message">似乎您或者是应用服务处于离线状态。</string>
+    <string name="retry">重试</string>
+    <string name="openSource">开放源代码</string>
+    <string name="openSource_desc">本应用是开源软件!</string>
+    <string name="version">版本</string>
+    <string name="rateDonate">评分/捐赠</string>
+    <string name="donate_summary">通过我的网站捐赠：我可以拿到所有的钱！</string>
+    <!-- Prefs -->
+    <string name="prefs_nightMode">启用夜间模式(暗色主题)</string>
+    <string name="prefs_nightMode_summary">总是启用夜间模式，无视系统默认设置。您可能需要重新启动本应用。</string>
+    <string name="prefs_usageStatistics">使用情况统计</string>
+    <string name="prefs_usageStatisticsSummary">选择哪种信息会被发送给开发者。</string>
+    <string name="prefs_usageStatisticsDialogLong">我们收集关于应用使用情况和崩溃的匿名信息，以改善用户体验。 您可以通过以下选项关闭。</string>
+    <string name="prefs_usageTracking">使用情况跟踪</string>
+    <string name="prefs_crashesTracking">崩溃情况跟踪</string>
+    <string name="prefs_tutorial">教程</string>
+    <string name="prefs_restartTutorial">重新启动教程。</string>
+    <string name="prefs_developer">开发者</string>
+    <string name="missingWebBrowser">似乎您的设备没有安装网页浏览器。</string>
+    <string name="exportLogFiles">导出日志文件</string>
+    <string name="translators">翻译者名单</string>
+</resources>
