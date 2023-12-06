@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="log_activity_title">Günlükler</string>
+    <string name="unknown">Bilinmeyen</string>
+    <string name="somethingWentWrong">Bir şeyler yanlış gitti! Geliştiriciye bir rapor gönderildi.</string>
+    <string name="openDrawer">Çekmeceyi aç</string>
+    <string name="donate">Bağış</string>
+    <string name="logs">Günlük dosyaları</string>
+    <string name="preferences">Seçenekler</string>
+    <string name="third_part">Üçüncü taraf projeleri</string>
+    <string name="closeDrawer">Çekmeceyi kapat</string>
+    <string name="donateGoogle">Google Play üzerinden bağış yap</string>
+    <string name="donateGoogleSummary">Paranın bir kısmı Google tarafından alınır</string>
+    <string name="about_app">Uygulama hakkında</string>
+    <string name="connectingBillingService">Ödeme hizmetine bağlanılıyor. Lütfen bekleyin…</string>
+    <string name="youAreOffline">Çevrimdışısınız!</string>
+    <string name="copiedToClipboard">Panoya kopyalandı!</string>
+    <string name="userCancelled">İşlemi iptal ettiniz.</string>
+    <string name="thankYou">Teşekkürler!</string>
+    <string name="failedBuying">Bu ürün satın alınamadı!</string>
+    <string name="failedBillingConnection">Ödeme hizmetine bağlanılamadı!</string>
+    <string name="noLogs">Hiç günlük kaydı yok.</string>
+    <string name="rateApp">Uygulamayı değerlendir</string>
+    <string name="leaveReview">Play Store\'da bir yorum yazın</string>
+    <string name="offline_message">Görünüşe göre ya siz ya da uygulama hizmeti çevrimdışı.</string>
+    <string name="retry">Yeniden Dene</string>
+    <string name="openSource">Açık Kaynak</string>
+    <string name="openSource_desc">Bu uygulama tamamen açık kaynaktır!</string>
+    <string name="version">Sürüm</string>
+    <string name="rateDonate">Oy ver/bağış yap</string>
+    <string name="devgianluCopyright" tools:ignore="PluralsCandidate">🄯 %d devgianlu</string>
+    <string name="donate_summary">Web sitemden bağış yapın: Tüm para bana ulaşır!</string>
+    <!-- Prefs -->
+    <string name="prefs_nightMode">Gece modunu etkinleştir (koyu tema)</string>
+    <string name="prefs_nightMode_summary">Sistem varsayılanına bakılmaksızın her zaman gece modunu etkinleştirir. Uygulamayı yeniden başlatmak gerekebilir.</string>
+    <string name="prefs_usageStatistics">Kullanım istatistikleri</string>
+    <string name="prefs_usageStatisticsSummary">Geliştiriciye gönderilecek bilgileri düzenle</string>
+    <string name="prefs_usageStatisticsDialogLong">Kullanıcı deneyimini iyileştirmek için uygulama kullanımı ve olası çökmeler hakkında anonim bilgiler toplarız. Devre dışı bırakmak isterseniz, bunu aşağıda yapabilirsiniz.</string>
+    <string name="prefs_usageTracking">Kullanım takibi</string>
+    <string name="prefs_crashesTracking">Çökme takibi</string>
+    <string name="prefs_tutorial">Öğretici</string>
+    <string name="prefs_restartTutorial">Öğreticiyi yeniden başlat</string>
+    <string name="prefs_developer">Geliştirici</string>
+    <string name="missingWebBrowser">Cihazınızda bir web tarayıcısı yok gibi görünüyor.</string>
+    <string name="exportLogFiles">Günlük dosyasını dışa aktar</string>
+    <string name="translators">Çevirmenler</string>
+</resources>
