@@ -6,8 +6,3 @@ updates:
     interval: daily
     time: "04:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: com.google.firebase:firebase-crashlytics
-    versions:
-    - 17.4.0
-    - 17.4.1

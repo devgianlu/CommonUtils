@@ -1,22 +1,64 @@
-buildscript {
-    repositories {
-        google()
+apply plugin: 'com.android.library'
+
+android {
+    defaultConfig {
+        compileSdk 34
+
+        minSdkVersion 21
+        targetSdkVersion 34
+
+        versionCode 1
+        versionName "1.0"
     }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
+    flavorDimensions = ['main']
+    productFlavors {
+        foss {
+            dimension 'main'
+        }
+
+        standard {
+            dimension 'main'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        warning 'MissingTranslation'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+
+        debug {
+        }
+    }
+
+    namespace 'com.gianlu.commonutils'
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
-        maven { url 'https://maven.fabric.io/public' }
-    }
-}
+dependencies {
+    standardApi 'com.android.billingclient:billing:6.1.0'
+    standardApi 'com.google.firebase:firebase-analytics:21.5.0'
+    standardApi 'com.google.firebase:firebase-crashlytics:18.6.0'
+    standardApi 'com.google.android.gms:play-services-basement:18.2.0'
 
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    api 'com.github.devgianlu.MaterialPreferences:library:cbb81daaed'
+    api 'com.github.faruktoptas:FancyShowCaseView:1.3.9'
+    api 'com.github.daniel-stoneuk:material-about-library:3.1.2'
+
+    implementation 'com.google.android.material:material:1.10.0'
+    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
