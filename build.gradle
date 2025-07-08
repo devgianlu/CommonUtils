@@ -50,10 +50,10 @@ android {
 }
 
 dependencies {
-    standardApi 'com.android.billingclient:billing:7.0.0'
-    standardApi 'com.google.firebase:firebase-analytics:22.1.0'
-    standardApi 'com.google.firebase:firebase-crashlytics:19.1.0'
-    standardApi 'com.google.android.gms:play-services-basement:18.4.0'
+    standardApi 'com.android.billingclient:billing:8.0.0'
+    standardApi 'com.google.firebase:firebase-analytics:22.5.0'
+    standardApi 'com.google.firebase:firebase-crashlytics:19.4.4'
+    standardApi 'com.google.android.gms:play-services-basement:18.7.1'
 
     api 'com.github.devgianlu.MaterialPreferences:library:cbb81daaed'
     api 'com.github.faruktoptas:FancyShowCaseView:1.3.9'
