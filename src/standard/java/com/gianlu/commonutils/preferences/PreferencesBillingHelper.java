@@ -20,35 +20,47 @@ import com.android.billingclient.api.BillingClient.BillingResponseCode;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
+import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.gianlu.commonutils.R;
 import com.gianlu.commonutils.dialogs.DialogUtils;
 import com.gianlu.commonutils.ui.Toaster;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PreferencesBillingHelper {
     private static final String TAG = PreferencesBillingHelper.class.getSimpleName();
     private final Object billingReady = new Object();
     private final DialogUtils.ShowStuffInterface listener;
-    private final List<String> products;
+    private final List<QueryProductDetailsParams.Product> products;
     private BillingClient billingClient;
     private boolean destroyed = false;
 
     public PreferencesBillingHelper(@NonNull DialogUtils.ShowStuffInterface listener, String... products) {
         this.listener = listener;
-        this.products = Arrays.asList(products);
+        this.products = new ArrayList<>();
+        for (String product : products) {
+            this.products.add(QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(product)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build());
+        }
     }
 
     public void onStart(@NonNull Activity activity) {
         if (destroyed) throw new IllegalStateException();
 
-        billingClient = BillingClient.newBuilder(activity).enablePendingPurchases().setListener(new InternalListener()).build();
+        billingClient = BillingClient.newBuilder(activity)
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder()
+                        .enableOneTimeProducts()
+                        .enablePrepaidPlans()
+                        .build())
+                .setListener(new InternalListener()).build();
         billingClient.startConnection(new BillingClientStateListener() {
             private boolean retried = false;
 
@@ -85,9 +97,11 @@ public class PreferencesBillingHelper {
         }
     }
 
-    private void buyProduct(@NonNull Activity activity, @NonNull SkuDetails product) {
+    private void buyProduct(@NonNull Activity activity, @NonNull ProductDetails product) {
         BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(product)
+                .setProductDetailsParamsList(List.of(BillingFlowParams.ProductDetailsParams.newBuilder()
+                        .setProductDetails(product)
+                        .build()))
                 .build();
 
         BillingResult result = billingClient.launchBillingFlow(activity, flowParams);
@@ -95,10 +109,10 @@ public class PreferencesBillingHelper {
             handleBillingErrors(result.getResponseCode());
     }
 
-    private void showDonateDialog(@NonNull Activity activity, List<SkuDetails> products) {
+    private void showDonateDialog(@NonNull Activity activity, List<ProductDetails> products) {
         RecyclerView list = new RecyclerView(activity);
         list.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
-        list.setAdapter(new SkuAdapter(activity, products, product -> {
+        list.setAdapter(new ProductAdapter(activity, products, product -> {
             buyProduct(activity, product);
             listener.dismissDialog();
         }));
@@ -114,15 +128,12 @@ public class PreferencesBillingHelper {
             listener.showDialog(DialogUtils.progressDialog(activity, R.string.connectingBillingService));
 
         if (billingClient != null && billingClient.isReady()) {
-            SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-            params.setSkusList(products).setType(BillingClient.SkuType.INAPP);
-            billingClient.querySkuDetailsAsync(params.build(), (billingResult, skuDetailsList) -> {
+            billingClient.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(products).build(), (billingResult, productDetailsList) -> {
                 listener.dismissDialog();
 
                 if (billingResult.getResponseCode() == BillingResponseCode.OK)
-                    showDonateDialog(activity, skuDetailsList);
-                else
-                    handleBillingErrors(billingResult.getResponseCode());
+                    showDonateDialog(activity, productDetailsList.getProductDetailsList());
+                else handleBillingErrors(billingResult.getResponseCode());
             });
         } else {
             new Thread() {
@@ -151,7 +162,6 @@ public class PreferencesBillingHelper {
             case BillingResponseCode.BILLING_UNAVAILABLE:
             case BillingResponseCode.SERVICE_UNAVAILABLE:
             case BillingResponseCode.SERVICE_DISCONNECTED:
-            case BillingResponseCode.SERVICE_TIMEOUT:
                 listener.showToast(Toaster.build().message(R.string.failedBillingConnection));
                 break;
             case BillingResponseCode.USER_CANCELED:
@@ -170,12 +180,12 @@ public class PreferencesBillingHelper {
         }
     }
 
-    public static class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
-        private final List<SkuDetails> products;
+    public static class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
+        private final List<ProductDetails> products;
         private final Listener listener;
         private final LayoutInflater inflater;
 
-        SkuAdapter(Context context, List<SkuDetails> products, Listener listener) {
+        ProductAdapter(Context context, List<ProductDetails> products, Listener listener) {
             this.products = products;
             this.listener = listener;
             this.inflater = LayoutInflater.from(context);
@@ -189,9 +199,9 @@ public class PreferencesBillingHelper {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final SkuDetails item = products.get(position);
+            final ProductDetails item = products.get(position);
 
-            switch (item.getSku()) {
+            switch (item.getProductId()) {
                 case "donation.lemonade":
                     holder.icon.setImageResource(R.drawable.ic_juice_64dp);
                     break;
@@ -212,9 +222,16 @@ public class PreferencesBillingHelper {
                     break;
             }
 
+            final String price;
+            if (item.getOneTimePurchaseOfferDetails() != null) {
+                price = item.getOneTimePurchaseOfferDetails().getFormattedPrice();
+            } else {
+                price = "???";
+            }
+
             holder.title.setText(item.getTitle());
             holder.description.setText(item.getDescription());
-            holder.buy.setText(item.getPrice());
+            holder.buy.setText(price);
             holder.buy.setOnClickListener(view -> {
                 if (listener != null) listener.onItemSelected(item);
             });
@@ -230,7 +247,7 @@ public class PreferencesBillingHelper {
         }
 
         public interface Listener {
-            void onItemSelected(@NonNull SkuDetails product);
+            void onItemSelected(@NonNull ProductDetails product);
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
